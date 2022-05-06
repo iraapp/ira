@@ -5,12 +5,15 @@ import 'package:institute_app/screens/gate_pass/purpose.dart';
 import 'package:institute_app/services/auth.service.dart';
 import 'package:provider/provider.dart';
 
+import '../gate_pass/scan_gate_pass.dart';
+
 String capitalize(String str) {
   return '${str[0].toUpperCase()}${str.substring(1).toLowerCase()}';
 }
 
 class Dashboard extends StatelessWidget {
-  const Dashboard({Key? key}) : super(key: key);
+  final String role;
+  const Dashboard({Key? key, required this.role}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -70,64 +73,85 @@ class Dashboard extends StatelessWidget {
                       const SizedBox(
                         height: 5.0,
                       ),
-                      Text(
-                        capitalize((authService.user?.displayName ?? '')
-                                .split(' ')[0]) +
-                            ' ' +
-                            capitalize((authService.user?.displayName ?? '')
-                                .split(' ')[1]),
-                        style: const TextStyle(
-                          fontSize: 24.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      role != 'guard'
+                          ? Text(
+                              capitalize((authService.user?.displayName ?? '')
+                                      .split(' ')[0]) +
+                                  ' ' +
+                                  capitalize(
+                                      (authService.user?.displayName ?? '')
+                                          .split(' ')[1]),
+                              style: const TextStyle(
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
+                          : const Text('Guard user'),
                       const SizedBox(
                         height: 20.0,
                       ),
+                      role != 'guard'
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                MenuItem(
+                                  iconData: Icons.account_balance_rounded,
+                                  menuName: 'Academics',
+                                  pressHandler: () {},
+                                ),
+                                MenuItem(
+                                  iconData: Icons.apartment_rounded,
+                                  menuName: 'Hostel',
+                                  pressHandler: () {},
+                                ),
+                              ],
+                            )
+                          : Container(),
+                      role != 'guard'
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                MenuItem(
+                                  iconData: Icons.food_bank,
+                                  menuName: 'Mess',
+                                  pressHandler: () {},
+                                ),
+                                MenuItem(
+                                  iconData: Icons.medical_services_rounded,
+                                  menuName: 'Medical',
+                                  pressHandler: () {},
+                                ),
+                              ],
+                            )
+                          : Container(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          MenuItem(
-                            iconData: Icons.account_balance_rounded,
-                            menuName: 'Academics',
-                            pressHandler: () {},
-                          ),
-                          MenuItem(
-                            iconData: Icons.apartment_rounded,
-                            menuName: 'Hostel',
-                            pressHandler: () {},
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          MenuItem(
-                            iconData: Icons.food_bank,
-                            menuName: 'Mess',
-                            pressHandler: () {},
-                          ),
-                          MenuItem(
-                            iconData: Icons.medical_services_rounded,
-                            menuName: 'Medical',
-                            pressHandler: () {},
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          MenuItem(
-                            iconData: Icons.admin_panel_settings_rounded,
-                            menuName: 'Gate Pass',
-                            pressHandler: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const PurposeScreen(),
-                                  ));
-                            },
-                          ),
+                          role != 'guard'
+                              ? MenuItem(
+                                  iconData: Icons.admin_panel_settings_rounded,
+                                  menuName: 'Gate Pass',
+                                  pressHandler: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const PurposeScreen(),
+                                        ));
+                                  },
+                                )
+                              : MenuItem(
+                                  iconData: Icons.admin_panel_settings_rounded,
+                                  menuName: 'Scan Gate Pass',
+                                  pressHandler: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const ScanGatePass(),
+                                        ));
+                                  },
+                                ),
                         ],
                       )
                     ]),

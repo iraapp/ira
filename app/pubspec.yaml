@@ -40,6 +40,8 @@ dependencies:
   http: ^0.13.4
   qr_flutter: ^4.0.0
   flutter_secure_storage: ^5.0.2
+  mobile_scanner: ^1.0.0
+  flutter_beep: ^1.0.0
 
 dev_dependencies:
   flutter_test:

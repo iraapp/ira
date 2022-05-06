@@ -23,10 +23,10 @@ class AuthService with ChangeNotifier {
         _user?.authentication.then(
           (googleKey) async {
             final response = await http.get(
-              Uri.parse('http://10.0.2.2:8000/auth/login'),
+              Uri.parse('http://172.19.138.240:8000/auth/login'),
               headers: <String, String>{
                 'Content-Type': 'application/json; charset=UTF-8',
-                'Authorization': 'Token ' + googleKey.idToken!
+                'Authorization': 'idToken ' + googleKey.idToken!
               },
             );
 

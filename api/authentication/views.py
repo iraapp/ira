@@ -1,12 +1,12 @@
-from authentication.models import Guard
+import json
+from authentication.models import Guard, GuardToken
 from authentication.serializers import GuardSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import authentication_classes
 
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
 
 class CoursePageViewStudent(APIView):
     permission_classes = [IsAuthenticated]
@@ -36,3 +36,22 @@ class RegisterGuardView(APIView):
             return Response(status = 400)
 
         return None
+
+@authentication_classes([])
+class ObtainTokenView(APIView):
+
+    def post(self, request, *args, **kwargs):
+        credentials = json.loads(request.body.decode('utf-8'))
+        username = credentials.get('username')
+        raw_password = credentials.get('password')
+
+        if not username or not raw_password:
+            return Response(status=400, data='Username and password fields are empty')
+
+        guard_user = Guard.objects.get(username=username)
+
+        if check_password(raw_password, guard_user.password):
+            token, _ = GuardToken.objects.get_or_create(user=guard_user)
+            return Response({'token': token.key})
+
+        return Response(status=401, data='Authentication credentials are incorrect')

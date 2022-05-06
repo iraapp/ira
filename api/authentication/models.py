@@ -1,9 +1,13 @@
+import binascii
+import os
 import uuid
 from django.db import models
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+
+from institute_app import settings
 
 from .managers import CustomUserManager
 
@@ -63,3 +67,32 @@ class Guard(models.Model):
 
     def __str__(self):
         return self.first_name + ' ' + self.last_name
+
+class GuardToken(models.Model):
+    """
+    The guard authorization token model.
+    """
+    key = models.CharField(_("Key"), max_length=40, primary_key=True)
+    user = models.OneToOneField(
+        Guard, related_name='auth_token',
+        on_delete=models.CASCADE, verbose_name=_("Guard")
+    )
+    created = models.DateTimeField(_("Created"), auto_now_add=True)
+
+    class Meta:
+        abstract = 'rest_framework.authtoken' not in settings.INSTALLED_APPS
+        verbose_name = _("Guard Token")
+        verbose_name_plural = _("Guard Tokens")
+
+    def save(self, *args, **kwargs):
+        if not self.key:
+            self.key = self.generate_key()
+        return super().save(*args, **kwargs)
+
+    @classmethod
+    def generate_key(cls):
+        return binascii.hexlify(os.urandom(20)).decode()
+
+    def __str__(self):
+        return self.key
+

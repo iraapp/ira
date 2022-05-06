@@ -39,7 +39,9 @@ class Wrapper extends StatelessWidget {
       stream: authService.isAuthenticatedStreamController.stream,
       builder: (context, snapshot) {
         if (snapshot.data == true) {
-          return const Dashboard();
+          return const Dashboard(
+            role: 'student',
+          );
         } else {
           return const LoginScreen();
         }

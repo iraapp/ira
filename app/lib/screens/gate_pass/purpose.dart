@@ -22,10 +22,10 @@ class _PurposeScreenState extends State<PurposeScreen> {
   Future<Map<String, String>> fetchQR() async {
     String? idToken = await storage.read(key: 'idToken');
     final response = await http.get(
-        Uri.parse('http://10.0.2.2:8000/gate_pass/studentStatus'),
+        Uri.parse('http://172.19.138.240:8000/gate_pass/studentStatus'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'Token ' + idToken!
+          'Authorization': 'idToken ' + idToken!
         });
 
     Map<String, String> mmp = {};
@@ -133,12 +133,12 @@ class _PurposeScreenState extends State<PurposeScreen> {
                                               key: 'idToken');
                                           final response = await http.post(
                                               Uri.parse(
-                                                  'http://10.0.2.2:8000/gate_pass/generate_qr'),
+                                                  'http://172.19.138.240:8000/gate_pass/generate_qr'),
                                               headers: <String, String>{
                                                 'Content-Type':
                                                     'application/json; charset=UTF-8',
                                                 'Authorization':
-                                                    'Token ' + idToken!
+                                                    'idToken ' + idToken!
                                               },
                                               body: jsonEncode(<String, String>{
                                                 'purpose':
