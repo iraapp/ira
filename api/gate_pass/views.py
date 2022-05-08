@@ -213,3 +213,19 @@ class Testing(APIView):
 # When the user goes to the main gate, and his qr is scanned, a ping is sent to backend, and image of user is sent back.
 # Now, when the guard approves the request, a modelinstance is created in the backend, for outing, with out time. with out == True
 # Now, when the user comes back to the campus, and opens app, the qr should be there, and when it is scanned again, the out == False.
+
+class DeleteQR(APIView):
+
+    def post(self, request):
+        hash = json.loads(request.body.decode('utf-8')).get('hash')
+
+        user_email = hash.split('_')[0] + '@iitjammu.ac.in'
+
+        gate_pass = GatePass.objects.filter(
+            user__email=user_email, status=False, completed_status=False).first()
+
+        if gate_pass:
+            gate_pass.delete()
+            return Response(status=200, data='success')
+
+        return Response(status=400, data='invalid gate pass')

@@ -1,10 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_flavor/flutter_flavor.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:institute_app/screens/gate_pass/purpose.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:http/http.dart' as http;
 
 class GatePassScreen extends StatelessWidget {
   String hash;
   String purpose;
   String status;
+  String baseUrl = FlavorConfig.instance.variables['baseUrl'];
+  final storage = const FlutterSecureStorage();
 
   GatePassScreen({
     Key? key,
@@ -12,6 +20,26 @@ class GatePassScreen extends StatelessWidget {
     required this.purpose,
     required this.status,
   }) : super(key: key);
+
+  void destroyQr(BuildContext context) async {
+    String? idToken = await storage.read(key: 'idToken');
+    final response =
+        await http.post(Uri.parse(baseUrl + '/gate_pass/delete_qr'),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+              'Authorization': 'idToken ' + idToken!,
+            },
+            body: jsonEncode({
+              'hash': hash,
+            }));
+
+    if (response.statusCode == 200) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const PurposeScreen()),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,12 +89,24 @@ class GatePassScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(20.0),
                     child: Column(
                       children: [
-                        const Text(
-                          'Scan QR Code',
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'QR Code',
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            status == 'false'
+                                ? IconButton(
+                                    onPressed: () => destroyQr(context),
+                                    color: Colors.black,
+                                    icon: const Icon(Icons.delete),
+                                  )
+                                : Container()
+                          ],
                         ),
                         const SizedBox(
                           height: 30.0,
@@ -79,8 +119,8 @@ class GatePassScreen extends StatelessWidget {
                           height: 30.0,
                         ),
                         SizedBox(
-                          width: 120.0,
-                          height: 30.0,
+                          width: 130.0,
+                          height: 35.0,
                           child: DecoratedBox(
                             decoration: BoxDecoration(
                               color:
@@ -94,6 +134,7 @@ class GatePassScreen extends StatelessWidget {
                                     : 'Outside Campus',
                                 style: const TextStyle(
                                   color: Colors.white,
+                                  fontSize: 15.0,
                                 ),
                               ),
                             ),
