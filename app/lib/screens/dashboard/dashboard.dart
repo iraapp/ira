@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:institute_app/screens/dashboard/components/menu_item.dart';
-import 'package:institute_app/screens/gate_pass/gate_pass.dart';
 import 'package:institute_app/screens/gate_pass/purpose.dart';
 import 'package:institute_app/services/auth.service.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +13,8 @@ String capitalize(String str) {
 
 class Dashboard extends StatelessWidget {
   final String role;
+  final storage = const FlutterSecureStorage();
+
   const Dashboard({Key? key, required this.role}) : super(key: key);
 
   @override
@@ -162,14 +164,21 @@ class Dashboard extends StatelessWidget {
                 height: 30.0,
               ),
               TextButton(
-                child: const Text(
+                child: Text(
                   'Sign Out',
                   style: TextStyle(
-                    color: Color(0xff3a82fd),
+                    color: role != 'guard'
+                        ? const Color(0xff3a82fd)
+                        : Colors.white,
                   ),
                 ),
                 onPressed: () async {
-                  await authService.signOut();
+                  if (role == 'guard') {
+                    await storage.delete(key: 'guardToken');
+                    Navigator.pop(context);
+                  } else {
+                    await authService.signOut();
+                  }
                 },
               )
             ],
