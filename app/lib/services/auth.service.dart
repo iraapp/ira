@@ -1,18 +1,21 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AuthService with ChangeNotifier {
   GoogleSignInAccount? _user;
   bool isAuthenticated = false;
   StreamController<bool> isAuthenticatedStreamController =
       StreamController<bool>();
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-      clientId:
-          '776874295259-53ophl75eqo7l0bfgad108p7nm75do1i.apps.googleusercontent.com');
+  final GoogleSignIn _googleSignIn =
+      GoogleSignIn(clientId: dotenv.env['GOOGLE_OAUTH_CLIENT_ID']);
+  String baseUrl = FlavorConfig.instance.variables['baseUrl'];
+
   // Create storage
   final storage = const FlutterSecureStorage();
 
@@ -23,7 +26,9 @@ class AuthService with ChangeNotifier {
         _user?.authentication.then(
           (googleKey) async {
             final response = await http.get(
-              Uri.parse('http://172.19.138.240:8000/auth/login'),
+              Uri.parse(
+                baseUrl + '/auth/login',
+              ),
               headers: <String, String>{
                 'Content-Type': 'application/json; charset=UTF-8',
                 'Authorization': 'idToken ' + googleKey.idToken!

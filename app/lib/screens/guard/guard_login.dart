@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:institute_app/screens/dashboard/dashboard.dart';
@@ -18,6 +19,7 @@ class _GuardLoginState extends State<GuardLogin> {
   TextEditingController passwordFieldController = TextEditingController();
   // Create storage
   final storage = const FlutterSecureStorage();
+  String baseUrl = FlavorConfig.instance.variables['baseUrl'];
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +112,8 @@ class _GuardLoginState extends State<GuardLogin> {
                               if (_formKey.currentState!.validate()) {
                                 final response = await http.post(
                                     Uri.parse(
-                                        'http://172.19.138.240:8000/auth/guard-token'),
+                                      baseUrl + '/auth/guard-token',
+                                    ),
                                     headers: <String, String>{
                                       'Content-Type':
                                           'application/json; charset=UTF-8',

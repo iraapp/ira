@@ -1,10 +1,22 @@
+from pathlib import Path
 from django.contrib.auth.backends import BaseBackend
-from .models import Guard, GuardToken, User
+from .models import GuardToken, User
 from rest_framework import authentication
 from rest_framework import exceptions
 from google.auth.transport import requests
 from google.oauth2 import id_token
-from django.contrib.auth.hashers import check_password
+
+import environ
+import os
+
+# Intializing django environ
+env = environ.Env()
+
+# Set the project base directory
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Take environment variables from .env file
+environ.Env.read_env(os.path.join(BASE_DIR.parent, '.env'))
 
 class GoogleAuthenticationBackend(authentication.BaseAuthentication):
     def authenticate(self, request):
@@ -21,7 +33,10 @@ class GoogleAuthenticationBackend(authentication.BaseAuthentication):
                 return None
 
             token = authorization_header.split(' ')[1]
-            decoded_token = id_token.verify_oauth2_token(token, requests.Request(), "776874295259-53ophl75eqo7l0bfgad108p7nm75do1i.apps.googleusercontent.com")
+
+            decoded_token = id_token.verify_oauth2_token(
+                token, requests.Request(), env('GOOGLE_OAUTH_CLIENT_ID'))
+
         except Exception as e:
 
             print(e)

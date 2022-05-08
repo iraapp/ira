@@ -3,8 +3,6 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:flutter_beep/flutter_beep.dart';
 
 class ScanGatePass extends StatelessWidget {
-  // bool successWidgetIsShown = false;
-
   const ScanGatePass({Key? key}) : super(key: key);
 
   @override

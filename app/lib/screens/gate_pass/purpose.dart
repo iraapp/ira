@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:http/http.dart' as http;
 import 'package:institute_app/screens/gate_pass/gate_pass.dart';
 import 'package:institute_app/services/auth.service.dart';
@@ -18,11 +20,14 @@ class _PurposeScreenState extends State<PurposeScreen> {
   TextEditingController purposeFieldController = TextEditingController();
   // Create storage
   final storage = const FlutterSecureStorage();
+  String baseUrl = FlavorConfig.instance.variables['baseUrl'];
 
   Future<Map<String, String>> fetchQR() async {
     String? idToken = await storage.read(key: 'idToken');
     final response = await http.get(
-        Uri.parse('http://172.19.138.240:8000/gate_pass/studentStatus'),
+        Uri.parse(
+          baseUrl + '/gate_pass/studentStatus',
+        ),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'idToken ' + idToken!
@@ -133,7 +138,9 @@ class _PurposeScreenState extends State<PurposeScreen> {
                                               key: 'idToken');
                                           final response = await http.post(
                                               Uri.parse(
-                                                  'http://172.19.138.240:8000/gate_pass/generate_qr'),
+                                                baseUrl +
+                                                    '/gate_pass/generate_qr',
+                                              ),
                                               headers: <String, String>{
                                                 'Content-Type':
                                                     'application/json; charset=UTF-8',

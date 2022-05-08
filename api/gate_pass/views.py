@@ -91,15 +91,6 @@ class StudentGatepassStatus(APIView):
                 }
             )
 
-        # if not Current_user.is_student:
-        #     return Response(
-        #         status = 403,
-        #         data = {
-        #             "msg": "User doesn't have the permission to access this resource."
-        #         }
-        #     )
-
-
         current_gate_pass = GatePass.objects.filter(user = Current_user, completed_status = False).first()
         print(current_gate_pass)
         if current_gate_pass is None:
@@ -215,8 +206,6 @@ class Testing(APIView):
             },
             status = 200
         )
-
-
 
 
 # QR Code is generated in the frontend only.

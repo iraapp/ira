@@ -27,9 +27,9 @@ class RegisterGuardView(APIView):
         raw_password = request.POST.get('password')
 
         if username and first_name and last_name and raw_password:
-            guard = Guard.objects.create(username=username, first_name= first_name, last_name=last_name, password=make_password(raw_password))
-            # guard.password = make_password(raw_password)
-            # guard.save()
+            guard = Guard.objects.create(
+                username=username, first_name= first_name, last_name=last_name,
+                password=make_password(raw_password))
             return Response(status=200, data = GuardSerializer(guard).data)
 
         else:
