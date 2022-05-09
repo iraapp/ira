@@ -149,8 +149,7 @@ class Dashboard extends StatelessWidget {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) =>
-                                              const ScanGatePass(),
+                                          builder: (context) => ScanGatePass(),
                                         ));
                                   },
                                 ),

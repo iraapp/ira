@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.utils import timezone
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -215,6 +216,7 @@ class Testing(APIView):
 # Now, when the user comes back to the campus, and opens app, the qr should be there, and when it is scanned again, the out == False.
 
 class DeleteQR(APIView):
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         hash = json.loads(request.body.decode('utf-8')).get('hash')
@@ -227,5 +229,33 @@ class DeleteQR(APIView):
         if gate_pass:
             gate_pass.delete()
             return Response(status=200, data='success')
+
+        return Response(status=400, data='invalid gate pass')
+
+
+class ScanQR(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        hash = json.loads(request.body.decode('utf-8')).get('hash')
+        user_email = hash.split('_')[0] + '@iitjammu.ac.in'
+
+        gate_pass = GatePass.objects.filter(
+            user__email=user_email, completed_status=False).first()
+
+        if gate_pass:
+            if gate_pass.status == False:
+                gate_pass.status = True
+                gate_pass.out_time_stamp = timezone.now()
+                gate_pass.save()
+
+                return Response(status=200, data='success')
+
+            elif gate_pass.status == True:
+                gate_pass.completed_status = True
+                gate_pass.in_time_stamp = timezone.now()
+                gate_pass.save()
+
+                return Response(status=200, data='success')
 
         return Response(status=400, data='invalid gate pass')

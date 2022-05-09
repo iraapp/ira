@@ -1,14 +1,37 @@
-import 'package:flutter/material.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:flutter_beep/flutter_beep.dart';
+import 'dart:convert';
 
-class ScanGatePass extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:flutter_flavor/flutter_flavor.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:http/http.dart' as http;
+
+class ScanGatePass extends StatefulWidget {
   const ScanGatePass({Key? key}) : super(key: key);
 
   @override
+  State<ScanGatePass> createState() => _ScanGatePassState();
+}
+
+class _ScanGatePassState extends State<ScanGatePass> {
+  final AudioCache player = AudioCache();
+  String baseUrl = FlavorConfig.instance.variables['baseUrl'];
+  final storage = const FlutterSecureStorage();
+  bool canCall = true;
+  bool _visible = false;
+
+  beep() async {
+    player.play('beep.mp3');
+  }
+
+  @override
   Widget build(BuildContext context) {
+    player.load('beep.mp3');
+
     return Scaffold(
-      body: Stack(children: [
+        body: Column(children: [
+      Stack(children: [
         Container(
           height: MediaQuery.of(context).size.height * 0.7,
           decoration: const BoxDecoration(
@@ -67,10 +90,40 @@ class ScanGatePass extends StatelessWidget {
                           height: 300,
                           child: MobileScanner(
                             allowDuplicates: false,
-                            onDetect: (barcode, args) {
-                              final String code = barcode.rawValue!;
-                              print('Barcode found! $code');
-                              FlutterBeep.beep();
+                            onDetect: (barcode, args) async {
+                              if (canCall == true) {
+                                final String hash = barcode.rawValue!;
+                                final String? token =
+                                    await storage.read(key: 'guardToken');
+
+                                final response = await http.post(
+                                    Uri.parse(baseUrl + '/gate_pass/scan_qr'),
+                                    headers: <String, String>{
+                                      'Content-Type':
+                                          'application/json; charset=UTF-8',
+                                      'Authorization':
+                                          token != null ? 'Token ' + token : '',
+                                    },
+                                    body: jsonEncode({
+                                      'hash': hash,
+                                    }));
+
+                                if (response.statusCode == 200) {
+                                  beep();
+                                  canCall = false;
+                                  setState(() {
+                                    _visible = !_visible;
+                                  });
+
+                                  Future.delayed(
+                                      const Duration(milliseconds: 5000), () {
+                                    canCall = true;
+                                    setState(() {
+                                      _visible = !_visible;
+                                    });
+                                  });
+                                }
+                              }
                             },
                           ),
                         ),
@@ -86,6 +139,52 @@ class ScanGatePass extends StatelessWidget {
           ),
         ),
       ]),
-    );
+      AnimatedOpacity(
+        duration: const Duration(milliseconds: 500),
+        opacity: _visible ? 1.0 : 0.0,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20.0, 40.0, 20.0, 20.0),
+          child: Row(
+            children: [
+              Image.network(
+                'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png',
+                width: 100.0,
+                height: 100.0,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    'Ashutosh Chauhan',
+                    style: TextStyle(
+                      fontSize: 17.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Text(
+                    '2020uee0132',
+                    style: TextStyle(
+                      fontSize: 15.0,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Text(
+                    'Successfully logged for going out',
+                    style: TextStyle(
+                      fontSize: 15.0,
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      )
+    ]));
   }
 }
