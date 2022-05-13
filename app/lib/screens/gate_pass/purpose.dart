@@ -18,12 +18,12 @@ class PurposeScreen extends StatefulWidget {
 class _PurposeScreenState extends State<PurposeScreen> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController purposeFieldController = TextEditingController();
-  // Create storage
-  final storage = const FlutterSecureStorage();
+  // Create secureStorage
+  final secureStorage = const FlutterSecureStorage();
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
 
   Future<Map<String, String>> fetchQR() async {
-    String? idToken = await storage.read(key: 'idToken');
+    String? idToken = await secureStorage.read(key: 'idToken');
     final response = await http.get(
         Uri.parse(
           baseUrl + '/gate_pass/studentStatus',
@@ -60,7 +60,8 @@ class _PurposeScreenState extends State<PurposeScreen> {
           if (snapshot.connectionState == ConnectionState.waiting ||
               snapshot.data == null) {
             return const Scaffold(
-                body: Center(child: Text('Please wait its loading...')));
+              body: Center(child: CircularProgressIndicator()),
+            );
           } else {
             if (snapshot.data['qr'] == 'invalid') {
               return Scaffold(
@@ -134,8 +135,8 @@ class _PurposeScreenState extends State<PurposeScreen> {
                                     ElevatedButton(
                                       onPressed: () async {
                                         if (_formKey.currentState!.validate()) {
-                                          String? idToken = await storage.read(
-                                              key: 'idToken');
+                                          String? idToken = await secureStorage
+                                              .read(key: 'idToken');
                                           final response = await http.post(
                                               Uri.parse(
                                                 baseUrl +
@@ -161,6 +162,7 @@ class _PurposeScreenState extends State<PurposeScreen> {
                                                     response.body)['status']
                                                 ? 'true'
                                                 : 'false';
+
                                             Navigator.pushReplacement(
                                               context,
                                               MaterialPageRoute(

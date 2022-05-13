@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:institute_app/screens/gate_pass/purpose.dart';
+import 'package:institute_app/util/helpers.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:http/http.dart' as http;
 
@@ -12,7 +13,7 @@ class GatePassScreen extends StatelessWidget {
   String purpose;
   String status;
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
-  final storage = const FlutterSecureStorage();
+  final secureStorage = const FlutterSecureStorage();
 
   GatePassScreen({
     Key? key,
@@ -22,7 +23,7 @@ class GatePassScreen extends StatelessWidget {
   }) : super(key: key);
 
   void destroyQr(BuildContext context) async {
-    String? idToken = await storage.read(key: 'idToken');
+    String? idToken = await secureStorage.read(key: 'idToken');
     final response =
         await http.post(Uri.parse(baseUrl + '/gate_pass/delete_qr'),
             headers: <String, String>{
@@ -64,14 +65,14 @@ class GatePassScreen extends StatelessWidget {
               )),
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 80.0),
+          padding: EdgeInsets.only(top: getHeightOf(context) * 0.1),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Center(
                 child: Container(
                   margin: const EdgeInsets.only(top: 50.0),
-                  width: MediaQuery.of(context).size.width * 0.9,
+                  width: MediaQuery.of(context).size.width * 0.8,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),

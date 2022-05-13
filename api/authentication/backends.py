@@ -39,11 +39,9 @@ class GoogleAuthenticationBackend(authentication.BaseAuthentication):
 
         except Exception as e:
 
-            print(e)
             raise exceptions.AuthenticationFailed('Invalid ID Token')
         try:
             email = decoded_token.get("email")
-            print(email)
         except Exception:
             raise exceptions.AuthenticationFailed('No such user exists')
 
@@ -72,11 +70,10 @@ class GuardAuthenticationBackend(BaseBackend):
             decoded_token = GuardToken.objects.get(key=token)
         except Exception as e:
 
-            print(e)
             raise exceptions.AuthenticationFailed('Invalid ID Token')
         try:
             guard_user = decoded_token.user
-            print(guard_user)
+
         except Exception:
             raise exceptions.AuthenticationFailed('No such user exists')
 

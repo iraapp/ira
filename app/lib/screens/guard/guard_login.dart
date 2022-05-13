@@ -17,13 +17,12 @@ class _GuardLoginState extends State<GuardLogin> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController usernameFieldController = TextEditingController();
   TextEditingController passwordFieldController = TextEditingController();
-  // Create storage
-  final storage = const FlutterSecureStorage();
+  // Create secureStorage
+  final secureStorage = const FlutterSecureStorage();
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
 
   Future<String> autoLogin() async {
-    String? guardToken = await storage.read(key: 'guardToken');
-    print(guardToken);
+    String? guardToken = await secureStorage.read(key: 'guardToken');
 
     final response = await http.get(
         Uri.parse(
@@ -49,7 +48,7 @@ class _GuardLoginState extends State<GuardLogin> {
         if (snapshot.connectionState == ConnectionState.waiting ||
             snapshot.data == null) {
           return const Scaffold(
-              body: Center(child: Text('Please wait its loading...')));
+              body: Center(child: CircularProgressIndicator()));
         } else if (snapshot.data == 'invalid') {
           return Scaffold(
             body: Stack(children: [
@@ -154,7 +153,7 @@ class _GuardLoginState extends State<GuardLogin> {
                                           }));
 
                                       if (response.statusCode == 200) {
-                                        await storage.write(
+                                        await secureStorage.write(
                                           key: 'guardToken',
                                           value: jsonDecode(
                                               response.body)['token'],
@@ -162,8 +161,7 @@ class _GuardLoginState extends State<GuardLogin> {
                                         Navigator.pushReplacement(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) =>
-                                                const Dashboard(
+                                            builder: (context) => Dashboard(
                                               role: 'guard',
                                             ),
                                           ),
@@ -188,7 +186,7 @@ class _GuardLoginState extends State<GuardLogin> {
             ]),
           );
         } else {
-          return const Dashboard(role: 'guard');
+          return Dashboard(role: 'guard');
         }
       },
     );

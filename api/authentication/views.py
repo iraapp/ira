@@ -35,7 +35,6 @@ class RegisterGuardView(APIView):
         else:
             return Response(status = 400)
 
-        return None
 
 @authentication_classes([])
 class ObtainTokenView(APIView):

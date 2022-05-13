@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:institute_app/screens/dashboard/dashboard.dart';
 import 'package:institute_app/screens/guard/guard_login.dart';
 import 'package:institute_app/services/auth.service.dart';
+import 'package:institute_app/util/helpers.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -37,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
               )),
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 150.0),
+          padding: EdgeInsets.only(top: getHeightOf(context) * 0.15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -97,11 +99,22 @@ class _LoginScreenState extends State<LoginScreen> {
                           'assets/svgs/login_with_google.svg',
                         ),
                         onPressed: () async {
-                          authService.signIn();
+                          authService.successCallback = () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Dashboard(
+                                  role: 'student',
+                                ),
+                              ),
+                            );
+                            authService.successCallback = () {};
+                          };
+                          await authService.signIn();
                         },
                       ),
                       const SizedBox(
-                        height: 50.0,
+                        height: 30.0,
                       )
                     ],
                   ),
@@ -128,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

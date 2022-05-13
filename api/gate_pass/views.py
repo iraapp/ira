@@ -93,7 +93,7 @@ class StudentGatepassStatus(APIView):
             )
 
         current_gate_pass = GatePass.objects.filter(user = Current_user, completed_status = False).first()
-        print(current_gate_pass)
+
         if current_gate_pass is None:
             return Response(
                 status = 404,
@@ -249,13 +249,13 @@ class ScanQR(APIView):
                 gate_pass.out_time_stamp = timezone.now()
                 gate_pass.save()
 
-                return Response(status=200, data='success')
+                return Response(status=200, data='successfully scanned for going out')
 
             elif gate_pass.status == True:
                 gate_pass.completed_status = True
                 gate_pass.in_time_stamp = timezone.now()
                 gate_pass.save()
 
-                return Response(status=200, data='success')
+                return Response(status=200, data='successfully scanned for coming back')
 
         return Response(status=400, data='invalid gate pass')

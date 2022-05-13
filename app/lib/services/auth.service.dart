@@ -6,6 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:localstorage/localstorage.dart';
 
 class AuthService with ChangeNotifier {
   GoogleSignInAccount? _user;
@@ -15,9 +16,11 @@ class AuthService with ChangeNotifier {
   final GoogleSignIn _googleSignIn =
       GoogleSignIn(clientId: dotenv.env['GOOGLE_OAUTH_CLIENT_ID']);
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
+  VoidCallback successCallback = () {};
 
-  // Create storage
-  final storage = const FlutterSecureStorage();
+  // Create secureStorage
+  final secureStorage = const FlutterSecureStorage();
+  final localStorage = LocalStorage('store');
 
   AuthService() {
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
@@ -38,12 +41,16 @@ class AuthService with ChangeNotifier {
             if (response.statusCode == 200) {
               print('Successfully authenticated with backend');
               isAuthenticated = true;
-              await storage.write(
+              await secureStorage.write(
                 key: 'idToken',
                 value: googleKey.idToken,
               );
+
+              localStorage.setItem('displayName', _user?.displayName);
+
               isAuthenticatedStreamController.add(isAuthenticated);
               notifyListeners();
+              successCallback();
             }
           },
         ).catchError((err) {
@@ -72,5 +79,6 @@ class AuthService with ChangeNotifier {
 
   signOut() async {
     await _googleSignIn.signOut();
+    await secureStorage.delete(key: 'idToken');
   }
 }

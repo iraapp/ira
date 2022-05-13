@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:institute_app/screens/dashboard/dashboard.dart';
 import 'package:institute_app/screens/login/login.dart';
 import 'package:institute_app/services/auth.service.dart';
@@ -33,19 +34,6 @@ class Wrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthService authService = Provider.of(context);
-
-    return StreamBuilder(
-      stream: authService.isAuthenticatedStreamController.stream,
-      builder: (context, snapshot) {
-        if (snapshot.data == true) {
-          return const Dashboard(
-            role: 'student',
-          );
-        } else {
-          return const LoginScreen();
-        }
-      },
-    );
+    return Dashboard(role: 'student');
   }
 }
