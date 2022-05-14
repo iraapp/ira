@@ -3,10 +3,15 @@ import 'package:flutter/material.dart';
 class MenuItem extends StatelessWidget {
   IconData? iconData;
   String menuName;
+  bool fade;
   VoidCallback pressHandler;
 
   MenuItem(
-      {Key? key, this.iconData, this.menuName = '', required this.pressHandler})
+      {Key? key,
+      this.iconData,
+      this.menuName = '',
+      required this.pressHandler,
+      required this.fade})
       : super(key: key);
 
   @override
@@ -23,9 +28,11 @@ class MenuItem extends StatelessWidget {
             iconSize: 65.0,
             onPressed: pressHandler,
           ),
-          decoration: const BoxDecoration(
-            color: Color(0xff3a82fd),
-            borderRadius: BorderRadius.all(
+          decoration: BoxDecoration(
+            color: fade
+                ? const Color.fromARGB(175, 58, 129, 253)
+                : const Color(0xff3a82fd),
+            borderRadius: const BorderRadius.all(
               Radius.circular(10.0),
             ),
           ),

@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'authentication',
     'gate_pass',
     'rest_framework',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
+    'user_profile',
 ]
 
 AUTH_USER_MODEL = 'authentication.User'

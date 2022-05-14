@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 import '../../util/helpers.dart';
 import '../gate_pass/scan_gate_pass.dart';
+import '../profile/profile.dart';
 
 String capitalize(String str) {
   return '${str[0].toUpperCase()}${str.substring(1).toLowerCase()}';
@@ -150,11 +151,18 @@ class _DashboardState extends State<Dashboard> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 MenuItem(
-                                  iconData: Icons.account_balance_rounded,
-                                  menuName: 'Academics',
-                                  pressHandler: () {},
+                                  fade: false,
+                                  iconData: Icons.person,
+                                  menuName: 'Profile',
+                                  pressHandler: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Profile()));
+                                  },
                                 ),
                                 MenuItem(
+                                  fade: true,
                                   iconData: Icons.apartment_rounded,
                                   menuName: 'Hostel',
                                   pressHandler: () {},
@@ -167,11 +175,13 @@ class _DashboardState extends State<Dashboard> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 MenuItem(
+                                  fade: true,
                                   iconData: Icons.food_bank,
                                   menuName: 'Mess',
                                   pressHandler: () {},
                                 ),
                                 MenuItem(
+                                  fade: true,
                                   iconData: Icons.medical_services_rounded,
                                   menuName: 'Medical',
                                   pressHandler: () {},
@@ -184,6 +194,7 @@ class _DashboardState extends State<Dashboard> {
                         children: [
                           widget.role != 'guard'
                               ? MenuItem(
+                                  fade: false,
                                   iconData: Icons.admin_panel_settings_rounded,
                                   menuName: 'Gate Pass',
                                   pressHandler: () {
@@ -196,6 +207,7 @@ class _DashboardState extends State<Dashboard> {
                                   },
                                 )
                               : MenuItem(
+                                  fade: false,
                                   iconData: Icons.admin_panel_settings_rounded,
                                   menuName: 'Scan Gate Pass',
                                   pressHandler: () {
