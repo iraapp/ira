@@ -17,8 +17,7 @@ jobs:
 
     steps:
       - name: Create dummy environment file
-        run: touch .env.symlink
-        working-directory: app
+        run: rm -rf app/.env.symlink && touch app/.env.symlink
 
       - uses: actions/checkout@v3
 
