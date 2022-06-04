@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:institute_app/screens/dashboard/dashboard.dart';
-import 'package:institute_app/screens/login/login.dart';
-import 'package:institute_app/services/auth.service.dart';
+import 'package:ira/screens/dashboard/dashboard.dart';
+import 'package:ira/services/auth.service.dart';
 import 'package:provider/provider.dart';
 
 class MyApp extends StatelessWidget {

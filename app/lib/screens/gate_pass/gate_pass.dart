@@ -3,11 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:institute_app/screens/gate_pass/purpose.dart';
-import 'package:institute_app/util/helpers.dart';
+import 'package:ira/screens/gate_pass/purpose.dart';
+import 'package:ira/util/helpers.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:http/http.dart' as http;
 
+// ignore: must_be_immutable
 class GatePassScreen extends StatelessWidget {
   String hash;
   String purpose;

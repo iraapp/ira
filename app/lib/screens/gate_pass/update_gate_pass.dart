@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 
 import '../../util/helpers.dart';
 
+// ignore: must_be_immutable
 class UpdateGatePass extends StatelessWidget {
   final String hash;
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];

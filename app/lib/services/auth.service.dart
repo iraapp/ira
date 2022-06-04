@@ -16,6 +16,7 @@ class AuthService with ChangeNotifier {
   final GoogleSignIn _googleSignIn =
       GoogleSignIn(clientId: dotenv.env['GOOGLE_OAUTH_CLIENT_ID']);
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
+  // ignore: prefer_function_declarations_over_variables
   VoidCallback successCallback = () {};
 
   // Create secureStorage
@@ -39,7 +40,6 @@ class AuthService with ChangeNotifier {
             );
 
             if (response.statusCode == 200) {
-              print('Successfully authenticated with backend');
               isAuthenticated = true;
               await secureStorage.write(
                 key: 'idToken',
@@ -56,8 +56,6 @@ class AuthService with ChangeNotifier {
         ).catchError((err) {
           isAuthenticated = false;
           isAuthenticatedStreamController.add(isAuthenticated);
-          print(err);
-          print('authentication failed');
         });
       } else {
         isAuthenticated = false;

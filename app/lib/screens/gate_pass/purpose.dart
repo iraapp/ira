@@ -1,11 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:http/http.dart' as http;
-import 'package:institute_app/screens/gate_pass/gate_pass.dart';
-import 'package:institute_app/services/auth.service.dart';
+import 'package:ira/screens/gate_pass/gate_pass.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class PurposeScreen extends StatefulWidget {
