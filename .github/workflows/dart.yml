@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - run: touch .env
       - uses: actions/checkout@v3
 
       - uses: subosito/flutter-action@v1
