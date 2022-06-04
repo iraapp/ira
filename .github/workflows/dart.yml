@@ -16,7 +16,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - run: touch .env
+      - name: Create dummy environment file
+        run: touch .env.symlink
+        working-directory: app
+
       - uses: actions/checkout@v3
 
       - uses: subosito/flutter-action@v1
@@ -27,7 +30,7 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
         working-directory: app
-        
+
       # Uncomment this step to verify the use of 'dart format' on each commit.
       # - name: Verify formatting
       #   run: dart format --output=none --set-exit-if-changed .
