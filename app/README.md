@@ -1,4 +1,4 @@
-# institute_app
+# IRA
 
 A new Flutter project.
 
