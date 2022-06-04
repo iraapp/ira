@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:institute_app/screens/dashboard/components/menu_item.dart';
-import 'package:institute_app/screens/gate_pass/purpose.dart';
-import 'package:institute_app/screens/login/login.dart';
-import 'package:institute_app/services/auth.service.dart';
+import 'package:ira/screens/dashboard/components/menu_item.dart';
+import 'package:ira/screens/gate_pass/purpose.dart';
+import 'package:ira/screens/login/login.dart';
+import 'package:ira/services/auth.service.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:provider/provider.dart';
 
@@ -47,6 +47,7 @@ class Username extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class Dashboard extends StatefulWidget {
   String role;
   final secureStorage = const FlutterSecureStorage();

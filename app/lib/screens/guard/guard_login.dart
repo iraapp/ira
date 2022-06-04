@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:institute_app/screens/dashboard/dashboard.dart';
+import 'package:ira/screens/dashboard/dashboard.dart';
 
 class GuardLogin extends StatefulWidget {
   const GuardLogin({Key? key}) : super(key: key);

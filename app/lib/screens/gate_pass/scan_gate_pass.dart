@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:institute_app/screens/gate_pass/update_gate_pass.dart';
+import 'package:ira/screens/gate_pass/update_gate_pass.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:flutter/services.dart';
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:institute_app/screens/dashboard/dashboard.dart';
-import 'package:institute_app/screens/guard/guard_login.dart';
-import 'package:institute_app/services/auth.service.dart';
-import 'package:institute_app/util/helpers.dart';
+import 'package:ira/screens/dashboard/dashboard.dart';
+import 'package:ira/screens/guard/guard_login.dart';
+import 'package:ira/services/auth.service.dart';
+import 'package:ira/util/helpers.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
