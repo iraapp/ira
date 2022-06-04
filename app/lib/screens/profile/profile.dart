@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:flip_card/flip_card.dart';
 
 import '../../util/helpers.dart';
 
@@ -59,67 +60,161 @@ class _ProfileState extends State<Profile> {
               )),
         ),
         Padding(
-          padding: EdgeInsets.only(top: getHeightOf(context) * 0.1),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Center(
-                child: Container(
-                  margin: EdgeInsets.only(top: getHeightOf(context) * 0.05),
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: const [
-                      BoxShadow(
-                          color: Colors.grey,
-                          blurRadius: 5.0,
-                          offset: Offset(
-                            0,
-                            5,
-                          ))
+          padding: EdgeInsets.only(top: getHeightOf(context) * 0.25),
+          child: FutureBuilder(
+              future: fetchProfile(),
+              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting ||
+                    snapshot.data == null) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (snapshot.data != 'invalid') {
+                  final profileData = jsonDecode(snapshot.data);
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Center(
+                        child: FlipCard(
+                          direction: FlipDirection.HORIZONTAL,
+                          front: Container(
+                            margin: EdgeInsets.only(
+                                top: getHeightOf(context) * 0.05),
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Colors.grey,
+                                    blurRadius: 5.0,
+                                    offset: Offset(
+                                      0,
+                                      5,
+                                    ))
+                              ],
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Image.asset(
+                                        'assets/images/id_logo1.png',
+                                      ),
+                                      Image.asset(
+                                        'assets/images/id_logo2.png',
+                                      )
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text('Name: ' + profileData['name']),
+                                          const Text('ID No: '),
+                                          Text('Discipline: ' +
+                                              profileData['branch']),
+                                          Text('Programme: ' +
+                                              profileData['programme']),
+                                          Text('DOB: ' +
+                                              profileData['date_of_birth']),
+                                          Text('Valid Upto: ' +
+                                              profileData['valid_upto']),
+                                        ],
+                                      ),
+                                      Column(children: [
+                                        Image.asset(
+                                            'assets/images/id_logo3.png'),
+                                        const SizedBox(
+                                          height: 10.0,
+                                        ),
+                                        const Text('Dean Academics'),
+                                      ]),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          back: Container(
+                            margin: EdgeInsets.only(
+                                top: getHeightOf(context) * 0.05),
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Colors.grey,
+                                    blurRadius: 5.0,
+                                    offset: Offset(
+                                      0,
+                                      5,
+                                    ))
+                              ],
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(30.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('E-mail: ' +
+                                      profileData['entry_no'] +
+                                      '@iitjammu.ac.in'),
+                                  const SizedBox(
+                                    height: 10.0,
+                                  ),
+                                  Text('Contact No: ' +
+                                      profileData['phone_number']),
+                                  const SizedBox(
+                                    height: 10.0,
+                                  ),
+                                  Text('Emergency No: ' +
+                                      profileData['emergency_no']),
+                                  const SizedBox(
+                                    height: 10.0,
+                                  ),
+                                  Text('Blood Group: ' +
+                                      profileData['blood_group']),
+                                  const SizedBox(
+                                    height: 10.0,
+                                  ),
+                                  Text(
+                                    'Permanent Address: ' +
+                                        profileData['address'],
+                                  ),
+                                  const SizedBox(
+                                    height: 15.0,
+                                  ),
+                                  const Text(
+                                      'www.iitjammu.ac.in | +91-191-257-0633'),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20.0,
+                      ),
                     ],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: FutureBuilder(
-                      future: fetchProfile(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<dynamic> snapshot) {
-                        if (snapshot.connectionState ==
-                                ConnectionState.waiting ||
-                            snapshot.data == null) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        }
+                  );
+                }
 
-                        if (snapshot.data != 'invalid') {
-                          final profileData = jsonDecode(snapshot.data);
-
-                          return Column(
-                            children: [
-                              Text('Name : ' + profileData['name']),
-                              Text('Entry Number : ' + profileData['entry_no']),
-                              Text('Programme : ' + profileData['programme']),
-                              Text('Branch : ' + profileData['branch']),
-                              Text('Phone Number : ' +
-                                  profileData['phone_number']),
-                              Text('Address : ' + profileData['address'])
-                            ],
-                          );
-                        }
-
-                        return Container();
-                      },
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 20.0,
-              ),
-            ],
-          ),
+                return Container();
+              }),
         ),
       ]),
     );

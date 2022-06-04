@@ -24,6 +24,10 @@ class StudentProfile(APIView):
       'programme': profile.programme,
       'branch': profile.branch,
       'phone_number': profile.phone_number,
-      'address': profile.address
+      'address': profile.address,
+      'date_of_birth': profile.date_of_birth,
+      'valid_upto': profile.valid_upto,
+      'emergency_no': profile.emergency_no,
+      'blood_group': profile.blood_group
     })
 

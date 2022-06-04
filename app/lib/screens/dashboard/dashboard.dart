@@ -153,7 +153,7 @@ class _DashboardState extends State<Dashboard> {
                                 MenuItem(
                                   fade: false,
                                   iconData: Icons.person,
-                                  menuName: 'Profile',
+                                  menuName: 'Digital ID Card',
                                   pressHandler: () {
                                     Navigator.push(
                                         context,

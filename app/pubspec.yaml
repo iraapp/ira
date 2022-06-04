@@ -44,6 +44,7 @@ dependencies:
   flutter_flavor: ^3.0.3
   localstorage: ^4.0.0+1
   qr_code_scanner: ^0.7.0
+  flip_card: ^0.6.0
 
 dev_dependencies:
   flutter_test:
