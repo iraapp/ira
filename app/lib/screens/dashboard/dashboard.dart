@@ -3,7 +3,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ira/screens/dashboard/components/menu_item.dart';
 import 'package:ira/screens/gate_pass/purpose.dart';
 import 'package:ira/screens/login/login.dart';
+import 'package:ira/screens/mess/mess.dart';
 import 'package:ira/services/auth.service.dart';
+import 'package:ira/shared/app_scaffold.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:provider/provider.dart';
 
@@ -87,175 +89,157 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     AuthService authService = Provider.of(context);
 
-    return Scaffold(
-      body: Stack(children: [
-        Container(
-          height: getHeightOf(context) * 0.7,
-          decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Color(0xff3a82fd),
-                  Color(0xff5077d3),
-                  Color(0xff3c91c8),
-                  Color(0xff72a8ee),
+    return AppScaffold(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Center(
+            child: Container(
+              margin: EdgeInsets.only(top: getHeightOf(context) * 0.05),
+              width: MediaQuery.of(context).size.width * 0.9,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: const [
+                  BoxShadow(
+                      color: Colors.grey,
+                      blurRadius: 5.0,
+                      offset: Offset(
+                        0,
+                        5,
+                      ))
                 ],
               ),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.elliptical(60, 20),
-                bottomRight: Radius.elliptical(60, 20),
-              )),
-        ),
-        Padding(
-          padding: EdgeInsets.only(top: getHeightOf(context) * 0.1),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Center(
-                child: Container(
-                  margin: EdgeInsets.only(top: getHeightOf(context) * 0.05),
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: const [
-                      BoxShadow(
-                          color: Colors.grey,
-                          blurRadius: 5.0,
-                          offset: Offset(
-                            0,
-                            5,
-                          ))
-                    ],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(children: <Widget>[
-                      const Text(
-                        'Welcome back',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 5.0,
-                      ),
-                      widget.role != 'guard'
-                          ? Username()
-                          : const Text('Guard user'),
-                      const SizedBox(
-                        height: 20.0,
-                      ),
-                      widget.role != 'guard'
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                MenuItem(
-                                  fade: false,
-                                  iconData: Icons.person,
-                                  menuName: 'Digital ID Card',
-                                  pressHandler: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => Profile()));
-                                  },
-                                ),
-                                MenuItem(
-                                  fade: true,
-                                  iconData: Icons.apartment_rounded,
-                                  menuName: 'Hostel',
-                                  pressHandler: () {},
-                                ),
-                              ],
-                            )
-                          : Container(),
-                      widget.role != 'guard'
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                MenuItem(
-                                  fade: true,
-                                  iconData: Icons.food_bank,
-                                  menuName: 'Mess',
-                                  pressHandler: () {},
-                                ),
-                                MenuItem(
-                                  fade: true,
-                                  iconData: Icons.medical_services_rounded,
-                                  menuName: 'Medical',
-                                  pressHandler: () {},
-                                ),
-                              ],
-                            )
-                          : Container(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          widget.role != 'guard'
-                              ? MenuItem(
-                                  fade: false,
-                                  iconData: Icons.admin_panel_settings_rounded,
-                                  menuName: 'Gate Pass',
-                                  pressHandler: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const PurposeScreen(),
-                                        ));
-                                  },
-                                )
-                              : MenuItem(
-                                  fade: false,
-                                  iconData: Icons.admin_panel_settings_rounded,
-                                  menuName: 'Scan Gate Pass',
-                                  pressHandler: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const ScanGatePass(),
-                                        ));
-                                  },
-                                ),
-                        ],
-                      )
-                    ]),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 20.0,
-              ),
-              TextButton(
-                child: Text(
-                  'Sign Out',
-                  style: TextStyle(
-                    color: widget.role != 'guard'
-                        ? const Color(0xff3a82fd)
-                        : Colors.white,
-                  ),
-                ),
-                onPressed: () async {
-                  if (widget.role == 'guard') {
-                    await widget.secureStorage.delete(key: 'guardToken');
-                  } else {
-                    await authService.signOut();
-                  }
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const LoginScreen(),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(children: <Widget>[
+                  const Text(
+                    'Welcome back',
+                    style: TextStyle(
+                      fontSize: 18.0,
                     ),
-                  );
-                },
-              )
-            ],
+                  ),
+                  const SizedBox(
+                    height: 5.0,
+                  ),
+                  widget.role != 'guard'
+                      ? Username()
+                      : const Text('Guard user'),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  widget.role != 'guard'
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            MenuItem(
+                              fade: false,
+                              iconData: Icons.person,
+                              menuName: 'Digital ID Card',
+                              pressHandler: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Profile()));
+                              },
+                            ),
+                            MenuItem(
+                              fade: true,
+                              iconData: Icons.apartment_rounded,
+                              menuName: 'Hostel',
+                              pressHandler: () {},
+                            ),
+                          ],
+                        )
+                      : Container(),
+                  widget.role != 'guard'
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            MenuItem(
+                              fade: false,
+                              iconData: Icons.food_bank,
+                              menuName: 'Mess',
+                              pressHandler: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => MessScreen()));
+                              },
+                            ),
+                            MenuItem(
+                              fade: true,
+                              iconData: Icons.medical_services_rounded,
+                              menuName: 'Medical',
+                              pressHandler: () {},
+                            ),
+                          ],
+                        )
+                      : Container(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      widget.role != 'guard'
+                          ? MenuItem(
+                              fade: false,
+                              iconData: Icons.admin_panel_settings_rounded,
+                              menuName: 'Gate Pass',
+                              pressHandler: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const PurposeScreen(),
+                                    ));
+                              },
+                            )
+                          : MenuItem(
+                              fade: false,
+                              iconData: Icons.admin_panel_settings_rounded,
+                              menuName: 'Scan Gate Pass',
+                              pressHandler: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ScanGatePass(),
+                                    ));
+                              },
+                            ),
+                    ],
+                  )
+                ]),
+              ),
+            ),
           ),
-        ),
-      ]),
+          const SizedBox(
+            height: 20.0,
+          ),
+          TextButton(
+            child: Text(
+              'Sign Out',
+              style: TextStyle(
+                color: widget.role != 'guard'
+                    ? const Color(0xff3a82fd)
+                    : Colors.white,
+              ),
+            ),
+            onPressed: () async {
+              if (widget.role == 'guard') {
+                await widget.secureStorage.delete(key: 'guardToken');
+              } else {
+                await authService.signOut();
+              }
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LoginScreen(),
+                ),
+              );
+            },
+          )
+        ],
+      ),
     );
   }
 }

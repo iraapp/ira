@@ -5,6 +5,7 @@ import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:http/http.dart' as http;
 import 'package:ira/screens/gate_pass/gate_pass.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:ira/shared/app_scaffold.dart';
 
 class PurposeScreen extends StatefulWidget {
   const PurposeScreen({Key? key}) : super(key: key);
@@ -62,134 +63,109 @@ class _PurposeScreenState extends State<PurposeScreen> {
             );
           } else {
             if (snapshot.data['qr'] == 'invalid') {
-              return Scaffold(
-                body: Stack(children: [
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.7,
-                    decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Color(0xff3a82fd),
-                            Color(0xff5077d3),
-                            Color(0xff3c91c8),
-                            Color(0xff72a8ee),
+              return AppScaffold(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Center(
+                      child: Container(
+                        margin: const EdgeInsets.only(top: 50.0),
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: const [
+                            BoxShadow(
+                                color: Colors.grey,
+                                blurRadius: 5.0,
+                                offset: Offset(
+                                  0,
+                                  5,
+                                ))
                           ],
                         ),
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.elliptical(60, 20),
-                          bottomRight: Radius.elliptical(60, 20),
-                        )),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 80.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Center(
-                          child: Container(
-                            margin: const EdgeInsets.only(top: 50.0),
-                            width: MediaQuery.of(context).size.width * 0.9,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: const [
-                                BoxShadow(
-                                    color: Colors.grey,
-                                    blurRadius: 5.0,
-                                    offset: Offset(
-                                      0,
-                                      5,
-                                    ))
-                              ],
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: Form(
-                                key: _formKey,
-                                child: Column(
-                                  children: [
-                                    const Text(
-                                        'Generate QR Code for going out'),
-                                    const SizedBox(
-                                      height: 30.0,
-                                    ),
-                                    TextFormField(
-                                      controller: purposeFieldController,
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return 'Please specify the purpose';
-                                        }
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
+                              children: [
+                                const Text('Generate QR Code for going out'),
+                                const SizedBox(
+                                  height: 30.0,
+                                ),
+                                TextFormField(
+                                  controller: purposeFieldController,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please specify the purpose';
+                                    }
 
-                                        return null;
-                                      },
-                                      decoration: const InputDecoration(
-                                        border: OutlineInputBorder(),
-                                        hintText: 'Purpose for going out',
-                                      ),
-                                    ),
-                                    const SizedBox(height: 30.0),
-                                    ElevatedButton(
-                                      onPressed: () async {
-                                        if (_formKey.currentState!.validate()) {
-                                          String? idToken = await secureStorage
-                                              .read(key: 'idToken');
-                                          final response = await http.post(
-                                              Uri.parse(
-                                                baseUrl +
-                                                    '/gate_pass/generate_qr',
-                                              ),
-                                              headers: <String, String>{
-                                                'Content-Type':
-                                                    'application/json; charset=UTF-8',
-                                                'Authorization':
-                                                    'idToken ' + idToken!
-                                              },
-                                              body: jsonEncode(<String, String>{
-                                                'purpose':
-                                                    purposeFieldController.text
-                                              }));
+                                    return null;
+                                  },
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    hintText: 'Purpose for going out',
+                                  ),
+                                ),
+                                const SizedBox(height: 30.0),
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    if (_formKey.currentState!.validate()) {
+                                      String? idToken = await secureStorage
+                                          .read(key: 'idToken');
+                                      final response = await http.post(
+                                          Uri.parse(
+                                            baseUrl + '/gate_pass/generate_qr',
+                                          ),
+                                          headers: <String, String>{
+                                            'Content-Type':
+                                                'application/json; charset=UTF-8',
+                                            'Authorization':
+                                                'idToken ' + idToken!
+                                          },
+                                          body: jsonEncode(<String, String>{
+                                            'purpose':
+                                                purposeFieldController.text
+                                          }));
 
-                                          if (response.statusCode == 200) {
-                                            String hash = jsonDecode(
-                                                response.body)['hash'];
-                                            String purpose = jsonDecode(
-                                                response.body)['purpose'];
-                                            String status = jsonDecode(
-                                                    response.body)['status']
+                                      if (response.statusCode == 200) {
+                                        String hash =
+                                            jsonDecode(response.body)['hash'];
+                                        String purpose = jsonDecode(
+                                            response.body)['purpose'];
+                                        String status =
+                                            jsonDecode(response.body)['status']
                                                 ? 'true'
                                                 : 'false';
 
-                                            Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    GatePassScreen(
-                                                  hash: hash,
-                                                  purpose: purpose,
-                                                  status: status,
-                                                ),
-                                              ),
-                                            );
-                                          }
-                                        }
-                                      },
-                                      child: const Text('Generate'),
-                                    )
-                                  ],
-                                ),
-                              ),
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                GatePassScreen(
+                                              hash: hash,
+                                              purpose: purpose,
+                                              status: status,
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    }
+                                  },
+                                  child: const Text('Generate'),
+                                )
+                              ],
                             ),
                           ),
                         ),
-                        const SizedBox(
-                          height: 30.0,
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                ]),
+                    const SizedBox(
+                      height: 30.0,
+                    ),
+                  ],
+                ),
               );
             } else {
               return GatePassScreen(
