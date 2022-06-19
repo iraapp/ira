@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ira/screens/gate_pass/purpose.dart';
-import 'package:ira/util/helpers.dart';
+import 'package:ira/shared/app_scaffold.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:http/http.dart' as http;
 
@@ -45,132 +45,108 @@ class GatePassScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(children: [
-        Container(
-          height: MediaQuery.of(context).size.height * 0.7,
-          decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Color(0xff3a82fd),
-                  Color(0xff5077d3),
-                  Color(0xff3c91c8),
-                  Color(0xff72a8ee),
+    return AppScaffold(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Center(
+            child: Container(
+              margin: const EdgeInsets.only(top: 50.0),
+              width: MediaQuery.of(context).size.width * 0.8,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: const [
+                  BoxShadow(
+                      color: Colors.grey,
+                      blurRadius: 5.0,
+                      offset: Offset(
+                        0,
+                        5,
+                      ))
                 ],
               ),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.elliptical(60, 20),
-                bottomRight: Radius.elliptical(60, 20),
-              )),
-        ),
-        Padding(
-          padding: EdgeInsets.only(top: getHeightOf(context) * 0.1),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Center(
-                child: Container(
-                  margin: const EdgeInsets.only(top: 50.0),
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: const [
-                      BoxShadow(
-                          color: Colors.grey,
-                          blurRadius: 5.0,
-                          offset: Offset(
-                            0,
-                            5,
-                          ))
-                    ],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'QR Code',
-                              style: TextStyle(
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                        const Text(
+                          'QR Code',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        status == 'false'
+                            ? IconButton(
+                                onPressed: () => destroyQr(context),
+                                color: Colors.black,
+                                icon: const Icon(Icons.delete),
+                              )
+                            : Container()
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 30.0,
+                    ),
+                    QrImage(
+                      data: hash,
+                      version: 3,
+                    ),
+                    const SizedBox(
+                      height: 30.0,
+                    ),
+                    SizedBox(
+                      width: 130.0,
+                      height: 35.0,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: status == 'false' ? Colors.green : Colors.red,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                          child: Text(
                             status == 'false'
-                                ? IconButton(
-                                    onPressed: () => destroyQr(context),
-                                    color: Colors.black,
-                                    icon: const Icon(Icons.delete),
-                                  )
-                                : Container()
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 30.0,
-                        ),
-                        QrImage(
-                          data: hash,
-                          version: 3,
-                        ),
-                        const SizedBox(
-                          height: 30.0,
-                        ),
-                        SizedBox(
-                          width: 130.0,
-                          height: 35.0,
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              color:
-                                  status == 'false' ? Colors.green : Colors.red,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Center(
-                              child: Text(
-                                status == 'false'
-                                    ? 'Inside Campus'
-                                    : 'Outside Campus',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15.0,
-                                ),
-                              ),
+                                ? 'Inside Campus'
+                                : 'Outside Campus',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 15.0,
                             ),
                           ),
                         ),
-                        const SizedBox(
-                          height: 30,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'Purpose for gate pass : ',
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              'Purpose for gate pass : ',
-                            ),
-                            Text(
-                              purpose,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )
-                          ],
+                        Text(
+                          purpose,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
                         )
                       ],
-                    ),
-                  ),
+                    )
+                  ],
                 ),
               ),
-              const SizedBox(
-                height: 30.0,
-              ),
-            ],
+            ),
           ),
-        ),
-      ]),
+          const SizedBox(
+            height: 30.0,
+          ),
+        ],
+      ),
     );
   }
 }
