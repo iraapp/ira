@@ -6,8 +6,6 @@ from gate_pass.models import GatePass
 import datetime
 import json
 
-from rest_framework.permissions import IsAuthenticated
-
 from authentication.models import User
 
 class GenerateQR(APIView):
