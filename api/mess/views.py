@@ -34,7 +34,7 @@ class FeedbackView(APIView):
         mess_no = request.body.get("mess_no", None)
         instance = Feedback.objects.create(
             user=user,
-            body=feedback,
+            Body=feedback,
             mess_no=mess_no
 
         )
@@ -46,8 +46,7 @@ class FeedbackView(APIView):
 
 class FeedbackInstanceView(APIView):
     def get(self, request, *args, **kwargs):
-        request.body = json.loads(request.body.decode('utf8'))
-        feedback_id = request.body.get("feedback_id", None)
+        feedback_id = kwargs.get("pk")
         data = Feedback.objects.first(id=feedback_id)
 
         serialized_json = FeedbackSerializer(data)
