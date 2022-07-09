@@ -4,6 +4,7 @@ import 'package:ira/screens/dashboard/components/menu_item.dart';
 import 'package:ira/screens/gate_pass/purpose.dart';
 import 'package:ira/screens/login/login.dart';
 import 'package:ira/screens/mess/mess.dart';
+import 'package:ira/screens/team/team.dart';
 import 'package:ira/services/auth.service.dart';
 import 'package:ira/shared/app_scaffold.dart';
 import 'package:localstorage/localstorage.dart';
@@ -207,6 +208,18 @@ class _DashboardState extends State<Dashboard> {
                                     ));
                               },
                             ),
+                      MenuItem(
+                        fade: false,
+                        iconData: Icons.supervised_user_circle_outlined,
+                        menuName: 'Our Team',
+                        pressHandler: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const TeamScreen(),
+                              ));
+                        },
+                      )
                     ],
                   )
                 ]),
