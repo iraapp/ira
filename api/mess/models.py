@@ -39,9 +39,27 @@ class Mess(models.Model):
   updated_at = models.DateTimeField(auto_now=True)
 
 
+# data base model for feedback
 class Feedback(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     Body = models.TextField(editable = True, null = False, blank = True)
     mess_no = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now = True)
     status = models.BooleanField(default = False)
+
+# data base model for mess mom
+class MessMom(models.Model):
+    date = models.DateField( default=None, null=True)
+    file = models.FileField(upload_to = 'mom/')
+    title = models.CharField(max_length = 100)
+    description = models.TextField()
+    created_at = models.DateTimeField(auto_now = True)
+
+# data base model for mess tender
+class MessTender(models.Model):
+    date = models.DateField(default=None, null=True)
+    contractor  = models.CharField(max_length = 100)
+    file = models.FileField(upload_to = 'tender/')
+    title = models.CharField(max_length = 100)
+    description = models.TextField(null=True)
+    created_at = models.DateTimeField(auto_now = True)
