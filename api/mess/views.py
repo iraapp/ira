@@ -40,7 +40,7 @@ class FeedbackView(APIView):
         mess_no = request.body.get("mess_no", None)
         instance = Feedback.objects.create(
             user=user,
-            Body=feedback,
+            body=feedback,
             mess_no=mess_no
 
         )

@@ -21,6 +21,7 @@ url used here
     6. /tender/<id>
                     - GET - get a tender using primary key
     7. /all_items
+                    - GET - get all mess items
 
 """
 
