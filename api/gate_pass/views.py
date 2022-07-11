@@ -256,3 +256,6 @@ class ScanQR(APIView):
                 return Response(status=200, data='successfully scanned for coming back')
 
         return Response(status=400, data='invalid gate pass')
+
+
+
