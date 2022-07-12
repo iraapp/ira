@@ -3,7 +3,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ira/screens/dashboard/components/menu_item.dart';
 import 'package:ira/screens/gate_pass/purpose.dart';
 import 'package:ira/screens/login/login.dart';
-import 'package:ira/screens/mess/mess.dart';
+import 'package:ira/screens/mess/mess_manager.dart';
+import 'package:ira/screens/mess/mess_student.dart';
 import 'package:ira/services/auth.service.dart';
 import 'package:ira/shared/app_scaffold.dart';
 import 'package:localstorage/localstorage.dart';
@@ -64,7 +65,8 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
-    authCheck();
+    //TODO: REMOVE COMMENT
+    //authCheck();
   }
 
   void authCheck() async {
@@ -161,11 +163,17 @@ class _DashboardState extends State<Dashboard> {
                               iconData: Icons.food_bank,
                               menuName: 'Mess',
                               pressHandler: () {
+                                // TODO: Handle admin or student
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            const MessScreen()));
+                                            const MessStudentScreen()));
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) =>
+                                //             const MessManagerScreen()));
                               },
                             ),
                             MenuItem(
