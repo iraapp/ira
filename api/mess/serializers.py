@@ -21,7 +21,7 @@ class MessSerializer(serializers.Serializer):
 
 class FeedbackSerializer(serializers.Serializer):
     id = serializers.IntegerField()
-    user = serializers.IntegerField()
+    user = serializers.StringRelatedField()
     body = serializers.CharField(max_length=500)
     mess_no = serializers.IntegerField()
     created_at = serializers.DateTimeField()

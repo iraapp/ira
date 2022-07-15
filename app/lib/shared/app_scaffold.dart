@@ -27,7 +27,7 @@ class AppScaffold extends StatelessWidget {
               )),
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 80.0),
+          padding: const EdgeInsets.only(top: 30.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -35,7 +35,7 @@ class AppScaffold extends StatelessWidget {
                 child: child,
               ),
               const SizedBox(
-                height: 30.0,
+                height: 20.0,
               ),
             ],
           ),
