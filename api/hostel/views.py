@@ -24,6 +24,7 @@ class MaintenanceStaffContactsView(APIView):
             contact=contact,
             designation=designation
         )
+        
         return Response(status=200, data={
             "msg": "Contact added successfully."
         })
