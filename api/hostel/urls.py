@@ -21,6 +21,4 @@ url used here
 urlpatterns = [
     path('maintenance/contact', views.MaintenanceStaffContactsView.as_view(), name="Maintenance staff contact items"),
     path('maintenance/contact/<int:pk>', views.MaintenanceStaffContactsInstanceView.as_view(), name="Maintenance staff contact instance items"),
-
-    
 ]

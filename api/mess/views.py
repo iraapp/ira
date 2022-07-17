@@ -49,10 +49,8 @@ class FeedbackView(APIView):
 class FeedbackInstanceView(APIView):
     def get(self, request, *args, **kwargs):
         feedback_id = kwargs.get("pk")
-        data = Feedback.objects.first(Id=feedback_id)
-
+        data = Feedback.objects.filter(id=feedback_id).first()
         serialized_json = FeedbackSerializer(data)
-
         return Response(data=serialized_json.data)
 
 

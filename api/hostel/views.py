@@ -27,12 +27,14 @@ class MaintenanceStaffContactsView(APIView):
         return Response(status=200, data={
             "msg": "Contact added successfully."
         })
+
 class MaintenanceStaffContactsInstanceView(APIView):
     def get(self, request, *args, **kwargs):
         contact_id = kwargs.get("pk")
         data = MaintenanceStaffContacts.objects.filter(id=contact_id).first()
         serialized_json = MaintenanceStaffContactsSer(data)
         return Response(data=serialized_json.data)
+
     def post(self, request, *args, **kwargs):
         contact_id = kwargs.get("pk")
         name = request.POST.get("name")
@@ -46,6 +48,7 @@ class MaintenanceStaffContactsInstanceView(APIView):
         return Response(status=200, data={
             "msg": "Contact updated successfully."
         })
+
     def delete(self, request, *args, **kwargs):
         contact_id = kwargs.get("pk")
         instance = MaintenanceStaffContacts.objects.filter(id=contact_id).delete()
