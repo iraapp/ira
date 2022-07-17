@@ -33,7 +33,7 @@ urlpatterns = [
     path('mom', views.MessMomView.as_view(), name="Add get mom"),
     path('mom/<int:pk>', views.MessMomInstanceView.as_view(),
             name="Mom instance"),
-    path('tender', views.MessMomView.as_view(), name="Add get tender"),
-    path('tender/<int:pk>', views.MessMomInstanceView.as_view(),
+    path('tender', views.MessTenderView.as_view(), name="Add get tender"),
+    path('tender/<int:pk>', views.MessTenderInstanceView.as_view(),
             name="tender instance"),
 ]

@@ -2,7 +2,7 @@ import json
 from mess.serializers import *
 from mess.models import *
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
 
@@ -25,19 +25,15 @@ FeedbackView:
 
 class FeedbackView(APIView):
     permission_classes = [IsAuthenticated]
-
     def get(self, request, *args, **kwargs):
         data = Feedback.objects.all()
-
         serialized_json = FeedbackSerializer(data, many=True)
-
         return Response(data=serialized_json.data)
 
     def post(self, request, *args, **kwargs):
-        request.body = json.loads(request.body.decode('utf8'))
         user = request.user
-        feedback = request.body.get("feedback", None)
-        mess_no = request.body.get("mess_no", None)
+        feedback = request.POST.get("feedback")
+        mess_no = request.POST.get("mess_no")
         instance = Feedback.objects.create(
             user=user,
             body=feedback,
@@ -53,10 +49,8 @@ class FeedbackView(APIView):
 class FeedbackInstanceView(APIView):
     def get(self, request, *args, **kwargs):
         feedback_id = kwargs.get("pk")
-        data = Feedback.objects.first(id=feedback_id)
-
+        data = Feedback.objects.filter(id=feedback_id).first()
         serialized_json = FeedbackSerializer(data)
-
         return Response(data=serialized_json.data)
 
 
@@ -83,11 +77,10 @@ class MessMomView(APIView):
 
     def post(self, request, *args, **kwargs):
         try:
-            request.body = json.loads(request.body.decode('utf8'))
             file = request.FILES.get("file")
-            title = request.body.get("title", None)
-            date = request.body.get("date", None)
-            description = request.body.get("description", None)
+            title = request.POST.get("title", None)
+            date = request.POST.get("date", None)
+            description = request.POST.get("description", None)
             instance = self.model.objects.create(
                 file=file,
                 title=title,
@@ -109,7 +102,7 @@ class MessMomInstanceView(APIView):
     model = MessMom
     def get(self, request, *args, **kwargs):
         mom_id = kwargs.get("pk")
-        data = self.model.objects.first(id=mom_id)
+        data = self.model.objects.filter(id=mom_id).first()
         serialized_json = MessMomSer(data)
         return Response(data=serialized_json.data)
 
@@ -138,12 +131,11 @@ class MessTenderView(APIView):
 
     def post(self, request, *args, **kwargs):
         try:
-            request.body = json.loads(request.body.decode('utf8'))
-            file = request.FILE.get("file")
-            title = request.body.get("title", None)
-            date  = request.body.get("date", None)
-            contractor = request.body.get("contractor", None)
-            description = request.body.get("description", None)
+            file = request.FILES.get("file")
+            title = request.POST.get("title", None)
+            date  = request.POST.get("date", None)
+            contractor = request.POST.get("contractor", None)
+            description = request.POST.get("description", None)
             instance = self.model.objects.create(
                 contractor=contractor,
                 date = date,
@@ -166,6 +158,6 @@ class MessTenderInstanceView(APIView):
     model = MessTender
     def get(self, request, *args, **kwargs):
         tender_id = kwargs.get("pk")
-        data = self.model.objects.first(id=tender_id)
+        data = self.model.objects.filter(id=tender_id).first()
         serialized_json = MessTenderSer(data)
         return Response(data=serialized_json.data)
