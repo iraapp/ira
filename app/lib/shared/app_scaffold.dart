@@ -27,7 +27,7 @@ class AppScaffold extends StatelessWidget {
               )),
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 80.0),
+          padding: const EdgeInsets.only(top: 30.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [

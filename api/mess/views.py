@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 
 class MessMenu(APIView):
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
     def get(self, request):
         data = Mess.objects.all()
@@ -15,6 +15,8 @@ class MessMenu(APIView):
         serialized_json = MessSerializer(data, many=True)
 
         return Response(data=serialized_json.data)
+
+
 """
 FeedbackView:
     Payload required:
@@ -22,6 +24,7 @@ FeedbackView:
         2. feeback - feedback body
 
 """
+
 
 class FeedbackView(APIView):
     permission_classes = [IsAuthenticated]
@@ -34,10 +37,9 @@ class FeedbackView(APIView):
         return Response(data=serialized_json.data)
 
     def post(self, request, *args, **kwargs):
-        request.body = json.loads(request.body.decode('utf8'))
         user = request.user
-        feedback = request.body.get("feedback", None)
-        mess_no = request.body.get("mess_no", None)
+        feedback = request.POST.get("feedback")
+        mess_no = request.POST.get("mess_no")
         instance = Feedback.objects.create(
             user=user,
             body=feedback,
@@ -72,6 +74,7 @@ MessMomView:
 
 """
 
+
 class MessMomView(APIView):
     permission_classes = [IsAuthenticated]
     model = MessMom
@@ -83,7 +86,7 @@ class MessMomView(APIView):
 
     def post(self, request, *args, **kwargs):
         try:
-            request.body = json.loads(request.body.decode('utf8'))
+            request.body = json.loads(request.body.decode('utf-8'))
             file = request.FILES.get("file")
             title = request.body.get("title", None)
             date = request.body.get("date", None)
@@ -105,8 +108,10 @@ class MessMomView(APIView):
                 "msg": "internal server error"
             })
 
+
 class MessMomInstanceView(APIView):
     model = MessMom
+
     def get(self, request, *args, **kwargs):
         mom_id = kwargs.get("pk")
         data = self.model.objects.first(id=mom_id)
@@ -114,10 +119,7 @@ class MessMomInstanceView(APIView):
         return Response(data=serialized_json.data)
 
 
-
-
 # Tender view note: s3 implimentation is necessary for production
-
 """
 mess tender view:
     Payload required:
@@ -127,6 +129,8 @@ mess tender view:
         4. description - description of tender
         5. contractor - name of tender contractor
 """
+
+
 class MessTenderView(APIView):
     permission_classes = [IsAuthenticated]
     model = MessTender
@@ -141,12 +145,12 @@ class MessTenderView(APIView):
             request.body = json.loads(request.body.decode('utf8'))
             file = request.FILE.get("file")
             title = request.body.get("title", None)
-            date  = request.body.get("date", None)
+            date = request.body.get("date", None)
             contractor = request.body.get("contractor", None)
             description = request.body.get("description", None)
             instance = self.model.objects.create(
                 contractor=contractor,
-                date = date,
+                date=date,
                 file=file,
                 title=title,
                 description=description
@@ -162,8 +166,10 @@ class MessTenderView(APIView):
                 "msg": "internal server error"
             })
 
+
 class MessTenderInstanceView(APIView):
     model = MessTender
+
     def get(self, request, *args, **kwargs):
         tender_id = kwargs.get("pk")
         data = self.model.objects.first(id=tender_id)

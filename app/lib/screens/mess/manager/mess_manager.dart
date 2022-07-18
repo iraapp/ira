@@ -3,13 +3,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:ira/screens/mess/complains_mess_student.dart';
-import 'package:ira/screens/mess/complaints_mess_manager.dart';
+import 'package:ira/screens/mess/student/complains_mess_student.dart';
+import 'package:ira/screens/mess/manager/complaints_mess_manager.dart';
 import 'package:ira/screens/mess/components/mess_weekday.dart';
 import 'package:ira/screens/mess/factories/mess.dart';
-import 'package:ira/screens/mess/feedback_mess_student.dart';
-import 'package:ira/screens/mess/feedback_mess_manager.dart';
-import 'package:ira/screens/mess/menu_mess_student.dart';
+import 'package:ira/screens/mess/student/feedback_mess_student.dart';
+import 'package:ira/screens/mess/manager/feedback_mess_manager.dart';
+import 'package:ira/screens/mess/student/menu_mess_student.dart';
 import 'package:ira/shared/app_scaffold.dart';
 import 'package:http/http.dart' as http;
 
