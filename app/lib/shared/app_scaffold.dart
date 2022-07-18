@@ -35,7 +35,7 @@ class AppScaffold extends StatelessWidget {
                 child: child,
               ),
               const SizedBox(
-                height: 30.0,
+                height: 20.0,
               ),
             ],
           ),

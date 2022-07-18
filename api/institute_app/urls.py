@@ -27,6 +27,8 @@ urlpatterns = [
     path('gate_pass/', include('gate_pass.urls')),
     path('user_profile/', include('user_profile.urls')),
     path('mess/', include('mess.urls')),
+    path('hostel/', include('hostel.urls')),
+
 ]
 
 

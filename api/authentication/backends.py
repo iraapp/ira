@@ -39,7 +39,7 @@ class GoogleAuthenticationBackend(authentication.BaseAuthentication):
                 token, requests.Request(), env('GOOGLE_OAUTH_CLIENT_ID'))
 
         except Exception as e:
-
+            print(e)
             raise exceptions.AuthenticationFailed('Invalid ID Token')
         try:
             email = decoded_token.get("email")
