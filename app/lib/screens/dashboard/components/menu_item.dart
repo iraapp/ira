@@ -20,7 +20,7 @@ class MenuItem extends StatelessWidget {
     return Column(
       children: [
         Container(
-          margin: const EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 10.0),
+          margin: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 10.0),
           child: IconButton(
             icon: Icon(
               iconData,

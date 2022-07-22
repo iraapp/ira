@@ -1,5 +1,35 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_flavor/flutter_flavor.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ira/shared/app_scaffold.dart';
+import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
+
+class Member {
+  String name;
+  String designation;
+  String profile;
+  String linkedIn;
+  String github;
+
+  Member(
+      {required this.name,
+      required this.designation,
+      required this.profile,
+      required this.linkedIn,
+      required this.github});
+
+  factory Member.fromJson(Map<String, dynamic> json) {
+    return Member(
+        name: json["name"],
+        designation: json["designation"],
+        profile: json["profile"],
+        linkedIn: json["linkedIn_url"],
+        github: json["github_url"]);
+  }
+}
 
 class TeamScreen extends StatefulWidget {
   const TeamScreen({Key? key}) : super(key: key);
@@ -9,6 +39,43 @@ class TeamScreen extends StatefulWidget {
 }
 
 class _TeamScreenState extends State<TeamScreen> {
+  final secureStorage = const FlutterSecureStorage();
+  String baseUrl = FlavorConfig.instance.variables['baseUrl'];
+
+  Future<Map<String, List<Member>>> fetchMembers() async {
+    String? idToken = await secureStorage.read(key: 'idToken');
+    final response = await http.get(
+        Uri.parse(
+          baseUrl + '/team/all',
+        ),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'idToken ' + idToken!
+        });
+
+    Map<String, List<Member>> mmp = {};
+
+    if (response.statusCode == 200) {
+      dynamic decodedBody = jsonDecode(response.body);
+
+      mmp = {
+        'team':
+            decodedBody.map<Member>((json) => Member.fromJson(json)).toList()
+      };
+    } else {
+      mmp = {'team': []};
+    }
+
+    return Future.value(mmp);
+  }
+
+  openUrl(String url) async {
+    if (!await launchUrl(
+      Uri.parse(url),
+      mode: LaunchMode.externalApplication,
+    )) throw 'Could not launch $url';
+  }
+
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
@@ -16,114 +83,116 @@ class _TeamScreenState extends State<TeamScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Center(
-            child: Container(
-              margin: const EdgeInsets.only(top: 50.0),
-              width: MediaQuery.of(context).size.width * 0.9,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: const [
-                  BoxShadow(
-                      color: Colors.grey,
-                      blurRadius: 5.0,
-                      offset: Offset(
-                        0,
-                        5,
-                      ))
-                ],
-              ),
-              child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    children: [
-                      const Text(
-                        'Our Team',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 30.0,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Image.asset('assets/images/id_logo2.png'),
-                          Column(
-                            children: const [
-                              Text(
-                                'Jeetendra Prajapati',
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
+            child: FutureBuilder(
+                future: fetchMembers(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<Map<String, List<Member>>> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting ||
+                      snapshot.data == null) {
+                    return const CircularProgressIndicator();
+                  }
+
+                  List<Member>? team = snapshot.data!['team'];
+
+                  return Container(
+                    margin: const EdgeInsets.only(top: 50.0),
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: const [
+                        BoxShadow(
+                            color: Colors.grey,
+                            blurRadius: 5.0,
+                            offset: Offset(
+                              0,
+                              5,
+                            ))
+                      ],
+                    ),
+                    child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          children: [
+                            const Text(
+                              'Our Team',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
                               ),
-                              Text(
-                                'Team Lead',
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                ),
+                            ),
+                            const SizedBox(
+                              height: 30.0,
+                            ),
+                            SizedBox(
+                              height: 450,
+                              child: ListView.builder(
+                                padding: EdgeInsets.zero,
+                                scrollDirection: Axis.vertical,
+                                shrinkWrap: true,
+                                itemCount: team?.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Image.asset(
+                                            'assets/images/' +
+                                                team![index].profile,
+                                            width: 100,
+                                            height: 100,
+                                          ),
+                                          Column(
+                                            children: [
+                                              Text(
+                                                team[index].name,
+                                                style: const TextStyle(
+                                                  fontSize: 16.0,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              Text(
+                                                team[index].designation,
+                                                style: const TextStyle(
+                                                  fontSize: 16.0,
+                                                ),
+                                              ),
+                                              Row(
+                                                children: [
+                                                  IconButton(
+                                                    onPressed: () => openUrl(
+                                                        team[index].linkedIn),
+                                                    icon: const Icon(
+                                                      Icons
+                                                          .assignment_ind_rounded,
+                                                    ),
+                                                  ),
+                                                  IconButton(
+                                                    onPressed: () => openUrl(
+                                                        team[index].github),
+                                                    icon:
+                                                        const Icon(Icons.code),
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 10.0,
+                                      ),
+                                    ],
+                                  );
+                                },
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10.0,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Image.asset('assets/images/id_logo2.png'),
-                          Column(
-                            children: const [
-                              Text(
-                                'Saurav Srivastava',
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                'Team Lead',
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10.0,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Image.asset('assets/images/id_logo2.png'),
-                          Column(
-                            children: const [
-                              Text(
-                                'Ashutosh Chauhan',
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                'Team Lead',
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  )),
-            ),
+                            ),
+                          ],
+                        )),
+                  );
+                }),
           ),
           const SizedBox(
             height: 30.0,

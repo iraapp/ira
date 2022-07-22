@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'gate_pass',
     'mess',
     'user_profile',
+    'team'
 ]
 
 AUTH_USER_MODEL = 'authentication.User'
