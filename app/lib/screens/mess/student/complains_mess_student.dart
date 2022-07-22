@@ -253,9 +253,7 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
                           child: TextField(
                             maxLines: 5,
                             decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                  //borderRadius: BorderRadius.circular(10.0),
-                                  ),
+                              border: OutlineInputBorder(),
                               hintText: "Description",
                             ),
                             onChanged: (value) {

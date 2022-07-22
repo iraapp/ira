@@ -25,7 +25,6 @@ class AuthService with ChangeNotifier {
 
   AuthService() {
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
-      print(account);
       if (account != null) {
         _user = account;
         _user?.authentication.then(
