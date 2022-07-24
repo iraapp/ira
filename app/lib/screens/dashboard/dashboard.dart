@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:ira/screens/dashboard/components/menu_item.dart';
 import 'package:ira/screens/gate_pass/purpose.dart';
 import 'package:ira/screens/login/login.dart';
 import 'package:ira/screens/mess/mess.dart';
@@ -10,7 +8,6 @@ import 'package:ira/services/auth.service.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:provider/provider.dart';
 
-import '../../util/helpers.dart';
 import '../gate_pass/scan_gate_pass.dart';
 import '../profile/profile.dart';
 
@@ -164,96 +161,132 @@ class _DashboardState extends State<Dashboard> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Column(children: [
-                            CircleAvatar(
-                              backgroundColor: const Color(0xFF09C7F9),
-                              child: IconButton(
-                                icon: const Icon(Icons.person),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => Profile(),
+                          widget.role == 'student'
+                              ? Column(children: [
+                                  CircleAvatar(
+                                    backgroundColor: const Color(0xFF09C7F9),
+                                    child: IconButton(
+                                      icon: const Icon(Icons.person),
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => Profile(),
+                                          ),
+                                        );
+                                      },
+                                      color: Colors.white,
                                     ),
-                                  );
-                                },
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(height: 5.0),
-                            const Text(
-                              "Id Card",
-                              style: TextStyle(fontSize: 12.0),
-                            )
-                          ]),
-                          Column(children: [
-                            CircleAvatar(
-                              backgroundColor: const Color(0xFF09C7F9),
-                              child: IconButton(
-                                icon: const Icon(Icons.food_bank),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const MessScreen(),
+                                  ),
+                                  const SizedBox(height: 5.0),
+                                  const Text(
+                                    "Id Card",
+                                    style: TextStyle(fontSize: 12.0),
+                                  )
+                                ])
+                              : Container(),
+                          widget.role == 'student'
+                              ? Column(children: [
+                                  CircleAvatar(
+                                    backgroundColor: const Color(0xFF09C7F9),
+                                    child: IconButton(
+                                      icon: const Icon(Icons.food_bank),
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const MessScreen(),
+                                          ),
+                                        );
+                                      },
+                                      color: Colors.white,
                                     ),
-                                  );
-                                },
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(height: 5.0),
-                            const Text(
-                              "Mess",
-                              style: TextStyle(fontSize: 12.0),
-                            )
-                          ]),
-                          Column(children: [
-                            CircleAvatar(
-                              backgroundColor: const Color(0xFF09C7F9),
-                              child: IconButton(
-                                icon: const Icon(
-                                    Icons.admin_panel_settings_rounded),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const PurposeScreen(),
+                                  ),
+                                  const SizedBox(height: 5.0),
+                                  const Text(
+                                    "Mess",
+                                    style: TextStyle(fontSize: 12.0),
+                                  )
+                                ])
+                              : Container(),
+                          widget.role == 'student'
+                              ? Column(children: [
+                                  CircleAvatar(
+                                    backgroundColor: const Color(0xFF09C7F9),
+                                    child: IconButton(
+                                      icon: const Icon(
+                                          Icons.admin_panel_settings_rounded),
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const PurposeScreen(),
+                                          ),
+                                        );
+                                      },
+                                      color: Colors.white,
                                     ),
-                                  );
-                                },
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(height: 5.0),
-                            const Text(
-                              "Gate Pass",
-                              style: TextStyle(fontSize: 12.0),
-                            )
-                          ]),
-                          Column(children: [
-                            CircleAvatar(
-                              backgroundColor: const Color(0xFF09C7F9),
-                              child: IconButton(
-                                icon: const Icon(Icons.people),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const TeamScreen(),
+                                  ),
+                                  const SizedBox(height: 5.0),
+                                  const Text(
+                                    "Gate Pass",
+                                    style: TextStyle(fontSize: 12.0),
+                                  )
+                                ])
+                              : Container(),
+                          widget.role == 'student'
+                              ? Column(children: [
+                                  CircleAvatar(
+                                    backgroundColor: const Color(0xFF09C7F9),
+                                    child: IconButton(
+                                      icon: const Icon(Icons.people),
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const TeamScreen(),
+                                          ),
+                                        );
+                                      },
+                                      color: Colors.white,
                                     ),
-                                  );
-                                },
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(height: 5.0),
-                            const Text(
-                              "Team",
-                              style: TextStyle(fontSize: 12.0),
-                            )
-                          ]),
+                                  ),
+                                  const SizedBox(height: 5.0),
+                                  const Text(
+                                    "Team",
+                                    style: TextStyle(fontSize: 12.0),
+                                  )
+                                ])
+                              : Container(),
+                          widget.role == 'guard'
+                              ? Column(children: [
+                                  CircleAvatar(
+                                    backgroundColor: const Color(0xFF09C7F9),
+                                    child: IconButton(
+                                      icon: const Icon(
+                                          Icons.admin_panel_settings_rounded),
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const ScanGatePass(),
+                                          ),
+                                        );
+                                      },
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5.0),
+                                  const Text(
+                                    "Scan gate pass",
+                                    style: TextStyle(fontSize: 12.0),
+                                  )
+                                ])
+                              : Container(),
                         ],
                       ),
                     ),
@@ -263,161 +296,31 @@ class _DashboardState extends State<Dashboard> {
             ),
           ),
         ),
+        const SizedBox(
+          height: 20.0,
+        ),
+        TextButton(
+          child: const Text(
+            'Sign Out',
+            style: TextStyle(
+              color: Color(0xff3a82fd),
+            ),
+          ),
+          onPressed: () async {
+            if (widget.role == 'guard') {
+              await widget.secureStorage.delete(key: 'guardToken');
+            } else {
+              await authService.signOut();
+            }
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LoginScreen(),
+              ),
+            );
+          },
+        )
       ]),
     );
-
-    // return AppScaffold(
-    //   child: Column(
-    //     crossAxisAlignment: CrossAxisAlignment.center,
-    //     children: [
-    //       Center(
-    //         child: Container(
-    //           margin: EdgeInsets.only(top: getHeightOf(context) * 0.05),
-    //           width: MediaQuery.of(context).size.width * 0.9,
-    //           decoration: BoxDecoration(
-    //             color: Colors.white,
-    //             borderRadius: BorderRadius.circular(10),
-    //             boxShadow: const [
-    //               BoxShadow(
-    //                   color: Colors.grey,
-    //                   blurRadius: 5.0,
-    //                   offset: Offset(
-    //                     0,
-    //                     5,
-    //                   ))
-    //             ],
-    //           ),
-    //           child: Padding(
-    //             padding: const EdgeInsets.all(20.0),
-    //             child: Column(children: <Widget>[
-    //               const Text(
-    //                 'Welcome back',
-    //                 style: TextStyle(
-    //                   fontSize: 18.0,
-    //                 ),
-    //               ),
-    //               const SizedBox(
-    //                 height: 5.0,
-    //               ),
-    //               widget.role != 'guard'
-    //                   ? Username()
-    //                   : const Text('Guard user'),
-    //               const SizedBox(
-    //                 height: 20.0,
-    //               ),
-    //               widget.role != 'guard'
-    //                   ? Row(
-    //                       mainAxisAlignment: MainAxisAlignment.center,
-    //                       children: [
-    //                         MenuItem(
-    //                           fade: false,
-    //                           iconData: Icons.person,
-    //                           menuName: 'Digital ID Card',
-    //                           pressHandler: () {
-    //                             Navigator.push(
-    //                                 context,
-    //                                 MaterialPageRoute(
-    //                                     builder: (context) => Profile()));
-    //                           },
-    //                         ),
-    //                         MenuItem(
-    //                           fade: true,
-    //                           iconData: Icons.apartment_rounded,
-    //                           menuName: 'Hostel',
-    //                           pressHandler: () {},
-    //                         ),
-    //                       ],
-    //                     )
-    //                   : Container(),
-    //               widget.role != 'guard'
-    //                   ? Row(
-    //                       mainAxisAlignment: MainAxisAlignment.center,
-    //                       children: [
-    //                         MenuItem(
-    //                           fade: false,
-    //                           iconData: Icons.food_bank,
-    //                           menuName: 'Mess',
-    //                           pressHandler: () {
-    //                             Navigator.push(
-    //                                 context,
-    //                                 MaterialPageRoute(
-    //                                     builder: (context) =>
-    //                                         const MessScreen()));
-    //                           },
-    //                         ),
-    //                         MenuItem(
-    //                           fade: true,
-    //                           iconData: Icons.medical_services_rounded,
-    //                           menuName: 'Medical',
-    //                           pressHandler: () {},
-    //                         ),
-    //                       ],
-    //                     )
-    //                   : Container(),
-    //               Row(
-    //                 mainAxisAlignment: MainAxisAlignment.center,
-    //                 children: [
-    //                   widget.role != 'guard'
-    //                       ? MenuItem(
-    //                           fade: false,
-    //                           iconData: Icons.admin_panel_settings_rounded,
-    //                           menuName: 'Gate Pass',
-    //                           pressHandler: () {
-    //                             Navigator.push(
-    //                                 context,
-    //                                 MaterialPageRoute(
-    //                                   builder: (context) =>
-    //                                       const PurposeScreen(),
-    //                                 ));
-    //                           },
-    //                         )
-    //                       : MenuItem(
-    //                           fade: false,
-    //                           iconData: Icons.admin_panel_settings_rounded,
-    //                           menuName: 'Scan Gate Pass',
-    //                           pressHandler: () {
-    //                             Navigator.push(
-    //                                 context,
-    //                                 MaterialPageRoute(
-    //                                   builder: (context) =>
-    //                                       const ScanGatePass(),
-    //                                 ));
-    //                           },
-    //                         ),
-    //                 ],
-    //               )
-    //             ]),
-    //           ),
-    //         ),
-    //       ),
-    //       const SizedBox(
-    //         height: 20.0,
-    //       ),
-    //       TextButton(
-    //         child: Text(
-    //           'Sign Out',
-    //           style: TextStyle(
-    //             color: widget.role != 'guard'
-    //                 ? const Color(0xff3a82fd)
-    //                 : Colors.white,
-    //           ),
-    //         ),
-    //         onPressed: () async {
-    //           if (widget.role == 'guard') {
-    //             await widget.secureStorage.delete(key: 'guardToken');
-    //           } else {
-    //             await authService.signOut();
-    //           }
-    //           Navigator.pushReplacement(
-    //             context,
-    //             MaterialPageRoute(
-    //               builder: (context) => const LoginScreen(),
-    //             ),
-    //           );
-    //         },
-    //       )
-    //     ],
-    //   ),
-    // );
   }
 }
