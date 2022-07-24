@@ -15,6 +15,8 @@ class MessMenu(APIView):
         serialized_json = MessSerializer(data, many=True)
 
         return Response(data=serialized_json.data)
+
+
 """
 FeedbackView:
     Payload required:
@@ -23,8 +25,10 @@ FeedbackView:
 
 """
 
+
 class FeedbackView(APIView):
     permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         data = Feedback.objects.all()
         serialized_json = FeedbackSerializer(data, many=True)
@@ -66,6 +70,7 @@ MessMomView:
 
 """
 
+
 class MessMomView(APIView):
     permission_classes = [IsAuthenticated]
     model = MessMom
@@ -98,8 +103,10 @@ class MessMomView(APIView):
                 "msg": "internal server error"
             })
 
+
 class MessMomInstanceView(APIView):
     model = MessMom
+
     def get(self, request, *args, **kwargs):
         mom_id = kwargs.get("pk")
         data = self.model.objects.filter(id=mom_id).first()
@@ -107,10 +114,7 @@ class MessMomInstanceView(APIView):
         return Response(data=serialized_json.data)
 
 
-
-
 # Tender view note: s3 implimentation is necessary for production
-
 """
 mess tender view:
     Payload required:
@@ -120,6 +124,8 @@ mess tender view:
         4. description - description of tender
         5. contractor - name of tender contractor
 """
+
+
 class MessTenderView(APIView):
     permission_classes = [IsAuthenticated]
     model = MessTender
@@ -133,12 +139,12 @@ class MessTenderView(APIView):
         try:
             file = request.FILES.get("file")
             title = request.POST.get("title", None)
-            date  = request.POST.get("date", None)
+            date = request.POST.get("date", None)
             contractor = request.POST.get("contractor", None)
             description = request.POST.get("description", None)
             instance = self.model.objects.create(
                 contractor=contractor,
-                date = date,
+                date=date,
                 file=file,
                 title=title,
                 description=description
@@ -154,8 +160,10 @@ class MessTenderView(APIView):
                 "msg": "internal server error"
             })
 
+
 class MessTenderInstanceView(APIView):
     model = MessTender
+
     def get(self, request, *args, **kwargs):
         tender_id = kwargs.get("pk")
         data = self.model.objects.filter(id=tender_id).first()
