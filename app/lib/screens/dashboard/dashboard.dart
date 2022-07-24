@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ira/screens/dashboard/components/menu_item.dart';
 import 'package:ira/screens/gate_pass/purpose.dart';
 import 'package:ira/screens/login/login.dart';
 import 'package:ira/screens/mess/mess.dart';
 import 'package:ira/services/auth.service.dart';
-import 'package:ira/shared/app_scaffold.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:provider/provider.dart';
 
@@ -36,14 +36,29 @@ class Username extends StatelessWidget {
           }
 
           String displayName = localStorage.getItem('displayName');
-          return Text(
-            capitalize(displayName.split(' ')[0]) +
-                ' ' +
-                capitalize(displayName.split(' ')[1]),
-            style: const TextStyle(
-              fontSize: 24.0,
-              fontWeight: FontWeight.bold,
-            ),
+          String entry = localStorage.getItem('entry');
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                capitalize(displayName.split(' ')[0]) +
+                    ' ' +
+                    capitalize(displayName.split(' ')[1]),
+                style: const TextStyle(
+                  fontSize: 30.0,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(
+                height: 10.0,
+              ),
+              Text(
+                entry.toUpperCase(),
+                style: const TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ],
           );
         });
   }
@@ -89,158 +104,312 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     AuthService authService = Provider.of(context);
 
-    return AppScaffold(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Center(
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF09c6f9),
+        elevation: 0,
+        leading: const Icon(Icons.menu),
+        actions: [
+          Container(
+            margin: const EdgeInsets.only(right: 10.0),
+            child: const Icon(Icons.notifications),
+          )
+        ],
+      ),
+      body: Column(children: [
+        Container(
+          height: 130.0,
+          width: MediaQuery.of(context).size.width,
+          decoration: const BoxDecoration(
+            color: Color(0xFF09c7f9),
+          ),
+          alignment: Alignment.topLeft,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(30.0, 10.0, 30.0, 10.0),
+            child: Username(),
+          ),
+        ),
+        Expanded(
+          child: Container(
+            color: const Color(0xFF09c7f9),
             child: Container(
-              margin: EdgeInsets.only(top: getHeightOf(context) * 0.05),
-              width: MediaQuery.of(context).size.width * 0.9,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: const [
-                  BoxShadow(
-                      color: Colors.grey,
-                      blurRadius: 5.0,
-                      offset: Offset(
-                        0,
-                        5,
-                      ))
-                ],
+              width: MediaQuery.of(context).size.width,
+              decoration: const BoxDecoration(
+                color: Color(0xFFE5E5E5),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
+                ),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
-                child: Column(children: <Widget>[
-                  const Text(
-                    'Welcome back',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 5.0,
-                  ),
-                  widget.role != 'guard'
-                      ? Username()
-                      : const Text('Guard user'),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  widget.role != 'guard'
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            MenuItem(
-                              fade: false,
-                              iconData: Icons.person,
-                              menuName: 'Digital ID Card',
-                              pressHandler: () {
-                                Navigator.push(
+                child: Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(20.0),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(20.0),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey,
+                            offset: Offset(0, 2),
+                            blurRadius: 5.0,
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Column(children: [
+                            CircleAvatar(
+                              backgroundColor: const Color(0xFF09C7F9),
+                              child: IconButton(
+                                icon: const Icon(Icons.person),
+                                onPressed: () {
+                                  Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => Profile()));
-                              },
+                                      builder: (context) => Profile(),
+                                    ),
+                                  );
+                                },
+                                color: Colors.white,
+                              ),
                             ),
-                            MenuItem(
-                              fade: true,
-                              iconData: Icons.apartment_rounded,
-                              menuName: 'Hostel',
-                              pressHandler: () {},
-                            ),
-                          ],
-                        )
-                      : Container(),
-                  widget.role != 'guard'
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            MenuItem(
-                              fade: false,
-                              iconData: Icons.food_bank,
-                              menuName: 'Mess',
-                              pressHandler: () {
-                                Navigator.push(
+                            const SizedBox(height: 5.0),
+                            const Text(
+                              "Id Card",
+                              style: TextStyle(fontSize: 12.0),
+                            )
+                          ]),
+                          Column(children: [
+                            CircleAvatar(
+                              backgroundColor: const Color(0xFF09C7F9),
+                              child: IconButton(
+                                icon: const Icon(Icons.food_bank),
+                                onPressed: () {
+                                  Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            const MessScreen()));
-                              },
+                                      builder: (context) => const MessScreen(),
+                                    ),
+                                  );
+                                },
+                                color: Colors.white,
+                              ),
                             ),
-                            MenuItem(
-                              fade: true,
-                              iconData: Icons.medical_services_rounded,
-                              menuName: 'Medical',
-                              pressHandler: () {},
-                            ),
-                          ],
-                        )
-                      : Container(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      widget.role != 'guard'
-                          ? MenuItem(
-                              fade: false,
-                              iconData: Icons.admin_panel_settings_rounded,
-                              menuName: 'Gate Pass',
-                              pressHandler: () {
-                                Navigator.push(
+                            const SizedBox(height: 5.0),
+                            const Text(
+                              "Mess",
+                              style: TextStyle(fontSize: 12.0),
+                            )
+                          ]),
+                          Column(children: [
+                            CircleAvatar(
+                              backgroundColor: const Color(0xFF09C7F9),
+                              child: IconButton(
+                                icon: const Icon(
+                                    Icons.admin_panel_settings_rounded),
+                                onPressed: () {
+                                  Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
                                           const PurposeScreen(),
-                                    ));
-                              },
-                            )
-                          : MenuItem(
-                              fade: false,
-                              iconData: Icons.admin_panel_settings_rounded,
-                              menuName: 'Scan Gate Pass',
-                              pressHandler: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const ScanGatePass(),
-                                    ));
-                              },
+                                    ),
+                                  );
+                                },
+                                color: Colors.white,
+                              ),
                             ),
-                    ],
-                  )
-                ]),
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 20.0,
-          ),
-          TextButton(
-            child: Text(
-              'Sign Out',
-              style: TextStyle(
-                color: widget.role != 'guard'
-                    ? const Color(0xff3a82fd)
-                    : Colors.white,
-              ),
-            ),
-            onPressed: () async {
-              if (widget.role == 'guard') {
-                await widget.secureStorage.delete(key: 'guardToken');
-              } else {
-                await authService.signOut();
-              }
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const LoginScreen(),
+                            const SizedBox(height: 5.0),
+                            const Text(
+                              "Gate Pass",
+                              style: TextStyle(fontSize: 12.0),
+                            )
+                          ]),
+                          Column(children: [
+                            CircleAvatar(
+                              backgroundColor: const Color(0xFF09C7F9),
+                              child: IconButton(
+                                icon: const Icon(Icons.people),
+                                onPressed: () {},
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(height: 5.0),
+                            const Text(
+                              "Team",
+                              style: TextStyle(fontSize: 12.0),
+                            )
+                          ]),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              );
-            },
-          )
-        ],
-      ),
+              ),
+            ),
+          ),
+        ),
+      ]),
     );
+
+    // return AppScaffold(
+    //   child: Column(
+    //     crossAxisAlignment: CrossAxisAlignment.center,
+    //     children: [
+    //       Center(
+    //         child: Container(
+    //           margin: EdgeInsets.only(top: getHeightOf(context) * 0.05),
+    //           width: MediaQuery.of(context).size.width * 0.9,
+    //           decoration: BoxDecoration(
+    //             color: Colors.white,
+    //             borderRadius: BorderRadius.circular(10),
+    //             boxShadow: const [
+    //               BoxShadow(
+    //                   color: Colors.grey,
+    //                   blurRadius: 5.0,
+    //                   offset: Offset(
+    //                     0,
+    //                     5,
+    //                   ))
+    //             ],
+    //           ),
+    //           child: Padding(
+    //             padding: const EdgeInsets.all(20.0),
+    //             child: Column(children: <Widget>[
+    //               const Text(
+    //                 'Welcome back',
+    //                 style: TextStyle(
+    //                   fontSize: 18.0,
+    //                 ),
+    //               ),
+    //               const SizedBox(
+    //                 height: 5.0,
+    //               ),
+    //               widget.role != 'guard'
+    //                   ? Username()
+    //                   : const Text('Guard user'),
+    //               const SizedBox(
+    //                 height: 20.0,
+    //               ),
+    //               widget.role != 'guard'
+    //                   ? Row(
+    //                       mainAxisAlignment: MainAxisAlignment.center,
+    //                       children: [
+    //                         MenuItem(
+    //                           fade: false,
+    //                           iconData: Icons.person,
+    //                           menuName: 'Digital ID Card',
+    //                           pressHandler: () {
+    //                             Navigator.push(
+    //                                 context,
+    //                                 MaterialPageRoute(
+    //                                     builder: (context) => Profile()));
+    //                           },
+    //                         ),
+    //                         MenuItem(
+    //                           fade: true,
+    //                           iconData: Icons.apartment_rounded,
+    //                           menuName: 'Hostel',
+    //                           pressHandler: () {},
+    //                         ),
+    //                       ],
+    //                     )
+    //                   : Container(),
+    //               widget.role != 'guard'
+    //                   ? Row(
+    //                       mainAxisAlignment: MainAxisAlignment.center,
+    //                       children: [
+    //                         MenuItem(
+    //                           fade: false,
+    //                           iconData: Icons.food_bank,
+    //                           menuName: 'Mess',
+    //                           pressHandler: () {
+    //                             Navigator.push(
+    //                                 context,
+    //                                 MaterialPageRoute(
+    //                                     builder: (context) =>
+    //                                         const MessScreen()));
+    //                           },
+    //                         ),
+    //                         MenuItem(
+    //                           fade: true,
+    //                           iconData: Icons.medical_services_rounded,
+    //                           menuName: 'Medical',
+    //                           pressHandler: () {},
+    //                         ),
+    //                       ],
+    //                     )
+    //                   : Container(),
+    //               Row(
+    //                 mainAxisAlignment: MainAxisAlignment.center,
+    //                 children: [
+    //                   widget.role != 'guard'
+    //                       ? MenuItem(
+    //                           fade: false,
+    //                           iconData: Icons.admin_panel_settings_rounded,
+    //                           menuName: 'Gate Pass',
+    //                           pressHandler: () {
+    //                             Navigator.push(
+    //                                 context,
+    //                                 MaterialPageRoute(
+    //                                   builder: (context) =>
+    //                                       const PurposeScreen(),
+    //                                 ));
+    //                           },
+    //                         )
+    //                       : MenuItem(
+    //                           fade: false,
+    //                           iconData: Icons.admin_panel_settings_rounded,
+    //                           menuName: 'Scan Gate Pass',
+    //                           pressHandler: () {
+    //                             Navigator.push(
+    //                                 context,
+    //                                 MaterialPageRoute(
+    //                                   builder: (context) =>
+    //                                       const ScanGatePass(),
+    //                                 ));
+    //                           },
+    //                         ),
+    //                 ],
+    //               )
+    //             ]),
+    //           ),
+    //         ),
+    //       ),
+    //       const SizedBox(
+    //         height: 20.0,
+    //       ),
+    //       TextButton(
+    //         child: Text(
+    //           'Sign Out',
+    //           style: TextStyle(
+    //             color: widget.role != 'guard'
+    //                 ? const Color(0xff3a82fd)
+    //                 : Colors.white,
+    //           ),
+    //         ),
+    //         onPressed: () async {
+    //           if (widget.role == 'guard') {
+    //             await widget.secureStorage.delete(key: 'guardToken');
+    //           } else {
+    //             await authService.signOut();
+    //           }
+    //           Navigator.pushReplacement(
+    //             context,
+    //             MaterialPageRoute(
+    //               builder: (context) => const LoginScreen(),
+    //             ),
+    //           );
+    //         },
+    //       )
+    //     ],
+    //   ),
+    // );
   }
 }
