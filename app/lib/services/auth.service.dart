@@ -46,8 +46,6 @@ class AuthService with ChangeNotifier {
                 value: googleKey.idToken,
               );
 
-              print(_user);
-
               localStorage.setItem('displayName', _user?.displayName);
               localStorage.setItem('entry', _user?.email.split('@')[0]);
 
