@@ -5,6 +5,7 @@ import 'package:ira/screens/dashboard/components/menu_item.dart';
 import 'package:ira/screens/gate_pass/purpose.dart';
 import 'package:ira/screens/login/login.dart';
 import 'package:ira/screens/mess/mess.dart';
+import 'package:ira/screens/team/team.dart';
 import 'package:ira/services/auth.service.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:provider/provider.dart';
@@ -236,7 +237,14 @@ class _DashboardState extends State<Dashboard> {
                               backgroundColor: const Color(0xFF09C7F9),
                               child: IconButton(
                                 icon: const Icon(Icons.people),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const TeamScreen(),
+                                    ),
+                                  );
+                                },
                                 color: Colors.white,
                               ),
                             ),
