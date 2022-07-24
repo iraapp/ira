@@ -28,7 +28,7 @@ urlpatterns = [
     path('user_profile/', include('user_profile.urls')),
     path('mess/', include('mess.urls')),
     path('hostel/', include('hostel.urls')),
-
+    path('team/', include('team.urls')),
 ]
 
 

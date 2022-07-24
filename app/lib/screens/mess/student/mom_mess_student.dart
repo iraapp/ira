@@ -49,7 +49,7 @@ class _MOMMessState extends State<MOMMess> {
     return Scaffold(
       backgroundColor: Colors.blue,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Mess",
           style: TextStyle(
             fontSize: 20,
@@ -65,25 +65,25 @@ class _MOMMessState extends State<MOMMess> {
         ),
         child: Container(
           width: double.infinity,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
               topRight: Radius.circular(40.0),
               bottomRight: Radius.circular(0.0),
               topLeft: Radius.circular(40.0),
               bottomLeft: Radius.circular(0.0),
             ),
-            color: const Color(0xfff5f5f5),
+            color: Color(0xfff5f5f5),
           ),
           child: Padding(
             padding:
                 const EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
             child: Column(
               children: [
-                Text("MOM",
+                const Text("MOM",
                     style: TextStyle(
                       fontSize: 16,
                     )),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Expanded(
                   child: FutureBuilder<List<MessMOMModel>>(
                       future: _getMessMOMItems(),
@@ -102,7 +102,7 @@ class _MOMMessState extends State<MOMMess> {
                                       Container(
                                           height: size.height * 0.2,
                                           width: double.infinity,
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                             borderRadius: BorderRadius.only(
                                               topRight: Radius.circular(10.0),
                                               bottomRight:
@@ -161,7 +161,7 @@ class _MOMMessState extends State<MOMMess> {
                                               ),
                                             ],
                                           )),
-                                      SizedBox(height: 20),
+                                      const SizedBox(height: 20),
                                     ],
                                   ),
                                 );

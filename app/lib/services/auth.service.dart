@@ -47,6 +47,7 @@ class AuthService with ChangeNotifier {
               );
 
               localStorage.setItem('displayName', _user?.displayName);
+              localStorage.setItem('entry', _user?.email.split('@')[0]);
 
               isAuthenticatedStreamController.add(isAuthenticated);
               notifyListeners();
