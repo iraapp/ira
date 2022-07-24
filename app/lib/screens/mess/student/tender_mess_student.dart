@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:ira/screens/mess/factories/mess.dart';
 import 'package:ira/screens/mess/student/mess_tender_model.dart';
 
 class TenderMess extends StatefulWidget {
@@ -47,7 +46,7 @@ class _TenderMessState extends State<TenderMess> {
     return Scaffold(
       backgroundColor: Colors.blue,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Mess Tender",
           style: TextStyle(
             fontSize: 20,
@@ -64,14 +63,14 @@ class _TenderMessState extends State<TenderMess> {
         ),
         child: Container(
           width: double.infinity,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
               topRight: Radius.circular(40.0),
               bottomRight: Radius.circular(0.0),
               topLeft: Radius.circular(40.0),
               bottomLeft: Radius.circular(0.0),
             ),
-            color: const Color(0xfff5f5f5),
+            color: Color(0xfff5f5f5),
           ),
           child: Padding(
             padding:
@@ -86,7 +85,8 @@ class _TenderMessState extends State<TenderMess> {
                     children: [
                       TextButton(
                         onPressed: () {
-                          //TODO: Handle Active
+                          // ignore: todo
+                          //TODO: Handle Active.
                           setState(() {
                             _isActive = true;
                           });
@@ -116,12 +116,12 @@ class _TenderMessState extends State<TenderMess> {
                     ],
                   ),
                 ),
-                SizedBox(height: 10),
-                Text("Download old tenders here",
+                const SizedBox(height: 10),
+                const Text("Download old tenders here",
                     style: TextStyle(
                       fontSize: 14.0,
                     )),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Expanded(
                   child: FutureBuilder<List<MessTenderModel>>(
                       future: _getMessTenderItems(),
@@ -140,7 +140,7 @@ class _TenderMessState extends State<TenderMess> {
                                       Container(
                                           // height: size.height * 0.1,
                                           width: double.infinity,
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                             color: Colors.white,
                                             boxShadow: [
                                               BoxShadow(
@@ -167,7 +167,7 @@ class _TenderMessState extends State<TenderMess> {
                                               ],
                                             ),
                                           )),
-                                      SizedBox(height: 20),
+                                      const SizedBox(height: 20),
                                     ],
                                   ),
                                 );

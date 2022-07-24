@@ -14,7 +14,7 @@ class _FeedbackMessManagerState extends State<FeedbackMessManager> {
     return Scaffold(
       backgroundColor: Colors.blue,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Feedbacks",
           style: TextStyle(
             fontSize: 20,
@@ -30,14 +30,14 @@ class _FeedbackMessManagerState extends State<FeedbackMessManager> {
         ),
         child: Container(
           width: double.infinity,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
               topRight: Radius.circular(40.0),
               bottomRight: Radius.circular(0.0),
               topLeft: Radius.circular(40.0),
               bottomLeft: Radius.circular(0.0),
             ),
-            color: const Color(0xfff5f5f5),
+            color: Color(0xfff5f5f5),
           ),
           child: Padding(
             padding:
@@ -52,7 +52,7 @@ class _FeedbackMessManagerState extends State<FeedbackMessManager> {
                       Container(
                           height: size.height * 0.25,
                           width: double.infinity,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             borderRadius: BorderRadius.only(
                               topRight: Radius.circular(10.0),
                               bottomRight: Radius.circular(10.0),
@@ -72,7 +72,7 @@ class _FeedbackMessManagerState extends State<FeedbackMessManager> {
                             children: [
                               Container(
                                 width: double.infinity,
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   borderRadius: BorderRadius.only(
                                     topRight: Radius.circular(10.0),
                                     bottomRight: Radius.circular(0.0),
@@ -86,13 +86,13 @@ class _FeedbackMessManagerState extends State<FeedbackMessManager> {
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
-                                    children: [
+                                    children: const [
                                       Text("Pratham",
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             color: Colors.white,
                                           )),
                                       Text("1B Mess | Breakfast | 06-07-2022",
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             color: Colors.white,
                                           )),
                                     ],
@@ -112,7 +112,7 @@ class _FeedbackMessManagerState extends State<FeedbackMessManager> {
                               ),
                             ],
                           )),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                     ],
                   ),
                 );

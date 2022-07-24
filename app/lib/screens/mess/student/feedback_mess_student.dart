@@ -15,20 +15,26 @@ class FeedbackMess extends StatefulWidget {
 }
 
 class _FeedbackMessState extends State<FeedbackMess> {
-  List<String> _messFill = ["Fill as Anonymous", "Use your credentials"];
+  final List<String> _messFill = ["Fill as Anonymous", "Use your credentials"];
   String _messFillValue = "Fill as Anonymous";
-  List<String> _mess = ["1 B Mess", "120 Mess", "Girls Mess"];
+  final List<String> _mess = ["1 B Mess", "120 Mess", "Girls Mess"];
   String _messValue = "1 B Mess";
-  List<String> _meals = ["Breakfast", "Lunch", "Snacks", "Dinner", "General"];
+  final List<String> _meals = [
+    "Breakfast",
+    "Lunch",
+    "Snacks",
+    "Dinner",
+    "General"
+  ];
   String _mealsValue = "Breakfast";
 
   String? _description;
 
-  Future<dynamic> _submitFeedback(int mess_no, String description) async {
+  Future<dynamic> _submitFeedback(int messNo, String description) async {
     String? idToken = await widget.secureStorage.read(key: 'idToken');
 
     Map<String, dynamic> formMap = {
-      'mess_no': mess_no.toString(),
+      'mess_no': messNo.toString(),
       'feedback': description,
     };
 
@@ -46,7 +52,6 @@ class _FeedbackMessState extends State<FeedbackMess> {
     if (response.statusCode == 200) {
       return Future.value(true);
     }
-    print(response.body);
     return Future.value(false);
   }
 
@@ -56,7 +61,7 @@ class _FeedbackMessState extends State<FeedbackMess> {
     return Scaffold(
       backgroundColor: Colors.blue,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Mess",
           style: TextStyle(
             fontSize: 20,
@@ -73,14 +78,14 @@ class _FeedbackMessState extends State<FeedbackMess> {
           ),
           child: Container(
             width: double.infinity,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               borderRadius: BorderRadius.only(
                 topRight: Radius.circular(40.0),
                 bottomRight: Radius.circular(0.0),
                 topLeft: Radius.circular(40.0),
                 bottomLeft: Radius.circular(0.0),
               ),
-              color: const Color(0xfff5f5f5),
+              color: Color(0xfff5f5f5),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,9 +93,9 @@ class _FeedbackMessState extends State<FeedbackMess> {
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                  children: const [
                     Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: EdgeInsets.all(16.0),
                       child: Text(
                         "Feedback",
                         style: TextStyle(
@@ -100,7 +105,7 @@ class _FeedbackMessState extends State<FeedbackMess> {
                     ),
                   ],
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 20.0, vertical: 0.0),
@@ -115,7 +120,7 @@ class _FeedbackMessState extends State<FeedbackMess> {
                             style: const TextStyle(
                               color: Colors.white,
                             ),
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.arrow_drop_down,
                               color: Colors.black,
                             ),
@@ -145,8 +150,8 @@ class _FeedbackMessState extends State<FeedbackMess> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text("Mess:",
-                                  style: const TextStyle(
+                              const Text("Mess:",
+                                  style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 16.0,
                                   )),
@@ -156,7 +161,7 @@ class _FeedbackMessState extends State<FeedbackMess> {
                                   style: const TextStyle(
                                     color: Colors.white,
                                   ),
-                                  icon: Icon(
+                                  icon: const Icon(
                                     Icons.arrow_drop_down,
                                     color: Colors.black,
                                   ),
@@ -189,8 +194,8 @@ class _FeedbackMessState extends State<FeedbackMess> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text("Meal:",
-                                  style: const TextStyle(
+                              const Text("Meal:",
+                                  style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 16.0,
                                   )),
@@ -200,7 +205,7 @@ class _FeedbackMessState extends State<FeedbackMess> {
                                   style: const TextStyle(
                                     color: Colors.white,
                                   ),
-                                  icon: Icon(
+                                  icon: const Icon(
                                     Icons.arrow_drop_down,
                                     color: Colors.black,
                                   ),
@@ -234,9 +239,9 @@ class _FeedbackMessState extends State<FeedbackMess> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 40.0),
                           child: Row(
-                            children: [
+                            children: const [
                               Text("Description:",
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 16.0,
                                   )),
@@ -247,11 +252,11 @@ class _FeedbackMessState extends State<FeedbackMess> {
                           height: 20.0,
                         ),
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 40.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 40.0),
                           child: TextField(
                             maxLines: 5,
                             textInputAction: TextInputAction.done,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               hintText: "Description",
                             ),
@@ -275,10 +280,9 @@ class _FeedbackMessState extends State<FeedbackMess> {
                                 width: 140.0,
                                 child: ElevatedButton(
                                     onPressed: () async {
-                                      int _mess_no = _mess.indexOf(_messValue);
+                                      int no = _mess.indexOf(_messValue);
                                       final res = await _submitFeedback(
-                                          _mess_no + 1,
-                                          _description.toString());
+                                          no + 1, _description.toString());
                                       if (res) {
                                         await showFeedbackDialog(context,
                                             title: "Thank you",
@@ -297,8 +301,8 @@ class _FeedbackMessState extends State<FeedbackMess> {
                                         ),
                                       ),
                                     ),
-                                    child: Text("Submit",
-                                        style: const TextStyle(
+                                    child: const Text("Submit",
+                                        style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 16.0,
                                         ))),
@@ -332,18 +336,18 @@ Future showFeedbackDialog(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(height: 10.0),
+          const SizedBox(height: 10.0),
           SizedBox(
               height: 100.0,
               child: Image.asset("assets/images/icon _tick circle.png")),
-          SizedBox(height: 20.0),
+          const SizedBox(height: 20.0),
           Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 18.0,
             ),
           ),
-          SizedBox(height: 10.0),
+          const SizedBox(height: 10.0),
           Text(content),
         ],
       ),
