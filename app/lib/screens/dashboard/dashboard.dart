@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ira/screens/gate_pass/purpose.dart';
+import 'package:ira/screens/hostel/dashboard.dart';
 import 'package:ira/screens/login/login.dart';
 import 'package:ira/screens/team/team.dart';
 import 'package:ira/screens/mess/student/mess_student.dart';
@@ -159,136 +160,164 @@ class _DashboardState extends State<Dashboard> {
                           ),
                         ],
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          widget.role == 'student'
-                              ? Column(children: [
-                                  CircleAvatar(
-                                    backgroundColor: const Color(0xFF09C7F9),
-                                    child: IconButton(
-                                      icon: const Icon(Icons.person),
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => Profile(),
-                                          ),
-                                        );
-                                      },
-                                      color: Colors.white,
+                      child: SizedBox(
+                        height: 150.0,
+                        child: GridView.count(
+                          crossAxisCount: 4,
+                          children: [
+                            widget.role == 'student'
+                                ? Column(children: [
+                                    CircleAvatar(
+                                      backgroundColor: const Color(0xFF09C7F9),
+                                      child: IconButton(
+                                        icon: const Icon(Icons.person),
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => Profile(),
+                                            ),
+                                          );
+                                        },
+                                        color: Colors.white,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(height: 5.0),
-                                  const Text(
-                                    "Id Card",
-                                    style: TextStyle(fontSize: 12.0),
-                                  )
-                                ])
-                              : Container(),
-                          widget.role == 'student'
-                              ? Column(children: [
-                                  CircleAvatar(
-                                    backgroundColor: const Color(0xFF09C7F9),
-                                    child: IconButton(
-                                      icon: const Icon(Icons.food_bank),
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const MessStudentScreen(),
-                                          ),
-                                        );
-                                      },
-                                      color: Colors.white,
+                                    const SizedBox(height: 5.0),
+                                    const Text(
+                                      "Id Card",
+                                      style: TextStyle(fontSize: 12.0),
+                                    )
+                                  ])
+                                : Container(),
+                            widget.role == 'student'
+                                ? Column(children: [
+                                    CircleAvatar(
+                                      backgroundColor: const Color(0xFF09C7F9),
+                                      child: IconButton(
+                                        icon: const Icon(Icons.food_bank),
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const MessStudentScreen(),
+                                            ),
+                                          );
+                                        },
+                                        color: Colors.white,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(height: 5.0),
-                                  const Text(
-                                    "Mess",
-                                    style: TextStyle(fontSize: 12.0),
-                                  )
-                                ])
-                              : Container(),
-                          widget.role == 'student'
-                              ? Column(children: [
-                                  CircleAvatar(
-                                    backgroundColor: const Color(0xFF09C7F9),
-                                    child: IconButton(
-                                      icon: const Icon(
-                                          Icons.admin_panel_settings_rounded),
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const PurposeScreen(),
-                                          ),
-                                        );
-                                      },
-                                      color: Colors.white,
+                                    const SizedBox(height: 5.0),
+                                    const Text(
+                                      "Mess",
+                                      style: TextStyle(fontSize: 12.0),
+                                    )
+                                  ])
+                                : Container(),
+                            widget.role == 'student'
+                                ? Column(children: [
+                                    CircleAvatar(
+                                      backgroundColor: const Color(0xFF09C7F9),
+                                      child: IconButton(
+                                        icon: const Icon(
+                                            Icons.admin_panel_settings_rounded),
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const PurposeScreen(),
+                                            ),
+                                          );
+                                        },
+                                        color: Colors.white,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(height: 5.0),
-                                  const Text(
-                                    "Gate Pass",
-                                    style: TextStyle(fontSize: 12.0),
-                                  )
-                                ])
-                              : Container(),
-                          widget.role == 'student'
-                              ? Column(children: [
-                                  CircleAvatar(
-                                    backgroundColor: const Color(0xFF09C7F9),
-                                    child: IconButton(
-                                      icon: const Icon(Icons.people),
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const TeamScreen(),
-                                          ),
-                                        );
-                                      },
-                                      color: Colors.white,
+                                    const SizedBox(height: 5.0),
+                                    const Text(
+                                      "Gate Pass",
+                                      style: TextStyle(fontSize: 12.0),
+                                    )
+                                  ])
+                                : Container(),
+                            widget.role == 'student'
+                                ? Column(children: [
+                                    CircleAvatar(
+                                      backgroundColor: const Color(0xFF09C7F9),
+                                      child: IconButton(
+                                        icon: const Icon(Icons.people),
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const TeamScreen(),
+                                            ),
+                                          );
+                                        },
+                                        color: Colors.white,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(height: 5.0),
-                                  const Text(
-                                    "Team",
-                                    style: TextStyle(fontSize: 12.0),
-                                  )
-                                ])
-                              : Container(),
-                          widget.role == 'guard'
-                              ? Column(children: [
-                                  CircleAvatar(
-                                    backgroundColor: const Color(0xFF09C7F9),
-                                    child: IconButton(
-                                      icon: const Icon(
-                                          Icons.admin_panel_settings_rounded),
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const ScanGatePass(),
-                                          ),
-                                        );
-                                      },
-                                      color: Colors.white,
+                                    const SizedBox(height: 5.0),
+                                    const Text(
+                                      "Team",
+                                      style: TextStyle(fontSize: 12.0),
+                                    )
+                                  ])
+                                : Container(),
+                            widget.role == 'guard'
+                                ? Column(children: [
+                                    CircleAvatar(
+                                      backgroundColor: const Color(0xFF09C7F9),
+                                      child: IconButton(
+                                        icon: const Icon(
+                                            Icons.admin_panel_settings_rounded),
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const ScanGatePass(),
+                                            ),
+                                          );
+                                        },
+                                        color: Colors.white,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(height: 5.0),
-                                  const Text(
-                                    "Scan gate pass",
-                                    style: TextStyle(fontSize: 12.0),
-                                  )
-                                ])
-                              : Container(),
-                        ],
+                                    const SizedBox(height: 5.0),
+                                    const Text(
+                                      "Scan gate pass",
+                                      style: TextStyle(fontSize: 12.0),
+                                    )
+                                  ])
+                                : Container(),
+                            widget.role == 'student'
+                                ? Column(children: [
+                                    CircleAvatar(
+                                      backgroundColor: const Color(0xFF09C7F9),
+                                      child: IconButton(
+                                        icon: const Icon(Icons.person),
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const HostelStudentScreen(),
+                                            ),
+                                          );
+                                        },
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5.0),
+                                    const Text(
+                                      "Hostel",
+                                      style: TextStyle(fontSize: 12.0),
+                                    )
+                                  ])
+                                : Container(),
+                          ],
+                        ),
                       ),
                     ),
                   ],
