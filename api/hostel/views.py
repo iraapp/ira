@@ -1,5 +1,4 @@
-import json
-from hostel.ser import *
+from hostel.serializers import *
 from hostel.models import *
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -24,7 +23,7 @@ class MaintenanceStaffContactsView(APIView):
             contact=contact,
             designation=designation
         )
-        
+
         return Response(status=200, data={
             "msg": "Contact added successfully."
         })
