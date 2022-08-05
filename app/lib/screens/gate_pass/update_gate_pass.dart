@@ -18,7 +18,7 @@ class UpdateGatePass extends StatelessWidget {
   }) : super(key: key);
 
   Future<String> updateQR() async {
-    final String? token = await secureStorage.read(key: 'guardToken');
+    final String? token = await secureStorage.read(key: 'staffToken');
 
     final response = await http.post(Uri.parse(baseUrl + '/gate_pass/scan_qr'),
         headers: <String, String>{

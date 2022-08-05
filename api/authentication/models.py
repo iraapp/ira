@@ -11,6 +11,11 @@ from institute_app import settings
 
 from .managers import CustomUserManager
 
+STAFF_ROLE_IDS = {
+    'guard': 1,
+    'mess_manager': 2
+}
+
 # Create your models here.
 class User(AbstractBaseUser, PermissionsMixin):
 
@@ -52,12 +57,20 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name = 'user'
         verbose_name_plural = 'users'
 
-class Guard(models.Model):
+class Staff(models.Model):
+    # These fields tie to the roles!
+
+    STAFF_ROLE_CHOICES = (
+        (STAFF_ROLE_IDS['guard'], 'Guard'),
+        (STAFF_ROLE_IDS['mess_manager'], 'Mess Manager'),
+    )
+
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     username = models.CharField(max_length=20, unique=True)
     password = models.CharField(_('password'), max_length=128, help_text=_(
         "Use '[algo]$[salt]$[hexdigest]' or use the <a href=\"password/\">change password form</a>."))
+    role = models.PositiveSmallIntegerField(choices=STAFF_ROLE_CHOICES, default=1)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -68,21 +81,21 @@ class Guard(models.Model):
     def __str__(self):
         return self.first_name + ' ' + self.last_name
 
-class GuardToken(models.Model):
+class StaffToken(models.Model):
     """
-    The guard authorization token model.
+    The staff authorization token model.
     """
     key = models.CharField(_("Key"), max_length=40, primary_key=True)
     user = models.OneToOneField(
-        Guard, related_name='auth_token',
-        on_delete=models.CASCADE, verbose_name=_("Guard")
+        Staff, related_name='auth_token',
+        on_delete=models.CASCADE, verbose_name=_("Staff")
     )
     created = models.DateTimeField(_("Created"), auto_now_add=True)
 
     class Meta:
         abstract = 'rest_framework.authtoken' not in settings.INSTALLED_APPS
-        verbose_name = _("Guard Token")
-        verbose_name_plural = _("Guard Tokens")
+        verbose_name = _("Staff Token")
+        verbose_name_plural = _("Staff Tokens")
 
     def save(self, *args, **kwargs):
         if not self.key:

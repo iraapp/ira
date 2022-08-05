@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:ira/screens/dashboard/dashboard.dart';
-import 'package:ira/screens/guard/guard_login.dart';
+import 'package:ira/screens/staff/staff_login.dart';
 import 'package:ira/services/auth.service.dart';
 import 'package:ira/shared/app_scaffold.dart';
 import 'package:provider/provider.dart';
@@ -109,12 +109,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const GuardLogin(),
+                    builder: (context) => const StaffLogin(),
                   ),
                 );
               },
               child: const Text(
-                'Continue as a Guard',
+                'Continue as a Staff',
                 style: TextStyle(
                   fontSize: 15.0,
                   color: Color(0xff4486cc),

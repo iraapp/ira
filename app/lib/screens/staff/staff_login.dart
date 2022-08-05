@@ -4,26 +4,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:ira/constants/constants.dart';
 import 'package:ira/screens/dashboard/dashboard.dart';
 import 'package:ira/shared/app_scaffold.dart';
+import 'package:localstorage/localstorage.dart';
 
-class GuardLogin extends StatefulWidget {
-  const GuardLogin({Key? key}) : super(key: key);
+class StaffLogin extends StatefulWidget {
+  const StaffLogin({Key? key}) : super(key: key);
 
   @override
-  State<GuardLogin> createState() => _GuardLoginState();
+  State<StaffLogin> createState() => _StaffLoginState();
 }
 
-class _GuardLoginState extends State<GuardLogin> {
+class _StaffLoginState extends State<StaffLogin> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController usernameFieldController = TextEditingController();
   TextEditingController passwordFieldController = TextEditingController();
   // Create secureStorage
   final secureStorage = const FlutterSecureStorage();
+  final localStorage = LocalStorage('store');
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
 
   Future<String> autoLogin() async {
-    String? guardToken = await secureStorage.read(key: 'guardToken');
+    String? staffToken = await secureStorage.read(key: 'staffToken');
 
     final response = await http.get(
         Uri.parse(
@@ -31,11 +34,11 @@ class _GuardLoginState extends State<GuardLogin> {
         ),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': guardToken != null ? 'Token ' + guardToken : ''
+          'Authorization': staffToken != null ? 'Token ' + staffToken : ''
         });
 
     if (response.statusCode == 200) {
-      return Future.value(guardToken);
+      return Future.value(staffToken);
     } else {
       return Future.value('invalid');
     }
@@ -119,7 +122,7 @@ class _GuardLoginState extends State<GuardLogin> {
                                 if (_formKey.currentState!.validate()) {
                                   final response = await http.post(
                                       Uri.parse(
-                                        baseUrl + '/auth/guard-token',
+                                        baseUrl + '/auth/staff-token',
                                       ),
                                       headers: <String, String>{
                                         'Content-Type':
@@ -133,9 +136,21 @@ class _GuardLoginState extends State<GuardLogin> {
 
                                   if (response.statusCode == 200) {
                                     await secureStorage.write(
-                                      key: 'guardToken',
+                                      key: 'staffToken',
                                       value: jsonDecode(response.body)['token'],
                                     );
+                                    await localStorage.setItem(
+                                      'staffRole',
+                                      staffRoleChoices[jsonDecode(
+                                          response.body)['staff_user']['role']],
+                                    );
+                                    await localStorage.setItem(
+                                        'staffName',
+                                        jsonDecode(response.body)['staff_user']
+                                                ['first_name'] +
+                                            ' ' +
+                                            jsonDecode(response.body)[
+                                                'staff_user']['last_name']);
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(

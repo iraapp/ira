@@ -1,6 +1,6 @@
 import json
-from authentication.models import Guard, GuardToken
-from authentication.serializers import GuardSerializer
+from authentication.models import Staff, StaffToken
+from authentication.serializers import StaffSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
@@ -18,7 +18,7 @@ class CoursePageViewStudent(APIView):
         return Response(status = 200, data="Authenticated")
 
 @authentication_classes([])
-class RegisterGuardView(APIView):
+class RegisterStaffView(APIView):
 
     def post(self, request, *args, **kwargs):
         username = request.POST.get('username')
@@ -27,10 +27,10 @@ class RegisterGuardView(APIView):
         raw_password = request.POST.get('password')
 
         if username and first_name and last_name and raw_password:
-            guard = Guard.objects.create(
+            staff = Staff.objects.create(
                 username=username, first_name= first_name, last_name=last_name,
                 password=make_password(raw_password))
-            return Response(status=200, data = GuardSerializer(guard).data)
+            return Response(status=200, data = StaffSerializer(staff).data)
 
         else:
             return Response(status = 400)
@@ -47,10 +47,10 @@ class ObtainTokenView(APIView):
         if not username or not raw_password:
             return Response(status=400, data='Username and password fields are empty')
 
-        guard_user = Guard.objects.get(username=username)
+        staff_user = Staff.objects.get(username=username)
 
-        if check_password(raw_password, guard_user.password):
-            token, _ = GuardToken.objects.get_or_create(user=guard_user)
-            return Response({'token': token.key})
+        if check_password(raw_password, staff_user.password):
+            token, _ = StaffToken.objects.get_or_create(user=staff_user)
+            return Response({'token': token.key, 'staff_user': StaffSerializer(staff_user).data})
 
         return Response(status=401, data='Authentication credentials are incorrect')
