@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ira/screens/hostel/maintenance_staff/maintenance_staff_contact.dart';
+import 'package:ira/screens/mess/student/complains_mess_student.dart';
 
 class HostelStudentScreen extends StatefulWidget {
   const HostelStudentScreen({Key? key}) : super(key: key);
@@ -16,10 +17,12 @@ class _HostelStudentScreenState extends State<HostelStudentScreen> {
 
   final List<String> _hostelList = [
     "Maintenance Staff Contact",
+    "Complaint",
   ];
 
   final List<Widget> _hostelRoutes = [
     MaintenanceStaffContact(),
+    ComplaintsMess()
   ];
 
   @override

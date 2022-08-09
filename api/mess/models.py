@@ -40,7 +40,7 @@ class Mess(models.Model):
 
 
 # data base model for feedback
-class Feedback(models.Model):
+class MessFeedback(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     body = models.TextField(editable = True, null = False, blank = True)
     mess_no = models.PositiveIntegerField(default=0)
