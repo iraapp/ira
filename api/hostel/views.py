@@ -1,4 +1,4 @@
-from hostel.serializers import HostelFeedbackSerializer, MaintenanceStaffContactsSer
+from hostel.serializers import ComplaintTypeSerializer, HostelFeedbackSerializer, HostelSerializer, MaintenanceStaffContactsSer
 from hostel.models import ComplaintType, Hostel, HostelFeedback, MaintenanceStaffContacts
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
@@ -68,12 +68,12 @@ class HostelFeedbackView(APIView):
     def post(self, request):
         user = request.user
         body = request.POST.get('feedback')
-        hostel_id = request.POST.get('hostel_id')
-        complaint_type_id = request.POST.get('complaint_type_id')
+        hostel = request.POST.get('hostel')
+        complaint_type = request.POST.get('complaint_type')
 
-        hostel = Hostel.objects.filter(id=hostel_id).first()
+        hostel = Hostel.objects.filter(name=hostel).first()
         complaint_type = ComplaintType.objects.filter(
-            id=complaint_type_id).first()
+            name=complaint_type).first()
 
         HostelFeedback.objects.create(
             user = user,
@@ -94,3 +94,15 @@ class HostelFeedbackInstanceView(APIView):
             serialized_json = HostelFeedbackSerializer(data)
             return Response(data=serialized_json.data)
         return Response(data={'msg': 'not found'}, status=404)
+
+class HostelAndComplaintListView(APIView):
+    permission_classes = []
+
+    def get(self, request):
+        data = Hostel.objects.all()
+        complaint_types = ComplaintType.objects.all()
+
+        return Response(data = {
+            'hostel': HostelSerializer(data, many=True).data,
+            'complaints': ComplaintTypeSerializer(complaint_types, many=True).data
+            })

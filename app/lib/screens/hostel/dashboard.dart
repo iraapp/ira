@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:ira/screens/hostel/complaint/hostel_complaint.dart';
 import 'package:ira/screens/hostel/maintenance_staff/maintenance_staff_contact.dart';
 import 'package:ira/screens/mess/student/complains_mess_student.dart';
 
@@ -22,7 +23,7 @@ class _HostelStudentScreenState extends State<HostelStudentScreen> {
 
   final List<Widget> _hostelRoutes = [
     MaintenanceStaffContact(),
-    ComplaintsMess()
+    HostelComplaint()
   ];
 
   @override
