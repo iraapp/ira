@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
-class MenuItem extends StatelessWidget {
+class MenuItem2 extends StatelessWidget {
   IconData? iconData;
   String menuName;
   bool fade;
   VoidCallback pressHandler;
 
-  MenuItem(
+  MenuItem2(
       {Key? key,
       this.iconData,
       this.menuName = '',

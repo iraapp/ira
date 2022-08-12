@@ -4,12 +4,10 @@ import 'package:ira/screens/dashboard/components/menu_item.dart';
 import 'package:ira/screens/gate_pass/purpose.dart';
 import 'package:ira/screens/login/login.dart';
 import 'package:ira/screens/mess/manager/mess_manager.dart';
-import 'package:ira/screens/mess/student/mess_student.dart';
 import 'package:ira/services/auth.service.dart';
 import 'package:ira/shared/app_scaffold.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:provider/provider.dart';
-
 import '../../util/helpers.dart';
 import '../gate_pass/scan_gate_pass.dart';
 import '../profile/profile.dart';
@@ -65,7 +63,6 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
-    //TODO: REMOVE COMMENT
     authCheck();
   }
 
@@ -134,7 +131,7 @@ class _DashboardState extends State<Dashboard> {
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            MenuItem(
+                            MenuItem2(
                               fade: false,
                               iconData: Icons.person,
                               menuName: 'Digital ID Card',
@@ -145,7 +142,7 @@ class _DashboardState extends State<Dashboard> {
                                         builder: (context) => Profile()));
                               },
                             ),
-                            MenuItem(
+                            MenuItem2(
                               fade: true,
                               iconData: Icons.apartment_rounded,
                               menuName: 'Hostel',
@@ -158,25 +155,25 @@ class _DashboardState extends State<Dashboard> {
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            MenuItem(
+                            MenuItem2(
                               fade: false,
                               iconData: Icons.food_bank,
                               menuName: 'Mess',
                               pressHandler: () {
                                 // TODO: Handle admin or student
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const MessStudentScreen()));
                                 // Navigator.push(
                                 //     context,
                                 //     MaterialPageRoute(
                                 //         builder: (context) =>
-                                //             const MessManagerScreen()));
+                                //             const MessStudentScreen()));
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const MessManagerScreen()));
                               },
                             ),
-                            MenuItem(
+                            MenuItem2(
                               fade: true,
                               iconData: Icons.medical_services_rounded,
                               menuName: 'Medical',
@@ -189,7 +186,7 @@ class _DashboardState extends State<Dashboard> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       widget.role != 'guard'
-                          ? MenuItem(
+                          ? MenuItem2(
                               fade: false,
                               iconData: Icons.admin_panel_settings_rounded,
                               menuName: 'Gate Pass',
@@ -202,7 +199,7 @@ class _DashboardState extends State<Dashboard> {
                                     ));
                               },
                             )
-                          : MenuItem(
+                          : MenuItem2(
                               fade: false,
                               iconData: Icons.admin_panel_settings_rounded,
                               menuName: 'Scan Gate Pass',
