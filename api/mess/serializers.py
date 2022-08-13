@@ -23,9 +23,9 @@ class FeedbackSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     user = serializers.StringRelatedField()
     body = serializers.CharField(max_length=500)
-    mess_no = serializers.IntegerField()
+    mess_type = serializers.CharField(max_length=50)
     created_at = serializers.DateTimeField()
-    status = serializers.BooleanField()
+    status = serializers.BooleanField(default=False)
 
 class MessMomSer(serializers.Serializer):
     id = serializers.IntegerField()
@@ -42,4 +42,5 @@ class MessTenderSer(serializers.Serializer):
     file = serializers.FileField()
     title = serializers.CharField(max_length = 100)
     description = serializers.CharField(max_length = 500)
+    archived = serializers.BooleanField(default=False)
     created_at = serializers.DateTimeField()
