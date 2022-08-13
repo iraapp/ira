@@ -40,7 +40,7 @@ class Mess(models.Model):
 
 
 # data base model for feedback
-#status is for wether the feedback is viewed by messmanager or not
+# status is for whether the feedback is viewed by mess manager or not.
 class Feedback(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     body = models.TextField(editable = True, null = False, blank = True)
