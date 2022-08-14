@@ -1,57 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:ira/screens/dashboard/components/menu_item.dart';
-import 'package:ira/screens/gate_pass/purpose.dart';
+import 'package:ira/screens/dashboard/guard_menu.dart';
+import 'package:ira/screens/dashboard/mess_manager_menu.dart';
+import 'package:ira/screens/dashboard/staff_header.dart';
+import 'package:ira/screens/dashboard/student_menu.dart';
+import 'package:ira/screens/dashboard/student_header.dart';
 import 'package:ira/screens/login/login.dart';
-import 'package:ira/screens/mess/manager/mess_manager.dart';
 import 'package:ira/services/auth.service.dart';
-import 'package:ira/shared/app_scaffold.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:provider/provider.dart';
-import '../../util/helpers.dart';
-import '../gate_pass/scan_gate_pass.dart';
-import '../profile/profile.dart';
-
-String capitalize(String str) {
-  return '${str[0].toUpperCase()}${str.substring(1).toLowerCase()}';
-}
-
-class Username extends StatelessWidget {
-  Username({Key? key}) : super(key: key);
-  final localStorage = LocalStorage('store');
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: localStorage.ready,
-        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting ||
-              snapshot.data == null) {
-            return const Text('');
-          }
-
-          if (localStorage.getItem('displayName') == null) {
-            return const Text('');
-          }
-
-          String displayName = localStorage.getItem('displayName');
-          return Text(
-            capitalize(displayName.split(' ')[0]) +
-                ' ' +
-                capitalize(displayName.split(' ')[1]),
-            style: const TextStyle(
-              fontSize: 24.0,
-              fontWeight: FontWeight.bold,
-            ),
-          );
-        });
-  }
-}
 
 // ignore: must_be_immutable
 class Dashboard extends StatefulWidget {
   String role;
   final secureStorage = const FlutterSecureStorage();
+  final localStorage = LocalStorage('store');
+  final roleHeaderMap = {
+    'student': StudentHeader(),
+    'guard': StaffHeader(),
+    'mess_manager': StaffHeader(),
+  };
+
+  roleBasedMenu(context) {
+    switch (role) {
+      case 'student':
+        return studentMenu(context);
+      case 'guard':
+        return guardMenu(context);
+      case 'mess_manager':
+        return messManagerMenu(context);
+    }
+    return const <Widget>[];
+  }
 
   Dashboard({Key? key, required this.role}) : super(key: key);
 
@@ -68,12 +48,13 @@ class _DashboardState extends State<Dashboard> {
 
   void authCheck() async {
     String? idToken = await widget.secureStorage.read(key: 'idToken');
-    String? guardToken = await widget.secureStorage.read(key: 'guardToken');
+    String? staffToken = await widget.secureStorage.read(key: 'staffToken');
 
     if (idToken == null) {
-      if (guardToken != null) {
+      if (staffToken != null) {
+        String? staffRole = await widget.localStorage.getItem('staffRole');
         setState(() {
-          widget.role = 'guard';
+          widget.role = staffRole!;
         });
       }
 
@@ -81,6 +62,8 @@ class _DashboardState extends State<Dashboard> {
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => const LoginScreen()));
       }
+    } else {
+      widget.role = 'student';
     }
   }
 
@@ -88,164 +71,102 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     AuthService authService = Provider.of(context);
 
-    return AppScaffold(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Center(
-            child: Container(
-              margin: EdgeInsets.only(top: getHeightOf(context) * 0.05),
-              width: MediaQuery.of(context).size.width * 0.9,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: const [
-                  BoxShadow(
-                      color: Colors.grey,
-                      blurRadius: 5.0,
-                      offset: Offset(
-                        0,
-                        5,
-                      ))
-                ],
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(children: <Widget>[
-                  const Text(
-                    'Welcome back',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 5.0,
-                  ),
-                  widget.role != 'guard'
-                      ? Username()
-                      : const Text('Guard user'),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  widget.role != 'guard'
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            MenuItem2(
-                              fade: false,
-                              iconData: Icons.person,
-                              menuName: 'Digital ID Card',
-                              pressHandler: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Profile()));
-                              },
-                            ),
-                            MenuItem2(
-                              fade: true,
-                              iconData: Icons.apartment_rounded,
-                              menuName: 'Hostel',
-                              pressHandler: () {},
-                            ),
-                          ],
-                        )
-                      : Container(),
-                  widget.role != 'guard'
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            MenuItem2(
-                              fade: false,
-                              iconData: Icons.food_bank,
-                              menuName: 'Mess',
-                              pressHandler: () {
-                                // TODO: Handle admin or student
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) =>
-                                //             const MessStudentScreen()));
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const MessManagerScreen()));
-                              },
-                            ),
-                            MenuItem2(
-                              fade: true,
-                              iconData: Icons.medical_services_rounded,
-                              menuName: 'Medical',
-                              pressHandler: () {},
-                            ),
-                          ],
-                        )
-                      : Container(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      widget.role != 'guard'
-                          ? MenuItem2(
-                              fade: false,
-                              iconData: Icons.admin_panel_settings_rounded,
-                              menuName: 'Gate Pass',
-                              pressHandler: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const PurposeScreen(),
-                                    ));
-                              },
-                            )
-                          : MenuItem2(
-                              fade: false,
-                              iconData: Icons.admin_panel_settings_rounded,
-                              menuName: 'Scan Gate Pass',
-                              pressHandler: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const ScanGatePass(),
-                                    ));
-                              },
-                            ),
-                    ],
-                  )
-                ]),
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 20.0,
-          ),
-          TextButton(
-            child: Text(
-              'Sign Out',
-              style: TextStyle(
-                color: widget.role != 'guard'
-                    ? const Color(0xff3a82fd)
-                    : Colors.white,
-              ),
-            ),
-            onPressed: () async {
-              if (widget.role == 'guard') {
-                await widget.secureStorage.delete(key: 'guardToken');
-              } else {
-                await authService.signOut();
-              }
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const LoginScreen(),
-                ),
-              );
-            },
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF09c6f9),
+        elevation: 0,
+        leading: const Icon(Icons.menu),
+        actions: [
+          Container(
+            margin: const EdgeInsets.only(right: 10.0),
+            child: const Icon(Icons.notifications),
           )
         ],
       ),
+      body: Column(children: [
+        Container(
+          height: 130.0,
+          width: MediaQuery.of(context).size.width,
+          decoration: const BoxDecoration(
+            color: Color(0xFF09c7f9),
+          ),
+          alignment: Alignment.topLeft,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(30.0, 10.0, 30.0, 10.0),
+            child: widget.roleHeaderMap[widget.role],
+          ),
+        ),
+        Expanded(
+          child: Container(
+            color: const Color(0xFF09c7f9),
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              decoration: const BoxDecoration(
+                color: Color(0xFFE5E5E5),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(20.0),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(20.0),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey,
+                            offset: Offset(0, 2),
+                            blurRadius: 5.0,
+                          ),
+                        ],
+                      ),
+                      child: SizedBox(
+                        height: 150.0,
+                        child: GridView.count(
+                          crossAxisCount: 4,
+                          children: widget.roleBasedMenu(context),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 20.0,
+        ),
+        TextButton(
+          child: const Text(
+            'Sign Out',
+            style: TextStyle(
+              color: Color(0xff3a82fd),
+            ),
+          ),
+          onPressed: () async {
+            if (widget.role == 'student') {
+              await authService.signOut();
+            } else {
+              await widget.secureStorage.delete(key: 'staffToken');
+              await widget.secureStorage.delete(key: 'role');
+            }
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LoginScreen(),
+              ),
+            );
+          },
+        )
+      ]),
     );
   }
 }

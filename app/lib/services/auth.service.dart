@@ -46,8 +46,10 @@ class AuthService with ChangeNotifier {
                 key: 'idToken',
                 value: googleKey.idToken,
               );
+              await localStorage.setItem('role', 'student');
 
               localStorage.setItem('displayName', _user?.displayName);
+              localStorage.setItem('entry', _user?.email.split('@')[0]);
 
               isAuthenticatedStreamController.add(isAuthenticated);
               notifyListeners();
@@ -79,5 +81,6 @@ class AuthService with ChangeNotifier {
   signOut() async {
     await _googleSignIn.signOut();
     await secureStorage.delete(key: 'idToken');
+    await secureStorage.delete(key: 'role');
   }
 }

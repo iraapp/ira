@@ -1,4 +1,5 @@
 from django.utils import timezone
+from authentication.permissions import IsGuard
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -115,7 +116,7 @@ class StudentGatepassStatus(APIView):
 
 
 
-class Guard_Ping_1(APIView):
+class Staff_Ping_1(APIView):
     permission_classes = [IsAuthenticated]
 
 
@@ -231,7 +232,7 @@ class DeleteQR(APIView):
 
 
 class ScanQR(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsGuard]
 
     def post(self, request):
         hash = json.loads(request.body.decode('utf-8')).get('hash')
