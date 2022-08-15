@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:ira/screens/hostel/complaint/hostel_complaint.dart';
+import 'package:ira/screens/hostel/complaint/hostel_feedback.dart';
 import 'package:ira/screens/hostel/maintenance_staff/maintenance_staff_contact.dart';
 
 class HostelStudentScreen extends StatefulWidget {
@@ -14,12 +16,12 @@ class _HostelStudentScreenState extends State<HostelStudentScreen> {
   final secureStorage = const FlutterSecureStorage();
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
 
-  final List<String> _hostelList = [
-    "Maintenance Staff Contact",
-  ];
+  final List<String> _hostelList = ["Maintenance", "Complaint", "Feedback"];
 
   final List<Widget> _hostelRoutes = [
     MaintenanceStaffContact(),
+    HostelComplaint(feedback: false),
+    const HostelFeedback()
   ];
 
   @override
@@ -69,7 +71,9 @@ class _HostelStudentScreenState extends State<HostelStudentScreen> {
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 20.0, vertical: 40.0),
+                  horizontal: 20.0,
+                  vertical: 40.0,
+                ),
                 child: GridView.builder(
                   itemCount: _hostelList.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -88,7 +92,6 @@ class _HostelStudentScreenState extends State<HostelStudentScreen> {
                       },
                       child: Container(
                         width: 80.0,
-                        height: 80.0,
                         decoration: const BoxDecoration(
                             borderRadius: BorderRadius.only(
                               topRight: Radius.circular(10.0),
@@ -100,13 +103,14 @@ class _HostelStudentScreenState extends State<HostelStudentScreen> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SizedBox(
-                                  height: 60.0,
-                                  width: 60.0,
+                                  height: 50.0,
+                                  width: 50.0,
                                   child: Image.asset(
                                       "assets/images/mess_icon.png")),
-                              const SizedBox(height: 2.0),
+                              const SizedBox(height: 5.0),
                               Text(_hostelList[index]),
                             ],
                           ),
