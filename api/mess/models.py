@@ -1,3 +1,4 @@
+from unicodedata import name
 from institute_app import settings
 from django.db import models
 
@@ -34,9 +35,11 @@ class WeekDay(models.Model):
 
 class Mess(models.Model):
   name = models.CharField(max_length=15, default='')
-  week_days = models.ManyToManyField(WeekDay)
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
+
+  def __str__(self):
+    return self.name
 
 
 # data base model for feedback
@@ -44,7 +47,7 @@ class Mess(models.Model):
 class MessFeedback(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     body = models.TextField(editable = True, null = False, blank = True)
-    mess_type = models.CharField(max_length=50)
+    mess_type = models.ForeignKey(Mess, on_delete=models.CASCADE, null = True)
     created_at = models.DateTimeField(auto_now = True)
     status = models.BooleanField(default = False)
 

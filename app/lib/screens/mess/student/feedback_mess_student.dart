@@ -30,11 +30,11 @@ class _FeedbackMessState extends State<FeedbackMess> {
 
   String? _description;
 
-  Future<dynamic> _submitFeedback(int messNo, String description) async {
+  Future<dynamic> _submitFeedback(String mess, String description) async {
     String? idToken = await widget.secureStorage.read(key: 'idToken');
 
     Map<String, dynamic> formMap = {
-      'mess_no': messNo.toString(),
+      'mess_type': mess,
       'feedback': description,
     };
 
@@ -280,9 +280,8 @@ class _FeedbackMessState extends State<FeedbackMess> {
                                 width: 140.0,
                                 child: ElevatedButton(
                                     onPressed: () async {
-                                      int no = _mess.indexOf(_messValue);
                                       final res = await _submitFeedback(
-                                          no + 1, _description.toString());
+                                          _messValue, _description.toString());
                                       if (res) {
                                         await showFeedbackDialog(context,
                                             title: "Thank you",

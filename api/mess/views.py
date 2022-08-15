@@ -36,11 +36,12 @@ class FeedbackView(APIView):
     def post(self, request, *args, **kwargs):
         user = request.user
         feedback = request.POST.get("feedback")
-        mess_type = request.POST.get("mess_type")
+        mess_name = request.POST.get("mess_type")
+        mess_type = Mess.objects.filter(name = mess_name).first()
         MessFeedback.objects.create(
             user=user,
             body=feedback,
-            mess_type=mess_type
+            mess_type = mess_type
 
         )
         return Response(status=200, data={
