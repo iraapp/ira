@@ -19,7 +19,7 @@ class MessMenu(APIView):
 """
 FeedbackView:
     Payload required:
-        1. mess_no - mess number
+        1. mess_type - mess type
         2. feeback - feedback body
 
 """
@@ -36,11 +36,11 @@ class FeedbackView(APIView):
     def post(self, request, *args, **kwargs):
         user = request.user
         feedback = request.POST.get("feedback")
-        mess_no = request.POST.get("mess_no")
+        mess_type = request.POST.get("mess_type")
         MessFeedback.objects.create(
             user=user,
             body=feedback,
-            mess_no=mess_no
+            mess_type=mess_type
 
         )
         return Response(status=200, data={

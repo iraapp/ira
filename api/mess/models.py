@@ -40,10 +40,11 @@ class Mess(models.Model):
 
 
 # data base model for feedback
+# status is for whether the feedback is viewed by mess manager or not.
 class MessFeedback(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     body = models.TextField(editable = True, null = False, blank = True)
-    mess_no = models.PositiveIntegerField(default=0)
+    mess_type = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now = True)
     status = models.BooleanField(default = False)
 
