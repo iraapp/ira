@@ -7,7 +7,7 @@ from rest_framework.response import Response
 class MaintenanceStaffContactsView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self):
+    def get(self, request):
         data = MaintenanceStaffContacts.objects.all()
         serialized_json = MaintenanceStaffContactsSer(data, many=True)
         return Response(data=serialized_json.data)

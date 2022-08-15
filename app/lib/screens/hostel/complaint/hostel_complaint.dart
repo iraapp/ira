@@ -6,8 +6,11 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:ira/screens/mess/student/complains_mess_student.dart';
 
+// ignore: must_be_immutable
 class HostelComplaint extends StatefulWidget {
-  HostelComplaint({Key? key}) : super(key: key);
+  bool feedback = false;
+
+  HostelComplaint({Key? key, required this.feedback}) : super(key: key);
   final secureStorage = const FlutterSecureStorage();
   final String baseUrl = FlavorConfig.instance.variables['baseUrl'];
 
@@ -27,9 +30,7 @@ Future<Map<String, List<String>>> getHostelListAndComplaintTypes(
   Map<String, List<String>> mmp = {'hostel': [], 'complaints': []};
 
   if (response.statusCode == 200) {
-    // print(response.body);
     final decodedBody = jsonDecode(response.body);
-    // print(decodedBody);
     decodedBody['hostel']
         .forEach((hostel) => {mmp['hostel']?.add(hostel['name'])});
     decodedBody['complaints']
@@ -140,12 +141,12 @@ class _HostelComplaintState extends State<HostelComplaint> {
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         Padding(
-                          padding: EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.all(16.0),
                           child: Text(
-                            "Complaint",
-                            style: TextStyle(
+                            widget.feedback ? "Feedback" : "Complaint",
+                            style: const TextStyle(
                               fontSize: 18,
                             ),
                           ),
@@ -206,53 +207,56 @@ class _HostelComplaintState extends State<HostelComplaint> {
                                 ],
                               ),
                             ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 40.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text("Complaint Type:",
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 16.0,
-                                      )),
-                                  SizedBox(
-                                    width: 100,
-                                    child: DropdownButton<String>(
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                      icon: const Icon(
-                                        Icons.arrow_drop_down,
-                                        color: Colors.black,
-                                      ),
-                                      value: _complaintTypeValue,
-                                      items:
-                                          _complaintTypes.map((String items) {
-                                        return DropdownMenuItem(
-                                          value: items,
-                                          child: Text(
-                                            items,
+                            widget.feedback
+                                ? Container()
+                                : Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 40.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const Text("Complaint Type:",
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16.0,
+                                            )),
+                                        SizedBox(
+                                          width: 100,
+                                          child: DropdownButton<String>(
                                             style: const TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                            icon: const Icon(
+                                              Icons.arrow_drop_down,
                                               color: Colors.black,
                                             ),
+                                            value: _complaintTypeValue,
+                                            items: _complaintTypes
+                                                .map((String items) {
+                                              return DropdownMenuItem(
+                                                value: items,
+                                                child: Text(
+                                                  items,
+                                                  style: const TextStyle(
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                              );
+                                            }).toList(),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                _complaintTypeValue = value!;
+                                              });
+                                            },
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            isExpanded: true,
                                           ),
-                                        );
-                                      }).toList(),
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _complaintTypeValue = value!;
-                                        });
-                                      },
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      isExpanded: true,
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
                             const SizedBox(
                               height: 10.0,
                             ),
@@ -306,7 +310,9 @@ class _HostelComplaintState extends State<HostelComplaint> {
                                             final res =
                                                 await _submitHostelFeedback(
                                                     _hostelValue,
-                                                    _complaintTypeValue,
+                                                    widget.feedback
+                                                        ? "Feedback"
+                                                        : _complaintTypeValue,
                                                     _description);
                                             if (res) {
                                               await showFeedbackDialog(context,
