@@ -1,17 +1,14 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:ira/screens/mess/student/complains_mess_student.dart';
+import 'package:ira/screens/mess/manager/menu_mess_manager.dart';
 import 'package:ira/screens/mess/manager/complaints_mess_manager.dart';
-import 'package:ira/screens/mess/components/mess_weekday.dart';
 import 'package:ira/screens/mess/factories/mess.dart';
-import 'package:ira/screens/mess/student/feedback_mess_student.dart';
 import 'package:ira/screens/mess/manager/feedback_mess_manager.dart';
-import 'package:ira/screens/mess/student/menu_mess_student.dart';
-import 'package:ira/shared/app_scaffold.dart';
 import 'package:http/http.dart' as http;
+import 'package:ira/screens/mess/manager/mom_mess_manager.dart';
+import 'package:ira/screens/mess/student/mom_mess_student.dart';
 
 class MessManagerScreen extends StatefulWidget {
   const MessManagerScreen({Key? key}) : super(key: key);
@@ -51,27 +48,25 @@ class _MessManagerScreenState extends State<MessManagerScreen> {
     "Feedback",
     "Complaint",
     "Menu",
-    "Mess Leave",
-    "Food Request",
+    "Tenders",
     "Mess MOM",
   ];
 
   final List<Widget> _messRoutes = [
     FeedbackMessManager(),
     ComplaintMessManager(),
-    MessMenu(),
+    MenuMessManager(),
     Container(),
-    Container(),
-    Container(),
+    MOMMessManager(),
   ];
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.blue,
+      backgroundColor: Color(0xFF00ABE9),
       appBar: AppBar(
-        backgroundColor: Colors.blue,
+        backgroundColor: Color(0xFF00ABE9),
         elevation: 0.0,
       ),
       body: Column(
@@ -88,18 +83,6 @@ class _MessManagerScreenState extends State<MessManagerScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 40.0),
                       child: Text("Mess Secretary",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 26.0,
-                          )),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                      child: Text("Avinash",
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 26.0,

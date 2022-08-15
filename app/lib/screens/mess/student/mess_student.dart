@@ -53,8 +53,6 @@ class _MessStudentScreenState extends State<MessStudentScreen> {
     "Feedback",
     "Complaint",
     "Menu",
-    "Mess Leave",
-    "Food Request",
     "Mess MOM",
     "Tenders"
   ];
@@ -63,10 +61,6 @@ class _MessStudentScreenState extends State<MessStudentScreen> {
     FeedbackMess(),
     ComplaintsMess(),
     MessMenu(),
-    Container(),
-    // MessLeaveMess(),
-    Container(),
-    // FoodRequestMess(),
     MOMMess(),
     TenderMess(),
   ];
@@ -75,9 +69,9 @@ class _MessStudentScreenState extends State<MessStudentScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.blue,
+      backgroundColor: Color(0xFF00ABE9),
       appBar: AppBar(
-        backgroundColor: Colors.blue,
+        backgroundColor: Color(0xFF00ABE9),
         elevation: 0.0,
       ),
       body: Column(

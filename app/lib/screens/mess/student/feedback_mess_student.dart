@@ -54,7 +54,7 @@ class _FeedbackMessState extends State<FeedbackMess> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.blue,
+      backgroundColor: Color(0xFF00ABE9),
       appBar: AppBar(
         title: Text(
           "Mess",
@@ -62,7 +62,7 @@ class _FeedbackMessState extends State<FeedbackMess> {
             fontSize: 20,
           ),
         ),
-        backgroundColor: Colors.blue,
+        backgroundColor: Color(0xFF00ABE9),
         elevation: 0.0,
       ),
       body: SingleChildScrollView(

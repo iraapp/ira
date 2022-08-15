@@ -33,6 +33,7 @@ class GoogleAuthenticationBackend(authentication.BaseAuthentication):
                 return None
 
             token = authorization_header.split(' ')[1]
+            print(f"Token= {token}")
             decoded_token = id_token.verify_oauth2_token(
                 token, requests.Request(), env('GOOGLE_OAUTH_CLIENT_ID'))
 

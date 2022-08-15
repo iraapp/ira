@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
@@ -17,20 +18,17 @@ class FeedbackMessManager extends StatefulWidget {
 
 class _FeedbackMessManagerState extends State<FeedbackMessManager> {
   Future<List<FeedbackModel>> _getMessFeedbackItems() async {
-    String? idToken = await widget.secureStorage.read(key: 'idToken');
-
+    final String? token = await widget.secureStorage.read(key: 'staffToken');
     final requestUrl = Uri.parse(widget.baseUrl + '/mess/feedback');
     final response = await http.get(
       requestUrl,
       headers: <String, String>{
         "Content-Type": "application/x-www-form-urlencoded",
-        'Authorization': 'idToken ' + idToken!
+        'Authorization': token != null ? 'Token ' + token : '',
       },
     );
-
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      // print(data);
       return data
           .map<FeedbackModel>((json) => FeedbackModel.fromJson(json))
           .toList();
@@ -43,7 +41,7 @@ class _FeedbackMessManagerState extends State<FeedbackMessManager> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.blue,
+      backgroundColor: Color(0xFF00ABE9),
       appBar: AppBar(
         title: Text(
           "Feedbacks",
@@ -51,7 +49,7 @@ class _FeedbackMessManagerState extends State<FeedbackMessManager> {
             fontSize: 20,
           ),
         ),
-        backgroundColor: Colors.blue,
+        backgroundColor: Color(0xFF00ABE9),
         elevation: 0.0,
       ),
       body: ConstrainedBox(
@@ -126,7 +124,7 @@ class _FeedbackMessManagerState extends State<FeedbackMessManager> {
                                               topLeft: Radius.circular(10.0),
                                               bottomLeft: Radius.circular(0.0),
                                             ),
-                                            color: Colors.blue,
+                                            color: Color(0xFF00ABE9),
                                           ),
                                           child: Padding(
                                             padding: const EdgeInsets.all(10.0),
@@ -177,31 +175,4 @@ class _FeedbackMessManagerState extends State<FeedbackMessManager> {
       ),
     );
   }
-}
-
-Future showAlertDialog(
-  BuildContext context, {
-  required String title,
-  required String content,
-  required String defaultActionText,
-  String? cancelActionText,
-}) {
-  return showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text(title),
-      content: Text(content),
-      actions: [
-        if (cancelActionText != null)
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: Text(cancelActionText),
-          ),
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(false),
-          child: Text(defaultActionText),
-        ),
-      ],
-    ),
-  );
 }

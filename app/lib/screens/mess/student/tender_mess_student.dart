@@ -19,7 +19,29 @@ class TenderMess extends StatefulWidget {
 class _TenderMessState extends State<TenderMess> {
   bool _isActive = true;
 
-  Future<List<MessTenderModel>> _getMessTenderItems() async {
+  Future<List<MessTenderModel>> _getMessTenderActiveItems() async {
+    String? idToken = await widget.secureStorage.read(key: 'idToken');
+
+    final requestUrl = Uri.parse(widget.baseUrl + '/mess/tender');
+    final response = await http.get(
+      requestUrl,
+      headers: <String, String>{
+        "Content-Type": "application/x-www-form-urlencoded",
+        'Authorization': 'idToken ' + idToken!
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data
+          .map<MessTenderModel>((json) => MessTenderModel.fromJson(json))
+          .toList();
+    } else {
+      throw Exception('Failed to load post');
+    }
+  }
+
+  Future<List<MessTenderModel>> _getMessTenderArchivedItems() async {
     String? idToken = await widget.secureStorage.read(key: 'idToken');
 
     final requestUrl = Uri.parse(widget.baseUrl + '/mess/tender');
@@ -45,7 +67,7 @@ class _TenderMessState extends State<TenderMess> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.blue,
+      backgroundColor: Color(0xFF00ABE9),
       appBar: AppBar(
         title: Text(
           "Mess Tender",
@@ -54,7 +76,7 @@ class _TenderMessState extends State<TenderMess> {
           ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.blue,
+        backgroundColor: Color(0xFF00ABE9),
         elevation: 0.0,
       ),
       body: ConstrainedBox(
@@ -117,14 +139,17 @@ class _TenderMessState extends State<TenderMess> {
                   ),
                 ),
                 SizedBox(height: 10),
-                Text("Download old tenders here",
-                    style: TextStyle(
-                      fontSize: 14.0,
-                    )),
-                SizedBox(height: 20),
+                if (!_isActive)
+                  Text("Download old tenders here",
+                      style: TextStyle(
+                        fontSize: 14.0,
+                      )),
+                SizedBox(height: 10),
                 Expanded(
                   child: FutureBuilder<List<MessTenderModel>>(
-                      future: _getMessTenderItems(),
+                      future: _isActive
+                          ? _getMessTenderActiveItems()
+                          : _getMessTenderArchivedItems(),
                       builder: (_, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
                           if (snapshot.hasData) {
@@ -138,9 +163,16 @@ class _TenderMessState extends State<TenderMess> {
                                   child: Column(
                                     children: [
                                       Container(
-                                          // height: size.height * 0.1,
+                                          height: size.height * 0.13,
                                           width: double.infinity,
                                           decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.only(
+                                              topRight: Radius.circular(10.0),
+                                              bottomRight:
+                                                  Radius.circular(10.0),
+                                              topLeft: Radius.circular(10.0),
+                                              bottomLeft: Radius.circular(10.0),
+                                            ),
                                             color: Colors.white,
                                             boxShadow: [
                                               BoxShadow(
@@ -151,21 +183,64 @@ class _TenderMessState extends State<TenderMess> {
                                               ),
                                             ],
                                           ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 10.0,
-                                                vertical: 20.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Text(data.title,
-                                                    style: const TextStyle(
-                                                      fontSize: 16,
-                                                      color: Colors.black,
-                                                    )),
-                                              ],
-                                            ),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 10.0,
+                                                        vertical: 8.0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(data.title,
+                                                            style:
+                                                                const TextStyle(
+                                                              fontSize: 18,
+                                                              color:
+                                                                  Colors.black,
+                                                            )),
+                                                        SizedBox(height: 5),
+                                                        Text("1B Mess",
+                                                            style:
+                                                                const TextStyle(
+                                                              fontSize: 14,
+                                                              color: Colors
+                                                                  .black54,
+                                                            )),
+                                                        SizedBox(height: 5),
+                                                        Text(data.date,
+                                                            style:
+                                                                const TextStyle(
+                                                              fontSize: 14,
+                                                              color: Colors
+                                                                  .black54,
+                                                            )),
+                                                      ],
+                                                    ),
+                                                    InkWell(
+                                                      onTap: () {},
+                                                      child: SizedBox(
+                                                        height: 38.0,
+                                                        child: Image.asset(
+                                                            "assets/icons/download_cloud.png"),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
                                           )),
                                       SizedBox(height: 20),
                                     ],
@@ -187,31 +262,4 @@ class _TenderMessState extends State<TenderMess> {
       ),
     );
   }
-}
-
-Future showAlertDialog(
-  BuildContext context, {
-  required String title,
-  required String content,
-  required String defaultActionText,
-  String? cancelActionText,
-}) {
-  return showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text(title),
-      content: Text(content),
-      actions: [
-        if (cancelActionText != null)
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: Text(cancelActionText),
-          ),
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(false),
-          child: Text(defaultActionText),
-        ),
-      ],
-    ),
-  );
 }

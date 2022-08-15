@@ -47,7 +47,7 @@ class _MOMMessState extends State<MOMMess> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.blue,
+      backgroundColor: Color(0xFF00ABE9),
       appBar: AppBar(
         title: Text(
           "Mess",
@@ -55,7 +55,7 @@ class _MOMMessState extends State<MOMMess> {
             fontSize: 20,
           ),
         ),
-        backgroundColor: Colors.blue,
+        backgroundColor: Color(0xFF00ABE9),
         elevation: 0.0,
       ),
       body: ConstrainedBox(
@@ -100,7 +100,7 @@ class _MOMMessState extends State<MOMMess> {
                                   child: Column(
                                     children: [
                                       Container(
-                                          height: size.height * 0.2,
+                                          height: size.height * 0.13,
                                           width: double.infinity,
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.only(
@@ -121,6 +121,8 @@ class _MOMMessState extends State<MOMMess> {
                                             ],
                                           ),
                                           child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
@@ -134,28 +136,36 @@ class _MOMMessState extends State<MOMMess> {
                                                       MainAxisAlignment
                                                           .spaceBetween,
                                                   children: [
-                                                    Text(data.title,
-                                                        style: const TextStyle(
-                                                          fontSize: 16,
-                                                          color: Colors.black,
-                                                        )),
-                                                    Text(data.date,
-                                                        style: const TextStyle(
-                                                          color: Colors.black54,
-                                                        )),
-                                                  ],
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 10.0),
-                                                child: Wrap(
-                                                  children: [
-                                                    Text(data.description,
-                                                        style: const TextStyle(
-                                                          color: Colors.black54,
-                                                        )),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(data.title,
+                                                            style:
+                                                                const TextStyle(
+                                                              fontSize: 18,
+                                                              color:
+                                                                  Colors.black,
+                                                            )),
+                                                        SizedBox(height: 5),
+                                                        Text(data.date,
+                                                            style:
+                                                                const TextStyle(
+                                                              fontSize: 14,
+                                                              color: Colors
+                                                                  .black54,
+                                                            )),
+                                                      ],
+                                                    ),
+                                                    InkWell(
+                                                      onTap: () {},
+                                                      child: SizedBox(
+                                                        height: 38.0,
+                                                        child: Image.asset(
+                                                            "assets/icons/download_cloud.png"),
+                                                      ),
+                                                    )
                                                   ],
                                                 ),
                                               ),
@@ -181,31 +191,4 @@ class _MOMMessState extends State<MOMMess> {
       ),
     );
   }
-}
-
-Future showAlertDialog(
-  BuildContext context, {
-  required String title,
-  required String content,
-  required String defaultActionText,
-  String? cancelActionText,
-}) {
-  return showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text(title),
-      content: Text(content),
-      actions: [
-        if (cancelActionText != null)
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: Text(cancelActionText),
-          ),
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(false),
-          child: Text(defaultActionText),
-        ),
-      ],
-    ),
-  );
 }

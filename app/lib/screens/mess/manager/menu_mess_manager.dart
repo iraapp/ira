@@ -1,14 +1,14 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
-class MessMenu extends StatefulWidget {
-  const MessMenu({Key? key}) : super(key: key);
+class MenuMessManager extends StatefulWidget {
+  MenuMessManager({Key? key}) : super(key: key);
 
   @override
-  State<MessMenu> createState() => _MessMenuState();
+  State<MenuMessManager> createState() => _MenuMessManagerState();
 }
 
-class _MessMenuState extends State<MessMenu> {
+class _MenuMessManagerState extends State<MenuMessManager> {
   final List<String> _weekdays = [
     'Monday',
     'Tuesday',
@@ -74,11 +74,32 @@ class _MessMenuState extends State<MessMenu> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Center(
-                                      child: Text(
-                                        '$day',
-                                        style: TextStyle(fontSize: 20.0),
-                                      ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Opacity(
+                                          opacity: 0.0,
+                                          child: TextButton(
+                                            onPressed: () {},
+                                            child: Row(children: [
+                                              Text('Edit'),
+                                              Icon(Icons.edit)
+                                            ]),
+                                          ),
+                                        ),
+                                        Text(
+                                          '$day',
+                                          style: TextStyle(fontSize: 20.0),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {},
+                                          child: Row(children: [
+                                            Text('Edit'),
+                                            Icon(Icons.edit)
+                                          ]),
+                                        ),
+                                      ],
                                     ),
                                     SizedBox(height: 80.0),
                                     Text(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ira/screens/gate_pass/scan_gate_pass.dart';
+//import 'package:ira/screens/gate_pass/scan_gate_pass.dart.bat';
 
 guardMenu(context) {
   return [
@@ -11,12 +11,12 @@ guardMenu(context) {
           child: IconButton(
             icon: const Icon(Icons.admin_panel_settings_rounded),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ScanGatePass(),
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => const ScanGatePass(),
+              //   ),
+              // );
             },
             color: Colors.white,
           ),

@@ -2,7 +2,7 @@ class FeedbackModel {
   final String id;
   final String user;
   final String body;
-  final String mess_no;
+  final String mess_type;
   final String created_at;
   final String status;
 
@@ -10,7 +10,7 @@ class FeedbackModel {
     required this.id,
     required this.user,
     required this.body,
-    required this.mess_no,
+    required this.mess_type,
     required this.created_at,
     required this.status,
   });
@@ -18,10 +18,10 @@ class FeedbackModel {
   factory FeedbackModel.fromJson(Map<String, dynamic> json) {
     return FeedbackModel(
       id: json['id'].toString(),
-      user: json['user'] as String,
-      body: json['body'] as String,
-      mess_no: json['mess_no'].toString(),
-      created_at: json['created_at'] as String,
+      user: json['user'].toString(),
+      body: json['body'].toString(),
+      mess_type: json['mess_type'].toString(),
+      created_at: json['created_at'].toString(),
       status: json['status'].toString(),
     );
   }
