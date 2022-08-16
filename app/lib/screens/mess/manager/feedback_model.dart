@@ -4,7 +4,7 @@ class FeedbackModel {
   final String body;
   final String mess_type;
   final String created_at;
-  final String status;
+  final bool status;
 
   FeedbackModel({
     required this.id,
@@ -22,7 +22,7 @@ class FeedbackModel {
       body: json['body'].toString(),
       mess_type: json['mess_type'].toString(),
       created_at: json['created_at'].toString(),
-      status: json['status'].toString(),
+      status: json['status'],
     );
   }
 }

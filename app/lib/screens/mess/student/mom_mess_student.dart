@@ -1,10 +1,15 @@
 import 'dart:convert';
+import 'dart:isolate';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ira/screens/mess/student/mess_mom_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class MOMMess extends StatefulWidget {
   MOMMess({Key? key}) : super(key: key);
@@ -36,11 +41,6 @@ class _MOMMessState extends State<MOMMess> {
     } else {
       throw Exception('Failed to load post');
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 
   @override
@@ -159,7 +159,14 @@ class _MOMMessState extends State<MOMMess> {
                                                       ],
                                                     ),
                                                     InkWell(
-                                                      onTap: () {},
+                                                      onTap: () async {
+                                                        if (data.file !=
+                                                            'null') {
+                                                          await _downloadFile(
+                                                              data.file,
+                                                              data.id);
+                                                        }
+                                                      },
                                                       child: SizedBox(
                                                         height: 38.0,
                                                         child: Image.asset(
@@ -190,5 +197,53 @@ class _MOMMessState extends State<MOMMess> {
         ),
       ),
     );
+  }
+
+  Future<void> _downloadFile(String fileUrl, String id) async {
+    var status = await Permission.storage.request();
+    if (status.isGranted) {
+      final baseStorage = await getExternalStorageDirectory();
+      await FlutterDownloader.enqueue(
+        url: fileUrl,
+        savedDir: baseStorage!.path,
+        fileName: "mom" + id,
+        showNotification:
+            true, // show download progress in status bar (for Android)
+        openFileFromNotification:
+            true, // click on notification to open downloaded file (for Android)
+      );
+    }
+  }
+
+  ReceivePort _port = ReceivePort();
+
+  @override
+  void initState() {
+    super.initState();
+
+    IsolateNameServer.registerPortWithName(
+        _port.sendPort, 'downloader_send_port');
+    _port.listen((dynamic data) {
+      String id = data[0];
+      DownloadTaskStatus status = data[1];
+      int progress = data[2];
+      setState(() {});
+    });
+
+    FlutterDownloader.registerCallback(downloadCallback);
+  }
+
+  @override
+  void dispose() {
+    IsolateNameServer.removePortNameMapping('downloader_send_port');
+    super.dispose();
+  }
+
+  @pragma('vm:entry-point')
+  static void downloadCallback(
+      String id, DownloadTaskStatus status, int progress) {
+    final SendPort? send =
+        IsolateNameServer.lookupPortByName('downloader_send_port');
+    send?.send([id, status, progress]);
   }
 }

@@ -6,6 +6,7 @@ class MessTenderModel {
   final String title;
   final String description;
   final String createdAt;
+  final bool archived;
 
   MessTenderModel({
     required this.id,
@@ -15,6 +16,7 @@ class MessTenderModel {
     required this.title,
     required this.description,
     required this.createdAt,
+    required this.archived,
   });
 
   factory MessTenderModel.fromJson(Map<String, dynamic> json) {
@@ -25,6 +27,7 @@ class MessTenderModel {
       file: json['file'].toString(),
       title: json['title'].toString(),
       description: json['description'].toString(),
+      archived: json['archived'],
       createdAt: json['createdAt'].toString(),
     );
   }

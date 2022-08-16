@@ -16,10 +16,10 @@ class ComplaintMessManager extends StatefulWidget {
 }
 
 class _ComplaintMessManagerState extends State<ComplaintMessManager> {
-  bool _actionTaken = false;
   @override
   final List<String> _filter = ["Filter", "Date", "Mess", "Action"];
   String _filterValue = "Filter";
+
   Future<List<FeedbackModel>> _getMessFeedbackItems() async {
     final String? token = await widget.secureStorage.read(key: 'staffToken');
     final requestUrl = Uri.parse(widget.baseUrl + '/mess/feedback');
@@ -33,7 +33,6 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      // print(data);
       return data
           .map<FeedbackModel>((json) => FeedbackModel.fromJson(json))
           .toList();
@@ -124,24 +123,27 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                               itemCount: snapshot.data?.length,
                               itemBuilder: (BuildContext context, int index) {
                                 final data = snapshot.data![index];
-                                final day =
-                                    DateTime.tryParse(data.created_at)?.day;
-                                final month =
-                                    DateTime.tryParse(data.created_at)?.month;
-                                final year =
-                                    DateTime.tryParse(data.created_at)?.year;
+                                final time = DateTime.parse(data.created_at);
+                                final day = time.day;
+                                final month = time.month;
+                                final year = time.year;
                                 final date = day.toString() +
                                     "-" +
                                     month.toString() +
                                     "-" +
                                     year.toString();
+
+                                final bool status = data.status;
                                 return GestureDetector(
                                   onTap: () async {
-                                    await showComplaintDialog(context,
-                                        title: data.user,
-                                        subtitle: "1B Mess | Breakfast | $date",
-                                        content: data.body,
-                                        defaultActionText: "Close");
+                                    await showComplaintDialog(
+                                      context,
+                                      title: data.user,
+                                      subtitle: "1B Mess | Breakfast | $date",
+                                      content: data.body,
+                                      defaultActionText: "Close",
+                                      status: status,
+                                    );
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -187,7 +189,7 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                                                       bottomLeft:
                                                           Radius.circular(0.0),
                                                     ),
-                                                    color: !_actionTaken
+                                                    color: !status
                                                         ? Colors.red
                                                         : Colors.green,
                                                   ),
@@ -211,7 +213,7 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                                                                   color: Colors
                                                                       .white,
                                                                 )),
-                                                            !_actionTaken
+                                                            !status
                                                                 ? SizedBox(
                                                                     height:
                                                                         30.0,
@@ -330,6 +332,7 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
     required String subtitle,
     required String content,
     required String defaultActionText,
+    required bool status,
   }) {
     return showDialog(
       context: context,
@@ -375,9 +378,10 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
               height: 40.0,
               child: ElevatedButton(
                 onPressed: () {
-                  if (!_actionTaken) {
+                  if (!status) {
                     setState(() {
-                      //_actionTaken = !_actionTaken;
+                      // update the status of the complaint
+
                       Navigator.pop(context);
                     });
                   } else {
@@ -386,7 +390,7 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
-                    !_actionTaken ? Colors.red : Colors.green,
+                    !status ? Colors.red : Colors.green,
                   ),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
@@ -394,7 +398,7 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                     ),
                   ),
                 ),
-                child: Text(!_actionTaken ? "Take Action" : "Action Taken",
+                child: Text(!status ? "Take Action" : "Action Taken",
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 12.0,

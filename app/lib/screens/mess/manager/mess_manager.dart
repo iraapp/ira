@@ -8,6 +8,7 @@ import 'package:ira/screens/mess/factories/mess.dart';
 import 'package:ira/screens/mess/manager/feedback_mess_manager.dart';
 import 'package:http/http.dart' as http;
 import 'package:ira/screens/mess/manager/mom_mess_manager.dart';
+import 'package:ira/screens/mess/manager/tenders_mess_manager.dart';
 import 'package:ira/screens/mess/student/mom_mess_student.dart';
 
 class MessManagerScreen extends StatefulWidget {
@@ -56,7 +57,7 @@ class _MessManagerScreenState extends State<MessManagerScreen> {
     FeedbackMessManager(),
     ComplaintMessManager(),
     MenuMessManager(),
-    Container(),
+    TendersMessManager(),
     MOMMessManager(),
   ];
 
