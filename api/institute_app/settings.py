@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     'mess',
     'user_profile',
     'hostel',
-    'team'
+    'team',
+    'medical',
 ]
 
 AUTH_USER_MODEL = 'authentication.User'

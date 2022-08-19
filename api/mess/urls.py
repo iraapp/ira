@@ -22,7 +22,9 @@ url used here
                     - GET - get a tender using primary key
     7. /all_items
                     - GET - get all mess items
+     8. feedback/action/<int:pk>/ - for admin to update feedback status
 
+     9. tender/archive/<int:pk>/ - for admin to archive tender
 """
 
 urlpatterns = [
@@ -32,8 +34,12 @@ urlpatterns = [
          name="Feedback instance"),
     path('mom', views.MessMomView.as_view(), name="Add get mom"),
     path('mom/<int:pk>', views.MessMomInstanceView.as_view(),
-            name="Mom instance"),
+         name="Mom instance"),
     path('tender', views.MessTenderView.as_view(), name="Add get tender"),
     path('tender/<int:pk>', views.MessTenderInstanceView.as_view(),
-            name="tender instance"),
+         name="tender instance"),
+    path('feedback/action/<int:pk>/',
+         views.FeedbackActionView.as_view(), name="feedback action"),
+    path('tender/archive/<int:pk>/', views.MessTenderArchivedView.as_view(),
+         name="tender action"),
 ]
