@@ -24,6 +24,7 @@ class FeedbackSerializer(serializers.Serializer):
     user = serializers.StringRelatedField()
     body = serializers.CharField(max_length=500)
     mess_type = serializers.CharField(max_length=50)
+    mess_meal = serializers.CharField(max_length=50)
     created_at = serializers.DateTimeField()
     status = serializers.BooleanField(default=False)
 
