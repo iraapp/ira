@@ -1,4 +1,3 @@
-import json
 from mess.serializers import *
 from mess.models import *
 from rest_framework.views import APIView
@@ -31,20 +30,19 @@ class FeedbackView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        data = Feedback.objects.all()
-        serialized_json = FeedbackSerializer(data, many=True)
+        data = MessFeedback.objects.all()
+        serialized_json = MessFeedbackSerializer(data, many=True)
         return Response(data=serialized_json.data)
 
     def post(self, request, *args, **kwargs):
         user = request.user
         feedback = request.POST.get("feedback")
-        mess_type = request.POST.get("mess_type")
-        mess_meal = request.POST.get("mess_meal")
-
-        instance = Feedback.objects.create(
+        mess_name = request.POST.get("mess_type")
+        mess_type = Mess.objects.filter(name = mess_name).first()
+        MessFeedback.objects.create(
             user=user,
             body=feedback,
-            mess_type=mess_type,
+            mess_type = mess_type,
             mess_meal=mess_meal
         )
         return Response(status=200, data={
@@ -58,8 +56,8 @@ class FeedbackInstanceView(APIView):
 
     def get(self, request, *args, **kwargs):
         feedback_id = kwargs.get("pk")
-        data = Feedback.objects.filter(id=feedback_id).first()
-        serialized_json = FeedbackSerializer(data)
+        data = MessFeedback.objects.filter(id=feedback_id).first()
+        serialized_json = MessFeedbackSerializer(data)
         return Response(data=serialized_json.data)
 
 # To the status of feedback
