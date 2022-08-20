@@ -1,9 +1,9 @@
-import json
 from mess.serializers import *
 from mess.models import *
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
+from authentication.permissions import IsMessManager
 
 
 class MessMenu(APIView):
@@ -30,19 +30,21 @@ class FeedbackView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        data = Feedback.objects.all()
-        serialized_json = FeedbackSerializer(data, many=True)
+        data = MessFeedback.objects.all()
+        serialized_json = MessFeedbackSerializer(data, many=True)
         return Response(data=serialized_json.data)
 
     def post(self, request, *args, **kwargs):
         user = request.user
         feedback = request.POST.get("feedback")
-        mess_type = request.POST.get("mess_type")
-        instance = Feedback.objects.create(
+        mess_name = request.POST.get("mess_type")
+        mess_meal = request.POST.get("mess_meal")
+        mess_type = Mess.objects.filter(name=mess_name).first()
+        MessFeedback.objects.create(
             user=user,
             body=feedback,
-            mess_type=mess_type
-
+            mess_type=mess_type,
+            mess_meal=mess_meal
         )
         return Response(status=200, data={
 
@@ -51,11 +53,29 @@ class FeedbackView(APIView):
 
 
 class FeedbackInstanceView(APIView):
+    permission_classes = [IsAuthenticated, ]
+
     def get(self, request, *args, **kwargs):
         feedback_id = kwargs.get("pk")
-        data = Feedback.objects.filter(id=feedback_id).first()
-        serialized_json = FeedbackSerializer(data)
+        data = MessFeedback.objects.filter(id=feedback_id).first()
+        serialized_json = MessFeedbackSerializer(data)
         return Response(data=serialized_json.data)
+
+# To the status of feedback
+
+
+class FeedbackActionView(APIView):
+    permission_classes = [IsMessManager, ]
+
+    def update(self, request, *args, **kwargs):
+        pk = kwargs.get("pk")
+        feedback = Feedback.objects.filter(id=pk).first()
+        feedback.status = True
+        feedback.save()
+        return Response(status=200, data={
+
+            "msg": "feedback action Updated."
+        })
 
 
 # Minutes of meeting for meeting note: s3 implimentation is necessary for production
@@ -72,7 +92,7 @@ MessMomView:
 
 
 class MessMomView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, ]
     model = MessMom
 
     def get(self, request, *args, **kwargs):
@@ -105,11 +125,12 @@ class MessMomView(APIView):
 
 
 class MessMomInstanceView(APIView):
-    model = MessMom
+
+    permission_classes = [IsAuthenticated, ]
 
     def get(self, request, *args, **kwargs):
         mom_id = kwargs.get("pk")
-        data = self.model.objects.filter(id=mom_id).first()
+        data = MessMom.objects.filter(id=mom_id).first()
         serialized_json = MessMomSer(data)
         return Response(data=serialized_json.data)
 
@@ -127,7 +148,7 @@ mess tender view:
 
 
 class MessTenderView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsMessManager, ]
     model = MessTender
 
     def get(self, request, *args, **kwargs):
@@ -159,6 +180,20 @@ class MessTenderView(APIView):
             return Response(status=500, data={
                 "msg": "internal server error"
             })
+
+
+# To update tender State
+class MessTenderArchivedView(APIView):
+    permission_classes = [IsMessManager, ]
+
+    def update(self, request, *args, **kwargs):
+        pk = kwargs.get("pk")
+        data = MessTender.objects.filter(id=pk).first()
+        data.archived = True
+        data.save()
+        return Response(status=200, data={
+            "msg": "tender archived successfully."
+        })
 
 
 class MessTenderInstanceView(APIView):
