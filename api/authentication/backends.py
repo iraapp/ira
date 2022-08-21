@@ -18,6 +18,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Take environment variables from .env file
 environ.Env.read_env(os.path.join(BASE_DIR.parent, '.env'))
 
+
 class GoogleAuthenticationBackend(authentication.BaseAuthentication):
     def authenticate(self, request):
 
@@ -33,7 +34,6 @@ class GoogleAuthenticationBackend(authentication.BaseAuthentication):
                 return None
 
             token = authorization_header.split(' ')[1]
-            print(f"Token= {token}")
             decoded_token = id_token.verify_oauth2_token(
                 token, requests.Request(), env('GOOGLE_OAUTH_CLIENT_ID'))
 
