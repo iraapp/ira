@@ -464,12 +464,6 @@ class _MOMMessManagerState extends State<MOMMessManager> {
               )
             ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: Text("Cancel"),
-            ),
-          ],
         );
       }),
     );

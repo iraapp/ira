@@ -38,9 +38,14 @@ class _TenderMessState extends State<TenderMess> {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      return data
-          .map<MessTenderModel>((json) => MessTenderModel.fromJson(json))
-          .toList();
+      List<MessTenderModel> _activeItems = [];
+      for (var d in data) {
+        final item = MessTenderModel.fromJson(d);
+        if (item.archived == false) {
+          _activeItems.add(item);
+        }
+      }
+      return _activeItems;
     } else {
       throw Exception('Failed to load post');
     }

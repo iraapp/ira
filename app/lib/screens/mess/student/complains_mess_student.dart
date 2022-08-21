@@ -26,12 +26,13 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
 
   final ImagePicker _picker = ImagePicker();
 
-  Future<dynamic> _submitFeedback(int mess_no, String description) async {
+  Future<dynamic> _submitFeedback(
+      String mess_type, String description, String mess_meal) async {
     String? idToken = await widget.secureStorage.read(key: 'idToken');
-
     Map<String, dynamic> formMap = {
-      'mess_no': mess_no.toString(),
+      'mess_type': mess_type,
       'feedback': description,
+      'mess_meal': mess_meal,
     };
 
     final requestUrl = Uri.parse(widget.baseUrl + '/mess/feedback');
@@ -48,7 +49,7 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
     if (response.statusCode == 200) {
       return Future.value(true);
     }
-    print(response.body);
+
     return Future.value(false);
   }
 
@@ -270,18 +271,6 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 0.0, vertical: 10.0),
-                          child: ElevatedButton(
-                              onPressed: () async {
-                                // Pick an image
-                                final XFile? image = await _picker.pickImage(
-                                    source: ImageSource.gallery);
-                                // TODO: implement upload
-                              },
-                              child: Text("Upload photo")),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
                               horizontal: 40.0, vertical: 20.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
@@ -290,10 +279,11 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
                                 width: 140.0,
                                 child: ElevatedButton(
                                     onPressed: () async {
-                                      int _mess_no = _mess.indexOf(_messValue);
                                       final res = await _submitFeedback(
-                                          _mess_no + 1,
-                                          _description.toString());
+                                        _messValue,
+                                        _description.toString(),
+                                        _mealsValue,
+                                      );
                                       if (res) {
                                         await showFeedbackDialog(context,
                                             title: "Thank you",

@@ -41,6 +41,25 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
     }
   }
 
+  Future<void> _takeActionOnComplaint(int id) async {
+    final String? token = await widget.secureStorage.read(key: 'staffToken');
+
+    final requestUrl = Uri.parse(widget.baseUrl + '/mess/feedback/action/$id/');
+    final response = await http.put(
+      requestUrl,
+      headers: <String, String>{
+        "Content-Type": "application/x-www-form-urlencoded",
+        'Authorization': token != null ? 'Token ' + token : '',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return;
+    } else {
+      throw Exception('Failed to get');
+    }
+  }
+
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
@@ -116,7 +135,6 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                   child: FutureBuilder<List<FeedbackModel>>(
                       future: _getMessFeedbackItems(),
                       builder: (_, snapshot) {
-                        print(snapshot.error);
                         if (snapshot.connectionState == ConnectionState.done) {
                           if (snapshot.hasData) {
                             return ListView.builder(
@@ -134,12 +152,14 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                                     year.toString();
 
                                 final bool status = data.status;
+
                                 return GestureDetector(
                                   onTap: () async {
                                     await showComplaintDialog(
-                                      context,
+                                      id: int.parse(data.id),
                                       title: data.user,
-                                      subtitle: "1B Mess | Breakfast | $date",
+                                      subtitle:
+                                          "${data.mess_type} | ${data.mess_meal} | $date",
                                       content: data.body,
                                       defaultActionText: "Close",
                                       status: status,
@@ -277,7 +297,7 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                                                         Builder(
                                                             builder: (context) {
                                                           return Text(
-                                                              "1B Mess | Breakfast | $date",
+                                                              "${data.mess_type} | ${data.mess_meal} | $date",
                                                               style:
                                                                   const TextStyle(
                                                                 color: Colors
@@ -326,8 +346,8 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
     );
   }
 
-  Future showComplaintDialog(
-    BuildContext context, {
+  Future showComplaintDialog({
+    required int id,
     required String title,
     required String subtitle,
     required String content,
@@ -381,7 +401,7 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                   if (!status) {
                     setState(() {
                       // update the status of the complaint
-
+                      _takeActionOnComplaint(id);
                       Navigator.pop(context);
                     });
                   } else {

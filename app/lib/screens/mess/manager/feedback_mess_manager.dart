@@ -137,7 +137,7 @@ class _FeedbackMessManagerState extends State<FeedbackMessManager> {
                                                       color: Colors.white,
                                                     )),
                                                 Text(
-                                                    "1B Mess | Breakfast | $date",
+                                                    "${data.mess_type} | ${data.mess_meal} | $date",
                                                     style: const TextStyle(
                                                       color: Colors.white,
                                                     )),

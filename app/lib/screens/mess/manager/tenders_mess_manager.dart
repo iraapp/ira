@@ -41,9 +41,14 @@ class _TendersMessManagerState extends State<TendersMessManager> {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      return data
-          .map<MessTenderModel>((json) => MessTenderModel.fromJson(json))
-          .toList();
+      List<MessTenderModel> _activeItems = [];
+      for (var d in data) {
+        final item = MessTenderModel.fromJson(d);
+        if (item.archived == false) {
+          _activeItems.add(item);
+        }
+      }
+      return _activeItems;
     } else {
       throw Exception('Failed to load post');
     }
@@ -109,6 +114,25 @@ class _TendersMessManagerState extends State<TendersMessManager> {
       }
     } catch (e) {
       return false;
+    }
+  }
+
+  Future<void> _makeTenderArchive(int id) async {
+    final String? token = await widget.secureStorage.read(key: 'staffToken');
+
+    final requestUrl = Uri.parse(widget.baseUrl + '/mess/tender/archive/$id/');
+    final response = await http.put(
+      requestUrl,
+      headers: <String, String>{
+        "Content-Type": "application/x-www-form-urlencoded",
+        'Authorization': token != null ? 'Token ' + token : '',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return;
+    } else {
+      throw Exception('Failed to get');
     }
   }
 
@@ -296,7 +320,12 @@ class _TendersMessManagerState extends State<TendersMessManager> {
                                                     Row(
                                                       children: [
                                                         InkWell(
-                                                          onTap: () {},
+                                                          onTap: () async {
+                                                            await _makeTenderArchive(
+                                                                int.parse(
+                                                                    data.id));
+                                                            setState(() {});
+                                                          },
                                                           child: SizedBox(
                                                             height: 38.0,
                                                             child: Image.asset(
@@ -417,168 +446,166 @@ class _TendersMessManagerState extends State<TendersMessManager> {
     return showDialog(
       context: context,
       builder: (context) => StatefulBuilder(builder: (context, setSte) {
-        return AlertDialog(
-          contentPadding:
-              EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(children: [
-                Text(
-                  "Tender Title",
-                  style: TextStyle(fontSize: 16.0),
-                ),
-                SizedBox(width: 10),
-                Flexible(
-                  child: SizedBox(
-                    height: 40.0,
-                    child: TextField(
-                      controller: _titleTextCtr,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
+        return Expanded(
+          child: AlertDialog(
+            contentPadding:
+                EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(children: [
+                  Text(
+                    "Tender Title",
+                    style: TextStyle(fontSize: 16.0),
                   ),
-                )
-              ]),
-              SizedBox(height: 10),
-              Row(children: [
-                Text(
-                  "Date             ",
-                  style: TextStyle(fontSize: 16.0),
-                ),
-                SizedBox(width: 10),
-                GestureDetector(
-                  onTap: () {
-                    _selectDate(context);
-                  },
-                  child: Container(
-                    height: 40.0,
-                    width: 200.0,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                        width: 1.0,
-                      ),
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                    child: Container(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                            selectedDate.toLocal().toString().split(' ')[0]),
+                  SizedBox(width: 10),
+                  Flexible(
+                    child: SizedBox(
+                      height: 40.0,
+                      child: TextField(
+                        controller: _titleTextCtr,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
                       ),
                     ),
+                  )
+                ]),
+                SizedBox(height: 10),
+                Row(children: [
+                  Text(
+                    "Date             ",
+                    style: TextStyle(fontSize: 16.0),
                   ),
-                ),
-              ]),
-              SizedBox(height: 10),
-              Row(children: [
-                Text(
-                  "Mess Name",
-                  style: TextStyle(fontSize: 16.0),
-                ),
-                SizedBox(width: 10),
-                Flexible(
-                  child: SizedBox(
-                    height: 40.0,
-                    child: TextField(
-                      controller: _descriptionTextCtr,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                )
-              ]),
-              SizedBox(height: 10),
-              Row(children: [
-                Text(
-                  "Upload PDF",
-                  style: TextStyle(fontSize: 16.0),
-                ),
-                SizedBox(width: 20),
-                ElevatedButton(
-                    onPressed: () async {
-                      final file = await FilePicker.platform.pickFiles(
-                        type: FileType.custom,
-                        allowMultiple: false,
-                        allowedExtensions: ['pdf'],
-                      );
-                      if (file != null) {
-                        setSte(() {
-                          _pdfUploaded = true;
-                          final _pdfFile = file.files.first;
-                          _pdfFilePath = _pdfFile.path!;
-                        });
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Please select a file')));
-                      }
+                  SizedBox(width: 10),
+                  GestureDetector(
+                    onTap: () {
+                      _selectDate(context);
                     },
-                    child: Text("Upload"),
-                    style: ButtonStyle(
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0)),
+                    child: Container(
+                      height: 40.0,
+                      width: 200.0,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                          width: 1.0,
+                        ),
+                        borderRadius: BorderRadius.circular(5.0),
                       ),
-                      backgroundColor:
-                          MaterialStateProperty.all<Color?>(Color(0xFF00ABE9)),
-                    )),
-                SizedBox(width: 10),
-                !_pdfUploaded
-                    ? Checkbox(value: false, onChanged: (value) {})
-                    : Checkbox(value: true, onChanged: (value) {}),
-              ]),
-              SizedBox(height: 20),
-              SizedBox(
-                width: 100.0,
-                child: ElevatedButton(
-                    onPressed: !_pdfUploaded
-                        ? null
-                        : () async {
-                            // call the api to add the tender
-                            final title = _titleTextCtr.text;
-                            final description = _descriptionTextCtr.text;
-                            final date =
-                                selectedDate.toLocal().toString().split(' ')[0];
-                            final pdf = _pdfFilePath;
-                            final bool res = await _submitMessTenderItem(
-                                title: title,
-                                description: description,
-                                date: date,
-                                filePath: pdf,
-                                contractor: "nill");
-                            if (res) {
-                              setState(() {});
-                              _titleTextCtr.clear();
-                              _descriptionTextCtr.clear();
-                              Navigator.pop(context);
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Error')));
-                            }
-                          },
-                    child: Text("Add"),
-                    style: ButtonStyle(
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0)),
+                      child: Container(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                              selectedDate.toLocal().toString().split(' ')[0]),
+                        ),
                       ),
-                      backgroundColor:
-                          MaterialStateProperty.all<Color?>(Color(0xFF00ABE9)),
-                    )),
-              )
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-              child: Text("Cancel"),
+                    ),
+                  ),
+                ]),
+                SizedBox(height: 10),
+                Row(children: [
+                  Text(
+                    "Mess Name",
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                  SizedBox(width: 10),
+                  Flexible(
+                    child: SizedBox(
+                      height: 40.0,
+                      child: TextField(
+                        controller: _descriptionTextCtr,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                  )
+                ]),
+                SizedBox(height: 10),
+                Row(children: [
+                  Text(
+                    "Upload PDF",
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                  SizedBox(width: 20),
+                  ElevatedButton(
+                      onPressed: () async {
+                        final file = await FilePicker.platform.pickFiles(
+                          type: FileType.custom,
+                          allowMultiple: false,
+                          allowedExtensions: ['pdf'],
+                        );
+                        if (file != null) {
+                          setSte(() {
+                            _pdfUploaded = true;
+                            final _pdfFile = file.files.first;
+                            _pdfFilePath = _pdfFile.path!;
+                          });
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Please select a file')));
+                        }
+                      },
+                      child: Text("Upload"),
+                      style: ButtonStyle(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0)),
+                        ),
+                        backgroundColor: MaterialStateProperty.all<Color?>(
+                            Color(0xFF00ABE9)),
+                      )),
+                  SizedBox(width: 10),
+                  !_pdfUploaded
+                      ? Checkbox(value: false, onChanged: (value) {})
+                      : Checkbox(value: true, onChanged: (value) {}),
+                ]),
+                SizedBox(height: 20),
+                SizedBox(
+                  width: 100.0,
+                  child: ElevatedButton(
+                      onPressed: !_pdfUploaded
+                          ? null
+                          : () async {
+                              // call the api to add the tender
+                              final title = _titleTextCtr.text;
+                              final description = _descriptionTextCtr.text;
+                              final date = selectedDate
+                                  .toLocal()
+                                  .toString()
+                                  .split(' ')[0];
+                              final pdf = _pdfFilePath;
+                              final bool res = await _submitMessTenderItem(
+                                  title: title,
+                                  description: description,
+                                  date: date,
+                                  filePath: pdf,
+                                  contractor: "nill");
+                              if (res) {
+                                setState(() {});
+                                _titleTextCtr.clear();
+                                _descriptionTextCtr.clear();
+                                Navigator.pop(context);
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Error')));
+                              }
+                            },
+                      child: Text("Add"),
+                      style: ButtonStyle(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0)),
+                        ),
+                        backgroundColor: MaterialStateProperty.all<Color?>(
+                            Color(0xFF00ABE9)),
+                      )),
+                )
+              ],
             ),
-          ],
+          ),
         );
       }),
     );

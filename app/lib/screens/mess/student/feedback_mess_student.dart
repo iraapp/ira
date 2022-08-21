@@ -17,19 +17,26 @@ class FeedbackMess extends StatefulWidget {
 class _FeedbackMessState extends State<FeedbackMess> {
   List<String> _messFill = ["Fill as Anonymous", "Use your credentials"];
   String _messFillValue = "Fill as Anonymous";
-  List<String> _mess = ["1 B Mess", "120 Mess", "Girls Mess"];
+  List<String> _messTypes = ["1 B Mess", "120 Mess", "Girls Mess"];
   String _messValue = "1 B Mess";
-  List<String> _meals = ["Breakfast", "Lunch", "Snacks", "Dinner", "General"];
+  List<String> _messMeals = [
+    "Breakfast",
+    "Lunch",
+    "Snacks",
+    "Dinner",
+    "General"
+  ];
   String _mealsValue = "Breakfast";
 
   String? _description;
 
-  Future<dynamic> _submitFeedback(int mess_no, String description) async {
+  Future<dynamic> _submitFeedback(
+      String mess_type, String description, String mess_meal) async {
     String? idToken = await widget.secureStorage.read(key: 'idToken');
-
     Map<String, dynamic> formMap = {
-      'mess_no': mess_no.toString(),
+      'mess_type': mess_type,
       'feedback': description,
+      'mess_meal': mess_meal,
     };
 
     final requestUrl = Uri.parse(widget.baseUrl + '/mess/feedback');
@@ -46,7 +53,7 @@ class _FeedbackMessState extends State<FeedbackMess> {
     if (response.statusCode == 200) {
       return Future.value(true);
     }
-    print(response.body);
+
     return Future.value(false);
   }
 
@@ -161,7 +168,7 @@ class _FeedbackMessState extends State<FeedbackMess> {
                                     color: Colors.black,
                                   ),
                                   value: _messValue,
-                                  items: _mess.map((String items) {
+                                  items: _messTypes.map((String items) {
                                     return DropdownMenuItem(
                                       value: items,
                                       child: Text(
@@ -205,7 +212,7 @@ class _FeedbackMessState extends State<FeedbackMess> {
                                     color: Colors.black,
                                   ),
                                   value: _mealsValue,
-                                  items: _meals.map((String items) {
+                                  items: _messMeals.map((String items) {
                                     return DropdownMenuItem(
                                       value: items,
                                       child: Text(
@@ -275,10 +282,11 @@ class _FeedbackMessState extends State<FeedbackMess> {
                                 width: 140.0,
                                 child: ElevatedButton(
                                     onPressed: () async {
-                                      int _mess_no = _mess.indexOf(_messValue);
                                       final res = await _submitFeedback(
-                                          _mess_no + 1,
-                                          _description.toString());
+                                        _messValue,
+                                        _description.toString(),
+                                        _mealsValue,
+                                      );
                                       if (res) {
                                         await showFeedbackDialog(context,
                                             title: "Thank you",
