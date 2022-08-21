@@ -18,3 +18,13 @@ class IsMessManager(BasePermission):
     def has_permission(self, request):
       return bool(request.user and
       request.user.role == STAFF_ROLE_IDS['mess_manager'])
+
+
+class IsMedicalManager(BasePermission):
+    """
+    Allows access only to only medical managers.
+    """
+
+    def has_permission(self, request):
+      return bool(request.user and
+      request.user.role == STAFF_ROLE_IDS['medical_manager'])

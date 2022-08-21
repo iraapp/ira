@@ -13,7 +13,8 @@ from .managers import CustomUserManager
 
 STAFF_ROLE_IDS = {
     'guard': 1,
-    'mess_manager': 2
+    'mess_manager': 2,
+    'medical_manager':3,
 }
 
 # Create your models here.
