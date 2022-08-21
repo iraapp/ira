@@ -127,6 +127,9 @@ class _HostelComplaintState extends State<HostelComplaint> {
 
                 _hostel = snapshot.data['hostel'];
                 _complaintTypes = snapshot.data['complaints'];
+                _complaintTypes = _complaintTypes
+                    .where((element) => element != 'Feedback')
+                    .toList();
 
                 if (_hostel.isNotEmpty && _complaintTypes.isNotEmpty) {
                   if (_hostelValue == "") _hostelValue = _hostel[0];
