@@ -11,7 +11,7 @@ studentMenu(context) {
   return [
     Column(children: [
       CircleAvatar(
-        backgroundColor: const Color(0xFF09C7F9),
+        backgroundColor: Colors.blue,
         child: IconButton(
           icon: const Icon(Icons.person),
           onPressed: () {
@@ -33,7 +33,7 @@ studentMenu(context) {
     ]),
     Column(children: [
       CircleAvatar(
-        backgroundColor: const Color(0xFF09C7F9),
+        backgroundColor: Colors.blue,
         child: IconButton(
           icon: const Icon(Icons.food_bank),
           onPressed: () {
@@ -55,7 +55,7 @@ studentMenu(context) {
     ]),
     Column(children: [
       CircleAvatar(
-        backgroundColor: const Color(0xFF09C7F9),
+        backgroundColor: Colors.blue,
         child: IconButton(
           icon: const Icon(Icons.admin_panel_settings_rounded),
           onPressed: () {
@@ -77,7 +77,7 @@ studentMenu(context) {
     ]),
     Column(children: [
       CircleAvatar(
-        backgroundColor: const Color(0xFF09C7F9),
+        backgroundColor: Colors.blue,
         child: IconButton(
           icon: const Icon(Icons.people),
           onPressed: () {
@@ -99,7 +99,7 @@ studentMenu(context) {
     ]),
     Column(children: [
       CircleAvatar(
-        backgroundColor: const Color(0xFF09C7F9),
+        backgroundColor: Colors.blue,
         child: IconButton(
           icon: const Icon(Icons.person),
           onPressed: () {
@@ -121,7 +121,7 @@ studentMenu(context) {
     ]),
     Column(children: [
       CircleAvatar(
-        backgroundColor: const Color(0xFF09C7F9),
+        backgroundColor: Colors.blue,
         child: IconButton(
           icon: const Icon(Icons.medical_services),
           onPressed: () {

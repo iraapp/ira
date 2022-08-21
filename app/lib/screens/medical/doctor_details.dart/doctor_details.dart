@@ -1,147 +1,39 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:ira/screens/medical/doctor_details.dart/doctor_card.dart';
+import 'package:http/http.dart' as http;
 
-class DoctorCard extends StatelessWidget {
-  final String name;
-  final String contact;
-  final String designation;
-  final String degree;
-  final String email;
+class DoctorModel {
+  String name;
+  String contact;
+  String specialization;
+  String mail;
+  String startTime;
+  String endTime;
+  String details;
 
-  const DoctorCard({
-    Key? key,
+  DoctorModel({
     required this.name,
-    required this.degree,
-    required this.designation,
     required this.contact,
-    required this.email,
-  }) : super(key: key);
+    required this.specialization,
+    required this.mail,
+    required this.startTime,
+    required this.endTime,
+    required this.details,
+  });
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(20.0)),
-            boxShadow: [
-              BoxShadow(
-                color: Color.fromARGB(81, 158, 158, 158),
-                offset: Offset(0, 3),
-                blurRadius: 3.0,
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(30.00, 25.00, 30.0, 20.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(children: [
-                      Image.asset("assets/icons/staff_contact_profile.png"),
-                      const SizedBox(
-                        width: 15.0,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            name,
-                            style: const TextStyle(
-                              fontSize: 12.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            designation,
-                            style: const TextStyle(
-                              fontSize: 12.0,
-                            ),
-                          ),
-                          Text(
-                            degree,
-                            style: const TextStyle(
-                              fontSize: 12.0,
-                            ),
-                          ),
-                          Text(
-                            contact,
-                            style: const TextStyle(
-                              fontSize: 12.0,
-                            ),
-                          ),
-                          Text(
-                            email,
-                            style: const TextStyle(
-                              fontSize: 12.0,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ]),
-                    const Text("Details: ")
-                  ],
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Container(
-                      padding:
-                          const EdgeInsets.fromLTRB(10.0, 12.5, 10.0, 12.5),
-                      decoration: const BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(20.0),
-                        ),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          "Take Appointment",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12.0,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      padding:
-                          const EdgeInsets.fromLTRB(10.0, 12.5, 10.0, 12.5),
-                      decoration: const BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.only(
-                          bottomRight: Radius.circular(20.0),
-                        ),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          "Timing - 2.00 - 4.00",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12.0,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
-        ),
-        const SizedBox(
-          height: 20.0,
-        )
-      ],
+  factory DoctorModel.fromJson(Map<String, dynamic> json) {
+    return DoctorModel(
+      name: json['name'],
+      contact: json['phone'],
+      specialization: json['specialization'],
+      mail: json['mail'],
+      startTime: json['start_time'],
+      endTime: json['end_time'],
+      details: json['details'],
     );
   }
 }
@@ -156,6 +48,30 @@ class DoctorDetailsScreen extends StatefulWidget {
 class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
   final secureStorage = const FlutterSecureStorage();
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
+
+  Future<Map<String, List<DoctorModel>>> fetchDoctorDetails() async {
+    String? idToken = await secureStorage.read(key: 'idToken');
+    final response = await http.get(
+        Uri.parse(
+          baseUrl + '/medical/student/doctor/',
+        ),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'idToken ' + idToken!
+        });
+
+    Map<String, List<DoctorModel>> mmp = {};
+
+    if (response.statusCode == 200) {
+      List decodedBody = jsonDecode(response.body);
+
+      mmp['data'] = decodedBody
+          .map<DoctorModel>((json) => DoctorModel.fromJson(json))
+          .toList();
+    }
+
+    return Future.value(mmp);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -205,25 +121,32 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 30.0,
-                  vertical: 40.0,
+                  vertical: 20.0,
                 ),
-                child: Column(
-                  children: const [
-                    DoctorCard(
-                      name: "Dr Rohit Bhatti",
-                      designation: "Physiotherapist",
-                      degree: "MBBS",
-                      contact: "+91 8767976787",
-                      email: "rohit.bhatti@iitjammu.ac.in",
-                    ),
-                    DoctorCard(
-                      name: "Dr Pranav Gupta",
-                      designation: "Dentist",
-                      degree: "BAMS",
-                      contact: "+91 9872672892",
-                      email: "pranav.gupta@iitjammu.ac.in",
-                    )
-                  ],
+                child: FutureBuilder(
+                  future: fetchDoctorDetails(),
+                  builder:
+                      (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting ||
+                        snapshot.data == null) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    return ListView.builder(
+                        itemCount: snapshot.data['data'].length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return DoctorCard(
+                            name: snapshot.data['data'][index].name,
+                            specialization:
+                                snapshot.data['data'][index].specialization,
+                            contact: snapshot.data['data'][index].contact,
+                            details: snapshot.data['data'][index].details,
+                            email: snapshot.data['data'][index].mail,
+                            startTime: snapshot.data['data'][index].startTime,
+                            endTime: snapshot.data['data'][index].endTime,
+                          );
+                        });
+                  },
                 ),
               ),
             ),

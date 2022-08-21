@@ -73,7 +73,7 @@ class _DashboardState extends State<Dashboard> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF09c6f9),
+        backgroundColor: Colors.blue,
         elevation: 0,
         leading: const Icon(Icons.menu),
         actions: [
@@ -88,7 +88,7 @@ class _DashboardState extends State<Dashboard> {
           height: 130.0,
           width: MediaQuery.of(context).size.width,
           decoration: const BoxDecoration(
-            color: Color(0xFF09c7f9),
+            color: Colors.blue,
           ),
           alignment: Alignment.topLeft,
           child: Padding(
@@ -98,7 +98,7 @@ class _DashboardState extends State<Dashboard> {
         ),
         Expanded(
           child: Container(
-            color: const Color(0xFF09c7f9),
+            color: Colors.blue,
             child: Container(
               width: MediaQuery.of(context).size.width,
               decoration: const BoxDecoration(
@@ -148,7 +148,7 @@ class _DashboardState extends State<Dashboard> {
           child: const Text(
             'Sign Out',
             style: TextStyle(
-              color: Color(0xff3a82fd),
+              color: Colors.blue,
             ),
           ),
           onPressed: () async {

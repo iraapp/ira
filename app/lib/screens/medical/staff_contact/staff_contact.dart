@@ -1,78 +1,26 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:ira/screens/medical/staff_contact/staff_card.dart';
+import 'package:http/http.dart' as http;
 
-class Staff extends StatelessWidget {
-  final String name;
-  final String designation;
-  final String contact;
+class StaffModel {
+  String name;
+  String contact;
+  String designation;
 
-  const Staff({
-    Key? key,
+  StaffModel({
     required this.name,
-    required this.designation,
     required this.contact,
-  }) : super(key: key);
+    required this.designation,
+  });
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.fromLTRB(30.00, 25.00, 30.0, 25.0),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(20.0)),
-            boxShadow: [
-              BoxShadow(
-                color: Color.fromARGB(81, 158, 158, 158),
-                offset: Offset(0, 3),
-                blurRadius: 3.0,
-              ),
-            ],
-          ),
-          child:
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Row(children: [
-              Image.asset("assets/icons/staff_contact_profile.png"),
-              const SizedBox(
-                width: 15.0,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    name,
-                    style: const TextStyle(
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    designation,
-                    style: const TextStyle(
-                      fontSize: 12.0,
-                    ),
-                  ),
-                  Text(
-                    contact,
-                    style: const TextStyle(
-                      fontSize: 12.0,
-                    ),
-                  ),
-                ],
-              ),
-            ]),
-            CircleAvatar(
-              backgroundColor: Colors.green,
-              child: Image.asset("assets/icons/call.png"),
-            )
-          ]),
-        ),
-        const SizedBox(
-          height: 20.0,
-        )
-      ],
+  factory StaffModel.fromJson(Map<String, dynamic> json) {
+    return StaffModel(
+      name: json['name'],
+      contact: json['phone'],
+      designation: json['designation'],
     );
   }
 }
@@ -87,6 +35,29 @@ class StaffContactScreen extends StatefulWidget {
 class _StaffContactScreenState extends State<StaffContactScreen> {
   final secureStorage = const FlutterSecureStorage();
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
+
+  Future<Map<String, List<StaffModel>>> fetchStaff() async {
+    String? idToken = await secureStorage.read(key: 'idToken');
+    final response = await http.get(
+        Uri.parse(
+          baseUrl + '/medical/student/staff/',
+        ),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'idToken ' + idToken!
+        });
+
+    Map<String, List<StaffModel>> mmp = {};
+
+    if (response.statusCode == 200) {
+      List decodedData = jsonDecode(response.body);
+      mmp['data'] = decodedData
+          .map<StaffModel>((json) => StaffModel.fromJson(json))
+          .toList();
+    }
+
+    return Future.value(mmp);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -138,25 +109,30 @@ class _StaffContactScreenState extends State<StaffContactScreen> {
                   horizontal: 30.0,
                   vertical: 40.0,
                 ),
-                child: Column(
-                  children: const [
-                    Staff(
-                      name: "Dr Karunika Sharma",
-                      designation: "Doctor",
-                      contact: "+91 9755467567",
-                    ),
-                    Staff(
-                      name: "Dr Rohit Bhatti",
-                      designation: "Doctor (Physiotherapist)",
-                      contact: "+91 8767976787",
-                    ),
-                    Staff(
-                      name: "Dr Pranav Gupta",
-                      designation: "Doctor (Dental)",
-                      contact: "+91 9872672892",
-                    ),
-                  ],
-                ),
+                child: FutureBuilder(
+                    future: fetchStaff(),
+                    builder: (
+                      BuildContext context,
+                      AsyncSnapshot<dynamic> snapshot,
+                    ) {
+                      if (snapshot.connectionState == ConnectionState.waiting ||
+                          snapshot.data == null) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+
+                      return ListView.builder(
+                          itemCount: snapshot.data['data'].length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return StaffCard(
+                              name: snapshot.data['data'][index].name,
+                              designation:
+                                  snapshot.data['data'][index].designation,
+                              contact: snapshot.data['data'][index].contact,
+                            );
+                          });
+                    }),
               ),
             ),
           ),

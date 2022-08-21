@@ -4,6 +4,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ira/screens/medical/doctor_details.dart/doctor_details.dart';
 import 'package:ira/screens/medical/staff_contact/staff_contact.dart';
 
+import 'history/medical_history.dart';
+
 class MedicalStudentScreen extends StatefulWidget {
   const MedicalStudentScreen({Key? key}) : super(key: key);
 
@@ -15,11 +17,12 @@ class _MedicalStudentScreenState extends State<MedicalStudentScreen> {
   final secureStorage = const FlutterSecureStorage();
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
 
-  final List<String> _medicalList = ["Staff Contact", "Doctors"];
+  final List<String> _medicalList = ["Staff Contact", "Doctors", "History"];
 
   final List<Widget> _medicalRoutes = [
     const StaffContactScreen(),
     const DoctorDetailsScreen(),
+    const MedicalHistoryScreen(),
   ];
 
   @override
