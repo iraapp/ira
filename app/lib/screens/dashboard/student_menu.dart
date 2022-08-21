@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ira/screens/gate_pass/purpose.dart';
 import 'package:ira/screens/hostel/dashboard.dart';
+import 'package:ira/screens/medical/dashboard.dart';
 import 'package:ira/screens/mess/student/mess_student.dart';
 import 'package:ira/screens/team/team.dart';
 
@@ -10,7 +11,7 @@ studentMenu(context) {
   return [
     Column(children: [
       CircleAvatar(
-        backgroundColor: const Color(0xFF09C7F9),
+        backgroundColor: Colors.blue,
         child: IconButton(
           icon: const Icon(Icons.person),
           onPressed: () {
@@ -32,7 +33,7 @@ studentMenu(context) {
     ]),
     Column(children: [
       CircleAvatar(
-        backgroundColor: const Color(0xFF09C7F9),
+        backgroundColor: Colors.blue,
         child: IconButton(
           icon: const Icon(Icons.food_bank),
           onPressed: () {
@@ -54,7 +55,7 @@ studentMenu(context) {
     ]),
     Column(children: [
       CircleAvatar(
-        backgroundColor: const Color(0xFF09C7F9),
+        backgroundColor: Colors.blue,
         child: IconButton(
           icon: const Icon(Icons.admin_panel_settings_rounded),
           onPressed: () {
@@ -76,7 +77,7 @@ studentMenu(context) {
     ]),
     Column(children: [
       CircleAvatar(
-        backgroundColor: const Color(0xFF09C7F9),
+        backgroundColor: Colors.blue,
         child: IconButton(
           icon: const Icon(Icons.people),
           onPressed: () {
@@ -98,7 +99,7 @@ studentMenu(context) {
     ]),
     Column(children: [
       CircleAvatar(
-        backgroundColor: const Color(0xFF09C7F9),
+        backgroundColor: Colors.blue,
         child: IconButton(
           icon: const Icon(Icons.person),
           onPressed: () {
@@ -115,6 +116,28 @@ studentMenu(context) {
       const SizedBox(height: 5.0),
       const Text(
         "Hostel",
+        style: TextStyle(fontSize: 12.0),
+      )
+    ]),
+    Column(children: [
+      CircleAvatar(
+        backgroundColor: Colors.blue,
+        child: IconButton(
+          icon: const Icon(Icons.medical_services),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const MedicalStudentScreen(),
+              ),
+            );
+          },
+          color: Colors.white,
+        ),
+      ),
+      const SizedBox(height: 5.0),
+      const Text(
+        "Medical",
         style: TextStyle(fontSize: 12.0),
       )
     ]),

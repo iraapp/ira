@@ -1,4 +1,3 @@
-import json
 from authentication.permissions import IsMedicalManager
 from medical.serializers import *
 from medical.models import *
