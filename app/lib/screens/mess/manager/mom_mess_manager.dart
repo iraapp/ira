@@ -83,7 +83,7 @@ class _MOMMessManagerState extends State<MOMMessManager> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Color(0xFF00ABE9),
+      backgroundColor: Colors.blue,
       appBar: AppBar(
         title: Text(
           "Mess",
@@ -91,7 +91,7 @@ class _MOMMessManagerState extends State<MOMMessManager> {
             fontSize: 20,
           ),
         ),
-        backgroundColor: Color(0xFF00ABE9),
+        backgroundColor: Colors.blue,
         elevation: 0.0,
       ),
       body: ConstrainedBox(
@@ -140,8 +140,8 @@ class _MOMMessManagerState extends State<MOMMessManager> {
                             RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18.0)),
                           ),
-                          backgroundColor: MaterialStateProperty.all<Color?>(
-                              Color(0xFF00ABE9)),
+                          backgroundColor:
+                              MaterialStateProperty.all<Color?>(Colors.blue),
                         ))
                   ],
                 ),
@@ -320,7 +320,6 @@ class _MOMMessManagerState extends State<MOMMessManager> {
         lastDate: DateTime(2101));
     if (picked != null && picked != selectedDate) {
       setState(() {
-        print(selectedDate);
         selectedDate = picked;
       });
     }
@@ -418,7 +417,7 @@ class _MOMMessManagerState extends State<MOMMessManager> {
                             borderRadius: BorderRadius.circular(18.0)),
                       ),
                       backgroundColor:
-                          MaterialStateProperty.all<Color?>(Color(0xFF00ABE9)),
+                          MaterialStateProperty.all<Color?>(Colors.blue),
                     )),
                 SizedBox(width: 10),
                 !_pdfUploaded
@@ -459,7 +458,7 @@ class _MOMMessManagerState extends State<MOMMessManager> {
                             borderRadius: BorderRadius.circular(18.0)),
                       ),
                       backgroundColor:
-                          MaterialStateProperty.all<Color?>(Color(0xFF00ABE9)),
+                          MaterialStateProperty.all<Color?>(Colors.blue),
                     )),
               )
             ],

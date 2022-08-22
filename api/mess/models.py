@@ -58,20 +58,14 @@ class MessFeedback(models.Model):
     created_at = models.DateTimeField(auto_now=True)
     status = models.BooleanField(default=False)
 
-# data base model for mess mom
-
-
-class MessMom(models.Model):
+# data base model for mess momclass MessMom(models.Model):
     date = models.DateField(default=None, null=True)
     file = models.FileField(upload_to='mom/')
     title = models.CharField(max_length=100)
     description = models.TextField()
     created_at = models.DateTimeField(auto_now=True)
 
-# data base model for mess tender
-
-
-class MessTender(models.Model):
+# data base model for mess tenderclass MessTender(models.Model):
     date = models.DateField(default=None, null=True)
     contractor = models.CharField(max_length=100)
     file = models.FileField(upload_to='tender/')

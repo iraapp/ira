@@ -140,7 +140,7 @@ class _TendersMessManagerState extends State<TendersMessManager> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Color(0xFF00ABE9),
+      backgroundColor: Colors.blue,
       appBar: AppBar(
         title: Text(
           "Mess Tender",
@@ -149,7 +149,7 @@ class _TendersMessManagerState extends State<TendersMessManager> {
           ),
         ),
         centerTitle: true,
-        backgroundColor: Color(0xFF00ABE9),
+        backgroundColor: Colors.blue,
         elevation: 0.0,
       ),
       body: ConstrainedBox(
@@ -222,8 +222,8 @@ class _TendersMessManagerState extends State<TendersMessManager> {
                           RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0)),
                         ),
-                        backgroundColor: MaterialStateProperty.all<Color?>(
-                            Color(0xFF00ABE9)),
+                        backgroundColor:
+                            MaterialStateProperty.all<Color?>(Colors.blue),
                       )),
                 ),
                 SizedBox(height: 10),
@@ -435,7 +435,6 @@ class _TendersMessManagerState extends State<TendersMessManager> {
         lastDate: DateTime(2101));
     if (picked != null && picked != selectedDate) {
       setState(() {
-        print(selectedDate);
         selectedDate = picked;
       });
     }
@@ -553,8 +552,8 @@ class _TendersMessManagerState extends State<TendersMessManager> {
                           RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0)),
                         ),
-                        backgroundColor: MaterialStateProperty.all<Color?>(
-                            Color(0xFF00ABE9)),
+                        backgroundColor:
+                            MaterialStateProperty.all<Color?>(Colors.blue),
                       )),
                   SizedBox(width: 10),
                   !_pdfUploaded
@@ -599,8 +598,8 @@ class _TendersMessManagerState extends State<TendersMessManager> {
                           RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0)),
                         ),
-                        backgroundColor: MaterialStateProperty.all<Color?>(
-                            Color(0xFF00ABE9)),
+                        backgroundColor:
+                            MaterialStateProperty.all<Color?>(Colors.blue),
                       )),
                 )
               ],

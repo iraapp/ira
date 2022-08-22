@@ -1,4 +1,3 @@
-from ast import Is
 from mess.serializers import *
 from mess.models import *
 from rest_framework.views import APIView
@@ -8,7 +7,7 @@ from authentication.permissions import IsMessManager
 
 
 class MessMenu(APIView):
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         data = Mess.objects.all()

@@ -22,7 +22,7 @@ class _MenuMessManagerState extends State<MenuMessManager> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Color(0xFF00ABE9),
+      backgroundColor: Colors.blue,
       appBar: AppBar(
         title: Text(
           "Menu",
@@ -30,7 +30,7 @@ class _MenuMessManagerState extends State<MenuMessManager> {
             fontSize: 20,
           ),
         ),
-        backgroundColor: Color(0xFF00ABE9),
+        backgroundColor: Colors.blue,
         elevation: 0.0,
       ),
       body: ConstrainedBox(

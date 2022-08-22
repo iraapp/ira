@@ -41,7 +41,7 @@ class _FeedbackMessManagerState extends State<FeedbackMessManager> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Color(0xFF00ABE9),
+      backgroundColor: Colors.blue,
       appBar: AppBar(
         title: Text(
           "Feedbacks",
@@ -49,7 +49,7 @@ class _FeedbackMessManagerState extends State<FeedbackMessManager> {
             fontSize: 20,
           ),
         ),
-        backgroundColor: Color(0xFF00ABE9),
+        backgroundColor: Colors.blue,
         elevation: 0.0,
       ),
       body: ConstrainedBox(
@@ -124,7 +124,7 @@ class _FeedbackMessManagerState extends State<FeedbackMessManager> {
                                               topLeft: Radius.circular(10.0),
                                               bottomLeft: Radius.circular(0.0),
                                             ),
-                                            color: Color(0xFF00ABE9),
+                                            color: Colors.blue,
                                           ),
                                           child: Padding(
                                             padding: const EdgeInsets.all(10.0),
