@@ -5,7 +5,7 @@ from mess import views
 
 """
 url used here
-    1. /feedback 
+    1. /feedback
                     - GET - get all feedbacks
                     - POST - create a feedback
     2. /feedback/<id>
@@ -28,7 +28,7 @@ url used here
 """
 
 urlpatterns = [
-    path('all_items', views.MessMenu.as_view(), name="mess items"),
+    path('all_items', views.MessMenuAPI.as_view(), name="mess items"),
     path('feedback', views.FeedbackView.as_view(), name="Add get feedbacks"),
     path('feedback/<int:pk>', views.FeedbackInstanceView.as_view(),
          name="Feedback instance"),

@@ -1,20 +1,26 @@
 from mess.serializers import *
 from mess.models import *
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from authentication.permissions import IsMessManager
 
 
-class MessMenu(APIView):
-    permission_classes = [IsAuthenticated]
+class MessMenuAPI(APIView):
+    permission_classes = []
 
     def get(self, request):
-        data = Mess.objects.all()
+        weekdays = WeekDay.objects.all()
 
-        serialized_json = MessSerializer(data, many=True)
+        data = {}
 
-        return Response(data=serialized_json.data)
+        for day in weekdays:
+            data[day.name] = {}
+            for slot in MenuSlot.objects.all():
+                data[day.name][slot.name] = MessMenuSerializer(
+                    MessMenu.objects.filter(slot = slot, weekdays = day).first()).data
+
+        return Response(data=data)
 
 
 """
@@ -189,7 +195,7 @@ class MessTenderArchivedView(APIView):
     def update(self, request, *args, **kwargs):
         pk = kwargs.get("pk")
         data = MessTender.objects.filter(id=pk).first()
-        data.archived = True
+        data.archeived = True
         data.save()
         return Response(status=200, data={
             "msg": "tender archived successfully."
