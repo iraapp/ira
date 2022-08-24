@@ -1,21 +1,15 @@
-name: Pylint
+name: Python lint checks
+on: [pull_request]
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-    
 jobs:
   build:
-    name: Lint python files
     runs-on: ubuntu-latest
-
+    name: Checks
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Run pylint
-        run: cclauss/GitHub-Action-for-pylint@0.7.0
-        working-directory: api
-        with:
-          args: pip install -r requirements.txt; pylint --load-plugins pylint_django
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
+    - run: pip install --upgrade pip
+    - run: pip install pylint==v2.14.5
+    - run: pylint $(git ls-files 'api/**/*.py')
