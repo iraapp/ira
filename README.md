@@ -45,6 +45,11 @@ python manage.py runserver
 flutter run -t lib/main_dev.dart
 ```
 
+7. Setup pre commit hook
+```
+./setup_hooks.sh
+```
+
 **Codebase Infrastructure**
 
 The backend code mainly resides in the `api` folder and the frontend code resides in the `app` folder.
