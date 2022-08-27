@@ -1,0 +1,25 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo "Before running tests"
+      - pip install -r requirements.txt
+  build:
+    commands:
+      - echo "Running all unit tests"
+      - cd api
+      - python manage.py test
+  post_build:
+    commands:
+      - echo Build completed on `date`
+artifacts:
+  files:
+    - '**/*'
+cache:
+  paths:
+    - '/root/.cache/pip/**/*'
+    - '/var/cache/apt/archives/**/*'
+    - '/var/lib/apt/lists/**/*'
+    - '/etc/apt/sources.list.d/mysql.list'
+    - '/etc/apt/sources.list'
