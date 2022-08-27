@@ -9,6 +9,7 @@ pip install wheel
 pip install -r requirements.txt
 cd api
 python manage.py migrate
+mkdir static
 python manage.py collectstatic --no-input
 
 # Set permission for all files
