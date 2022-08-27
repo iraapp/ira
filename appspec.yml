@@ -3,10 +3,10 @@ os: linux
 files:
   - source: /
     destination: /var/www/backend
-  - source: server_configs/apache2/backend.conf
+  - source: server_configs/apache2/000-default.conf
     destination: /etc/apache2/sites-enabled/
     runas: ubuntu
-  - source: server_configs/apache2/backend.conf
+  - source: server_configs/apache2/000-default.conf
     destination: /etc/apache2/sites-available/
     runas: ubuntu
 
