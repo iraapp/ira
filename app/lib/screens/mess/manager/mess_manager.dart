@@ -1,3 +1,4 @@
+// ignore_for_file: prefer_const_constructors
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
@@ -9,7 +10,6 @@ import 'package:ira/screens/mess/manager/feedback_mess_manager.dart';
 import 'package:http/http.dart' as http;
 import 'package:ira/screens/mess/manager/mom_mess_manager.dart';
 import 'package:ira/screens/mess/manager/tenders_mess_manager.dart';
-import 'package:ira/screens/mess/student/mom_mess_student.dart';
 
 class MessManagerScreen extends StatefulWidget {
   const MessManagerScreen({Key? key}) : super(key: key);
@@ -56,7 +56,7 @@ class _MessManagerScreenState extends State<MessManagerScreen> {
   final List<Widget> _messRoutes = [
     FeedbackMessManager(),
     ComplaintMessManager(),
-    MenuMessManager(),
+    const MenuMessManager(),
     TendersMessManager(),
     MOMMessManager(),
   ];
@@ -80,11 +80,12 @@ class _MessManagerScreenState extends State<MessManagerScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Row(
+                  // ignore: prefer_const_literals_to_create_immutables
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                      child: Text("Mess Secretary",
-                          style: const TextStyle(
+                      child: const Text("Mess Secretary",
+                          style: TextStyle(
                             color: Colors.white,
                             fontSize: 26.0,
                           )),
@@ -97,21 +98,21 @@ class _MessManagerScreenState extends State<MessManagerScreen> {
           SizedBox(
             height: size.height * 0.7,
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(
                   topRight: Radius.circular(40.0),
                   bottomRight: Radius.circular(0.0),
                   topLeft: Radius.circular(40.0),
                   bottomLeft: Radius.circular(0.0),
                 ),
-                color: const Color(0xfff5f5f5),
+                color: Color(0xfff5f5f5),
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                     horizontal: 20.0, vertical: 40.0),
                 child: GridView.builder(
                   itemCount: _messList.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
                     crossAxisSpacing: 20.0,
                     mainAxisSpacing: 20.0,
@@ -128,7 +129,7 @@ class _MessManagerScreenState extends State<MessManagerScreen> {
                       child: Container(
                         width: 80.0,
                         height: 80.0,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                             borderRadius: BorderRadius.only(
                               topRight: Radius.circular(10.0),
                               bottomRight: Radius.circular(10.0),
@@ -145,7 +146,7 @@ class _MessManagerScreenState extends State<MessManagerScreen> {
                                   width: 60.0,
                                   child: Image.asset(
                                       "assets/images/mess_icon.png")),
-                              SizedBox(height: 4.0),
+                              const SizedBox(height: 4.0),
                               Text(_messList[index]),
                             ],
                           ),

@@ -1,9 +1,7 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 
 class ComplaintsMess extends StatefulWidget {
@@ -16,23 +14,27 @@ class ComplaintsMess extends StatefulWidget {
 }
 
 class _ComplaintsMessState extends State<ComplaintsMess> {
-  List<String> _messFill = ["Fill as Anonymous", "Use your credentials"];
+  final List<String> _messFill = ["Fill as Anonymous", "Use your credentials"];
   String _messFillValue = "Fill as Anonymous";
-  List<String> _mess = ["1 B Mess", "120 Mess", "Girls Mess"];
+  final List<String> _mess = ["1 B Mess", "120 Mess", "Girls Mess"];
   String _messValue = "1 B Mess";
-  List<String> _meals = ["Breakfast", "Lunch", "Snacks", "Dinner", "General"];
+  final List<String> _meals = [
+    "Breakfast",
+    "Lunch",
+    "Snacks",
+    "Dinner",
+    "General"
+  ];
   String _mealsValue = "Breakfast";
   String? _description;
 
-  final ImagePicker _picker = ImagePicker();
-
   Future<dynamic> _submitFeedback(
-      String mess_type, String description, String mess_meal) async {
+      String messType, String description, String messMeal) async {
     String? idToken = await widget.secureStorage.read(key: 'idToken');
     Map<String, dynamic> formMap = {
-      'mess_type': mess_type,
+      'mess_type': messType,
       'feedback': description,
-      'mess_meal': mess_meal,
+      'mess_meal': messMeal,
     };
 
     final requestUrl = Uri.parse(widget.baseUrl + '/mess/feedback');
@@ -59,7 +61,7 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
     return Scaffold(
       backgroundColor: Colors.blue,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Mess",
           style: TextStyle(
             fontSize: 20,
@@ -76,14 +78,14 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
           ),
           child: Container(
             width: double.infinity,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               borderRadius: BorderRadius.only(
                 topRight: Radius.circular(40.0),
                 bottomRight: Radius.circular(0.0),
                 topLeft: Radius.circular(40.0),
                 bottomLeft: Radius.circular(0.0),
               ),
-              color: const Color(0xfff5f5f5),
+              color: Color(0xfff5f5f5),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,9 +93,10 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  // ignore: prefer_const_literals_to_create_immutables
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
+                    const Padding(
+                      padding: EdgeInsets.all(16.0),
                       child: Text(
                         "Complaint",
                         style: TextStyle(
@@ -103,7 +106,7 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
                     ),
                   ],
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 20.0, vertical: 0.0),
@@ -118,7 +121,7 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
                             style: const TextStyle(
                               color: Colors.white,
                             ),
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.arrow_drop_down,
                               color: Colors.black,
                             ),
@@ -148,8 +151,8 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text("Mess:",
-                                  style: const TextStyle(
+                              const Text("Mess:",
+                                  style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 16.0,
                                   )),
@@ -159,7 +162,7 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
                                   style: const TextStyle(
                                     color: Colors.white,
                                   ),
-                                  icon: Icon(
+                                  icon: const Icon(
                                     Icons.arrow_drop_down,
                                     color: Colors.black,
                                   ),
@@ -192,8 +195,8 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text("Meal:",
-                                  style: const TextStyle(
+                              const Text("Meal:",
+                                  style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 16.0,
                                   )),
@@ -203,7 +206,7 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
                                   style: const TextStyle(
                                     color: Colors.white,
                                   ),
-                                  icon: Icon(
+                                  icon: const Icon(
                                     Icons.arrow_drop_down,
                                     color: Colors.black,
                                   ),
@@ -237,9 +240,10 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 40.0),
                           child: Row(
+                            // ignore: prefer_const_literals_to_create_immutables
                             children: [
-                              Text("Description:",
-                                  style: const TextStyle(
+                              const Text("Description:",
+                                  style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 16.0,
                                   )),
@@ -250,10 +254,10 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
                           height: 20.0,
                         ),
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 40.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 40.0),
                           child: TextField(
                             maxLines: 5,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               border: OutlineInputBorder(
                                   //borderRadius: BorderRadius.circular(10.0),
                                   ),
@@ -302,8 +306,8 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
                                         ),
                                       ),
                                     ),
-                                    child: Text("Submit",
-                                        style: const TextStyle(
+                                    child: const Text("Submit",
+                                        style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 16.0,
                                         ))),
@@ -337,18 +341,18 @@ Future showFeedbackDialog(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(height: 10.0),
+          const SizedBox(height: 10.0),
           SizedBox(
               height: 100.0,
               child: Image.asset("assets/images/icon _tick circle.png")),
-          SizedBox(height: 20.0),
+          const SizedBox(height: 20.0),
           Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 18.0,
             ),
           ),
-          SizedBox(height: 10.0),
+          const SizedBox(height: 10.0),
           Text(content),
         ],
       ),

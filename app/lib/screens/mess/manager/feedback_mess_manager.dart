@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -43,7 +41,7 @@ class _FeedbackMessManagerState extends State<FeedbackMessManager> {
     return Scaffold(
       backgroundColor: Colors.blue,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Feedbacks",
           style: TextStyle(
             fontSize: 20,
@@ -59,14 +57,14 @@ class _FeedbackMessManagerState extends State<FeedbackMessManager> {
         ),
         child: Container(
           width: double.infinity,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
               topRight: Radius.circular(40.0),
               bottomRight: Radius.circular(0.0),
               topLeft: Radius.circular(40.0),
               bottomLeft: Radius.circular(0.0),
             ),
-            color: const Color(0xfff5f5f5),
+            color: Color(0xfff5f5f5),
           ),
           child: Padding(
             padding:
@@ -80,10 +78,10 @@ class _FeedbackMessManagerState extends State<FeedbackMessManager> {
                         itemCount: snapshot.data?.length,
                         itemBuilder: (BuildContext context, int index) {
                           final data = snapshot.data![index];
-                          final day = DateTime.tryParse(data.created_at)?.day;
+                          final day = DateTime.tryParse(data.createdAt)?.day;
                           final month =
-                              DateTime.tryParse(data.created_at)?.month;
-                          final year = DateTime.tryParse(data.created_at)?.year;
+                              DateTime.tryParse(data.createdAt)?.month;
+                          final year = DateTime.tryParse(data.createdAt)?.year;
                           final date = day.toString() +
                               "-" +
                               month.toString() +
@@ -97,7 +95,7 @@ class _FeedbackMessManagerState extends State<FeedbackMessManager> {
                                 Container(
                                     height: size.height * 0.25,
                                     width: double.infinity,
-                                    decoration: BoxDecoration(
+                                    decoration: const BoxDecoration(
                                       borderRadius: BorderRadius.only(
                                         topRight: Radius.circular(10.0),
                                         bottomRight: Radius.circular(10.0),
@@ -117,7 +115,7 @@ class _FeedbackMessManagerState extends State<FeedbackMessManager> {
                                       children: [
                                         Container(
                                           width: double.infinity,
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                             borderRadius: BorderRadius.only(
                                               topRight: Radius.circular(10.0),
                                               bottomRight: Radius.circular(0.0),
@@ -137,7 +135,7 @@ class _FeedbackMessManagerState extends State<FeedbackMessManager> {
                                                       color: Colors.white,
                                                     )),
                                                 Text(
-                                                    "${data.mess_type} | ${data.mess_meal} | $date",
+                                                    "${data.messType} | ${data.messMeal} | $date",
                                                     style: const TextStyle(
                                                       color: Colors.white,
                                                     )),
@@ -158,7 +156,7 @@ class _FeedbackMessManagerState extends State<FeedbackMessManager> {
                                         ),
                                       ],
                                     )),
-                                SizedBox(height: 20),
+                                const SizedBox(height: 20),
                               ],
                             ),
                           );
@@ -166,7 +164,7 @@ class _FeedbackMessManagerState extends State<FeedbackMessManager> {
                       );
                     }
                   }
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(),
                   );
                 }),

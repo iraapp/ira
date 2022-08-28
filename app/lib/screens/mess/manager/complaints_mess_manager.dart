@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -16,8 +15,7 @@ class ComplaintMessManager extends StatefulWidget {
 }
 
 class _ComplaintMessManagerState extends State<ComplaintMessManager> {
-  @override
-  final List<String> _filter = ["Filter", "Date", "Mess", "Action"];
+  final List<String> _filters = ["Filter", "Date", "Mess", "Action"];
   String _filterValue = "Filter";
 
   Future<List<FeedbackModel>> _getMessFeedbackItems() async {
@@ -60,12 +58,13 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
     }
   }
 
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.blue,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Complaints",
           style: TextStyle(
             fontSize: 20,
@@ -81,14 +80,14 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
         ),
         child: Container(
           width: double.infinity,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
               topRight: Radius.circular(40.0),
               bottomRight: Radius.circular(0.0),
               topLeft: Radius.circular(40.0),
               bottomLeft: Radius.circular(0.0),
             ),
-            color: const Color(0xfff5f5f5),
+            color: Color(0xfff5f5f5),
           ),
           child: Padding(
             padding:
@@ -104,12 +103,12 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                       style: const TextStyle(
                         color: Colors.white,
                       ),
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.arrow_drop_down,
                         color: Colors.black,
                       ),
                       value: _filterValue,
-                      items: _filter.map((String items) {
+                      items: _filters.map((String items) {
                         return DropdownMenuItem(
                           value: items,
                           child: Text(
@@ -130,7 +129,7 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                     ),
                   ),
                 ),
-                SizedBox(height: 10.0),
+                const SizedBox(height: 10.0),
                 Expanded(
                   child: FutureBuilder<List<FeedbackModel>>(
                       future: _getMessFeedbackItems(),
@@ -141,7 +140,7 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                               itemCount: snapshot.data?.length,
                               itemBuilder: (BuildContext context, int index) {
                                 final data = snapshot.data![index];
-                                final time = DateTime.parse(data.created_at);
+                                final time = DateTime.parse(data.createdAt);
                                 final day = time.day;
                                 final month = time.month;
                                 final year = time.year;
@@ -159,7 +158,7 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                                       id: int.parse(data.id),
                                       title: data.user,
                                       subtitle:
-                                          "${data.mess_type} | ${data.mess_meal} | $date",
+                                          "${data.messType} | ${data.messMeal} | $date",
                                       content: data.body,
                                       defaultActionText: "Close",
                                       status: status,
@@ -173,7 +172,7 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                                         Container(
                                             height: size.height * 0.25,
                                             width: double.infinity,
-                                            decoration: BoxDecoration(
+                                            decoration: const BoxDecoration(
                                                 borderRadius: BorderRadius.only(
                                                   topRight:
                                                       Radius.circular(10.0),
@@ -199,7 +198,7 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                                                   width: double.infinity,
                                                   decoration: BoxDecoration(
                                                     borderRadius:
-                                                        BorderRadius.only(
+                                                        const BorderRadius.only(
                                                       topRight:
                                                           Radius.circular(10.0),
                                                       bottomRight:
@@ -256,10 +255,10 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                                                                           ),
                                                                         ),
                                                                       ),
-                                                                      child: Text(
+                                                                      child: const Text(
                                                                           "Take Action",
                                                                           style:
-                                                                              const TextStyle(
+                                                                              TextStyle(
                                                                             color:
                                                                                 Colors.black,
                                                                             fontSize:
@@ -275,7 +274,7 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                                                                       onPressed:
                                                                           () {},
                                                                       child:
-                                                                          Icon(
+                                                                          const Icon(
                                                                         Icons
                                                                             .done,
                                                                         color: Colors
@@ -288,7 +287,7 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                                                                         primary:
                                                                             Colors.white,
                                                                         shape:
-                                                                            CircleBorder(),
+                                                                            const CircleBorder(),
                                                                       ),
                                                                     ),
                                                                   ),
@@ -297,7 +296,7 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                                                         Builder(
                                                             builder: (context) {
                                                           return Text(
-                                                              "${data.mess_type} | ${data.mess_meal} | $date",
+                                                              "${data.messType} | ${data.messMeal} | $date",
                                                               style:
                                                                   const TextStyle(
                                                                 color: Colors
@@ -323,7 +322,7 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                                                 ),
                                               ],
                                             )),
-                                        SizedBox(height: 20),
+                                        const SizedBox(height: 20),
                                       ],
                                     ),
                                   ),
@@ -333,7 +332,7 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                           }
                         }
 
-                        return Center(
+                        return const Center(
                           child: CircularProgressIndicator(),
                         );
                       }),
@@ -361,17 +360,17 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: 10.0),
+            const SizedBox(height: 10.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title, style: TextStyle(fontSize: 16.0)),
-                    SizedBox(height: 10.0),
-                    Text(subtitle, style: TextStyle(fontSize: 14.0)),
-                    SizedBox(height: 10.0),
+                    Text(title, style: const TextStyle(fontSize: 16.0)),
+                    const SizedBox(height: 10.0),
+                    Text(subtitle, style: const TextStyle(fontSize: 14.0)),
+                    const SizedBox(height: 10.0),
                   ],
                 ),
                 SizedBox(
@@ -379,21 +378,22 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                     child: Image.asset("assets/images/phone_icon.png")),
               ],
             ),
-            SizedBox(height: 10.0),
+            const SizedBox(height: 10.0),
             Container(
                 color: const Color(0xfff5f5f5),
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: Text(content, style: TextStyle(fontSize: 14.0)),
+                  child: Text(content, style: const TextStyle(fontSize: 14.0)),
                 )),
-            SizedBox(height: 10.0),
+            const SizedBox(height: 10.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
+              // ignore: prefer_const_literals_to_create_immutables
               children: [
-                Text("Details", style: TextStyle(fontSize: 14.0)),
+                const Text("Details", style: TextStyle(fontSize: 14.0)),
               ],
             ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             SizedBox(
               height: 40.0,
               child: ElevatedButton(

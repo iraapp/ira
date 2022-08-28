@@ -22,7 +22,7 @@ class MOMMessManager extends StatefulWidget {
 }
 
 class _MOMMessManagerState extends State<MOMMessManager> {
-  TextEditingController _titleTextCtr = TextEditingController();
+  final TextEditingController _titleTextCtr = TextEditingController();
 
   Future<List<MessMOMModel>> _getMessMOMItems() async {
     final String? token = await widget.secureStorage.read(key: 'staffToken');
@@ -85,7 +85,7 @@ class _MOMMessManagerState extends State<MOMMessManager> {
     return Scaffold(
       backgroundColor: Colors.blue,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Mess",
           style: TextStyle(
             fontSize: 20,
@@ -101,14 +101,14 @@ class _MOMMessManagerState extends State<MOMMessManager> {
         ),
         child: Container(
           width: double.infinity,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
               topRight: Radius.circular(40.0),
               bottomRight: Radius.circular(0.0),
               topLeft: Radius.circular(40.0),
               bottomLeft: Radius.circular(0.0),
             ),
-            color: const Color(0xfff5f5f5),
+            color: Color(0xfff5f5f5),
           ),
           child: Padding(
             padding:
@@ -122,10 +122,10 @@ class _MOMMessManagerState extends State<MOMMessManager> {
                       opacity: 0.0,
                       child: ElevatedButton(
                         onPressed: () {},
-                        child: Text("  + Add  "),
+                        child: const Text("  + Add  "),
                       ),
                     ),
-                    Text("MOM",
+                    const Text("MOM",
                         style: TextStyle(
                           fontSize: 16,
                         )),
@@ -133,7 +133,7 @@ class _MOMMessManagerState extends State<MOMMessManager> {
                         onPressed: () async {
                           await showAddMOMDialog();
                         },
-                        child: Text("+ Add"),
+                        child: const Text("+ Add"),
                         style: ButtonStyle(
                           shape:
                               MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -145,7 +145,7 @@ class _MOMMessManagerState extends State<MOMMessManager> {
                         ))
                   ],
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Expanded(
                   child: FutureBuilder<List<MessMOMModel>>(
                       future: _getMessMOMItems(),
@@ -164,7 +164,7 @@ class _MOMMessManagerState extends State<MOMMessManager> {
                                       Container(
                                           height: size.height * 0.13,
                                           width: double.infinity,
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                             borderRadius: BorderRadius.only(
                                               topRight: Radius.circular(10.0),
                                               bottomRight:
@@ -210,7 +210,8 @@ class _MOMMessManagerState extends State<MOMMessManager> {
                                                               color:
                                                                   Colors.black,
                                                             )),
-                                                        SizedBox(height: 5),
+                                                        const SizedBox(
+                                                            height: 5),
                                                         Text(data.date,
                                                             style:
                                                                 const TextStyle(
@@ -240,7 +241,7 @@ class _MOMMessManagerState extends State<MOMMessManager> {
                                               ),
                                             ],
                                           )),
-                                      SizedBox(height: 20),
+                                      const SizedBox(height: 20),
                                     ],
                                   ),
                                 );
@@ -277,7 +278,7 @@ class _MOMMessManagerState extends State<MOMMessManager> {
     }
   }
 
-  ReceivePort _port = ReceivePort();
+  final ReceivePort _port = ReceivePort();
 
   @override
   void initState() {
@@ -286,9 +287,6 @@ class _MOMMessManagerState extends State<MOMMessManager> {
     IsolateNameServer.registerPortWithName(
         _port.sendPort, 'downloader_send_port');
     _port.listen((dynamic data) {
-      String id = data[0];
-      DownloadTaskStatus status = data[1];
-      int progress = data[2];
       setState(() {});
     });
 
@@ -332,35 +330,35 @@ class _MOMMessManagerState extends State<MOMMessManager> {
       builder: (context) => StatefulBuilder(builder: (context, setSte) {
         return AlertDialog(
           contentPadding:
-              EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+              const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Row(children: [
-                Text(
+                const Text(
                   "Give Title",
                   style: TextStyle(fontSize: 16.0),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Flexible(
                   child: SizedBox(
                     height: 40.0,
                     child: TextField(
                       controller: _titleTextCtr,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                       ),
                     ),
                   ),
                 )
               ]),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Row(children: [
-                Text(
+                const Text(
                   "Date        ",
                   style: TextStyle(fontSize: 16.0),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 GestureDetector(
                   onTap: () {
                     _selectDate(context);
@@ -375,23 +373,21 @@ class _MOMMessManagerState extends State<MOMMessManager> {
                       ),
                       borderRadius: BorderRadius.circular(5.0),
                     ),
-                    child: Container(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                            selectedDate.toLocal().toString().split(' ')[0]),
-                      ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child:
+                          Text(selectedDate.toLocal().toString().split(' ')[0]),
                     ),
                   ),
                 ),
               ]),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Row(children: [
-                Text(
+                const Text(
                   "Upload PDF",
                   style: TextStyle(fontSize: 16.0),
                 ),
-                SizedBox(width: 20),
+                const SizedBox(width: 20),
                 ElevatedButton(
                     onPressed: () async {
                       final file = await FilePicker.platform.pickFiles(
@@ -407,10 +403,11 @@ class _MOMMessManagerState extends State<MOMMessManager> {
                         });
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Please select a file')));
+                            const SnackBar(
+                                content: Text('Please select a file')));
                       }
                     },
-                    child: Text("Upload"),
+                    child: const Text("Upload"),
                     style: ButtonStyle(
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
@@ -419,12 +416,12 @@ class _MOMMessManagerState extends State<MOMMessManager> {
                       backgroundColor:
                           MaterialStateProperty.all<Color?>(Colors.blue),
                     )),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 !_pdfUploaded
                     ? Checkbox(value: false, onChanged: (value) {})
                     : Checkbox(value: true, onChanged: (value) {}),
               ]),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               SizedBox(
                 width: 100.0,
                 child: ElevatedButton(
@@ -433,7 +430,7 @@ class _MOMMessManagerState extends State<MOMMessManager> {
                         : () async {
                             // call the api to add the mom
                             final title = _titleTextCtr.text;
-                            final description = "no description";
+                            const description = "no description";
                             final date =
                                 selectedDate.toLocal().toString().split(' ')[0];
                             final pdf = _pdfFilePath;
@@ -448,10 +445,10 @@ class _MOMMessManagerState extends State<MOMMessManager> {
                               Navigator.pop(context);
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Error')));
+                                  const SnackBar(content: Text('Error')));
                             }
                           },
-                    child: Text("Add"),
+                    child: const Text("Add"),
                     style: ButtonStyle(
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(

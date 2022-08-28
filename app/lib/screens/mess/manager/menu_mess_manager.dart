@@ -2,7 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 class MenuMessManager extends StatefulWidget {
-  MenuMessManager({Key? key}) : super(key: key);
+  const MenuMessManager({Key? key}) : super(key: key);
 
   @override
   State<MenuMessManager> createState() => _MenuMessManagerState();
@@ -24,7 +24,7 @@ class _MenuMessManagerState extends State<MenuMessManager> {
     return Scaffold(
       backgroundColor: Colors.blue,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Menu",
           style: TextStyle(
             fontSize: 20,
@@ -40,14 +40,14 @@ class _MenuMessManagerState extends State<MenuMessManager> {
         ),
         child: Container(
           width: double.infinity,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
               topRight: Radius.circular(40.0),
               bottomRight: Radius.circular(0.0),
               topLeft: Radius.circular(40.0),
               bottomLeft: Radius.circular(0.0),
             ),
-            color: const Color(0xfff5f5f5),
+            color: Color(0xfff5f5f5),
           ),
           child: Padding(
             padding:
@@ -63,7 +63,8 @@ class _MenuMessManagerState extends State<MenuMessManager> {
                         builder: (BuildContext context) {
                           return Container(
                               width: MediaQuery.of(context).size.width,
-                              margin: EdgeInsets.symmetric(horizontal: 5.0),
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 5.0),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(30.0),
@@ -82,48 +83,51 @@ class _MenuMessManagerState extends State<MenuMessManager> {
                                           opacity: 0.0,
                                           child: TextButton(
                                             onPressed: () {},
+                                            // ignore: prefer_const_literals_to_create_immutables
                                             child: Row(children: [
-                                              Text('Edit'),
-                                              Icon(Icons.edit)
+                                              const Text('Edit'),
+                                              const Icon(Icons.edit)
                                             ]),
                                           ),
                                         ),
                                         Text(
-                                          '$day',
-                                          style: TextStyle(fontSize: 20.0),
+                                          day,
+                                          style:
+                                              const TextStyle(fontSize: 20.0),
                                         ),
                                         TextButton(
                                           onPressed: () {},
+                                          // ignore: prefer_const_literals_to_create_immutables
                                           child: Row(children: [
-                                            Text('Edit'),
-                                            Icon(Icons.edit)
+                                            const Text('Edit'),
+                                            const Icon(Icons.edit)
                                           ]),
                                         ),
                                       ],
                                     ),
-                                    SizedBox(height: 80.0),
-                                    Text(
+                                    const SizedBox(height: 80.0),
+                                    const Text(
                                       'Breakfast  (9:00 - 10:30)',
                                       style: TextStyle(
                                         fontSize: 18.0,
                                       ),
                                     ),
-                                    SizedBox(height: 40.0),
-                                    Text(
+                                    const SizedBox(height: 40.0),
+                                    const Text(
                                       'Lunch  (9:00 - 10:30)',
                                       style: TextStyle(
                                         fontSize: 18.0,
                                       ),
                                     ),
-                                    SizedBox(height: 40.0),
-                                    Text(
+                                    const SizedBox(height: 40.0),
+                                    const Text(
                                       'Snacks  (9:00 - 10:30)',
                                       style: TextStyle(
                                         fontSize: 18.0,
                                       ),
                                     ),
-                                    SizedBox(height: 40.0),
-                                    Text(
+                                    const SizedBox(height: 40.0),
+                                    const Text(
                                       'Dinner  (9:00 - 10:30)',
                                       style: TextStyle(
                                         fontSize: 18.0,

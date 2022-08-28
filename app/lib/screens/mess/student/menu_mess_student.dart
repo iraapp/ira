@@ -24,7 +24,7 @@ class _MessMenuState extends State<MessMenu> {
     return Scaffold(
       backgroundColor: Colors.blue,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Menu",
           style: TextStyle(
             fontSize: 20,
@@ -40,14 +40,14 @@ class _MessMenuState extends State<MessMenu> {
         ),
         child: Container(
           width: double.infinity,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
               topRight: Radius.circular(40.0),
               bottomRight: Radius.circular(0.0),
               topLeft: Radius.circular(40.0),
               bottomLeft: Radius.circular(0.0),
             ),
-            color: const Color(0xfff5f5f5),
+            color: Color(0xfff5f5f5),
           ),
           child: Padding(
             padding:
@@ -63,7 +63,8 @@ class _MessMenuState extends State<MessMenu> {
                         builder: (BuildContext context) {
                           return Container(
                               width: MediaQuery.of(context).size.width,
-                              margin: EdgeInsets.symmetric(horizontal: 5.0),
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 5.0),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(30.0),
@@ -76,33 +77,33 @@ class _MessMenuState extends State<MessMenu> {
                                   children: [
                                     Center(
                                       child: Text(
-                                        '$day',
-                                        style: TextStyle(fontSize: 20.0),
+                                        day,
+                                        style: const TextStyle(fontSize: 20.0),
                                       ),
                                     ),
-                                    SizedBox(height: 80.0),
-                                    Text(
+                                    const SizedBox(height: 80.0),
+                                    const Text(
                                       'Breakfast  (9:00 - 10:30)',
                                       style: TextStyle(
                                         fontSize: 18.0,
                                       ),
                                     ),
-                                    SizedBox(height: 40.0),
-                                    Text(
+                                    const SizedBox(height: 40.0),
+                                    const Text(
                                       'Lunch  (9:00 - 10:30)',
                                       style: TextStyle(
                                         fontSize: 18.0,
                                       ),
                                     ),
-                                    SizedBox(height: 40.0),
-                                    Text(
+                                    const SizedBox(height: 40.0),
+                                    const Text(
                                       'Snacks  (9:00 - 10:30)',
                                       style: TextStyle(
                                         fontSize: 18.0,
                                       ),
                                     ),
-                                    SizedBox(height: 40.0),
-                                    Text(
+                                    const SizedBox(height: 40.0),
+                                    const Text(
                                       'Dinner  (9:00 - 10:30)',
                                       style: TextStyle(
                                         fontSize: 18.0,

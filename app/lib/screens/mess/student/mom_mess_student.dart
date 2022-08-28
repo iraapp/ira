@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:isolate';
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
@@ -49,7 +48,7 @@ class _MOMMessState extends State<MOMMess> {
     return Scaffold(
       backgroundColor: Colors.blue,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Mess",
           style: TextStyle(
             fontSize: 20,
@@ -65,25 +64,25 @@ class _MOMMessState extends State<MOMMess> {
         ),
         child: Container(
           width: double.infinity,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
               topRight: Radius.circular(40.0),
               bottomRight: Radius.circular(0.0),
               topLeft: Radius.circular(40.0),
               bottomLeft: Radius.circular(0.0),
             ),
-            color: const Color(0xfff5f5f5),
+            color: Color(0xfff5f5f5),
           ),
           child: Padding(
             padding:
                 const EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
             child: Column(
               children: [
-                Text("MOM",
+                const Text("MOM",
                     style: TextStyle(
                       fontSize: 16,
                     )),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Expanded(
                   child: FutureBuilder<List<MessMOMModel>>(
                       future: _getMessMOMItems(),
@@ -102,7 +101,7 @@ class _MOMMessState extends State<MOMMess> {
                                       Container(
                                           height: size.height * 0.13,
                                           width: double.infinity,
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                             borderRadius: BorderRadius.only(
                                               topRight: Radius.circular(10.0),
                                               bottomRight:
@@ -148,7 +147,8 @@ class _MOMMessState extends State<MOMMess> {
                                                               color:
                                                                   Colors.black,
                                                             )),
-                                                        SizedBox(height: 5),
+                                                        const SizedBox(
+                                                            height: 5),
                                                         Text(data.date,
                                                             style:
                                                                 const TextStyle(
@@ -178,7 +178,7 @@ class _MOMMessState extends State<MOMMess> {
                                               ),
                                             ],
                                           )),
-                                      SizedBox(height: 20),
+                                      const SizedBox(height: 20),
                                     ],
                                   ),
                                 );
@@ -215,7 +215,7 @@ class _MOMMessState extends State<MOMMess> {
     }
   }
 
-  ReceivePort _port = ReceivePort();
+  final ReceivePort _port = ReceivePort();
 
   @override
   void initState() {
@@ -224,9 +224,6 @@ class _MOMMessState extends State<MOMMess> {
     IsolateNameServer.registerPortWithName(
         _port.sendPort, 'downloader_send_port');
     _port.listen((dynamic data) {
-      String id = data[0];
-      DownloadTaskStatus status = data[1];
-      int progress = data[2];
       setState(() {});
     });
 

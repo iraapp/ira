@@ -1,13 +1,11 @@
 import 'dart:convert';
 import 'dart:isolate';
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:ira/screens/mess/factories/mess.dart';
 import 'package:ira/screens/mess/student/mess_tender_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -84,7 +82,7 @@ class _TenderMessState extends State<TenderMess> {
     return Scaffold(
       backgroundColor: Colors.blue,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Mess Tender",
           style: TextStyle(
             fontSize: 20,
@@ -101,14 +99,15 @@ class _TenderMessState extends State<TenderMess> {
         ),
         child: Container(
           width: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
+          decoration: const BoxDecoration(
+            // ignore: unnecessary_const
+            borderRadius: const BorderRadius.only(
               topRight: Radius.circular(40.0),
               bottomRight: Radius.circular(0.0),
               topLeft: Radius.circular(40.0),
               bottomLeft: Radius.circular(0.0),
             ),
-            color: const Color(0xfff5f5f5),
+            color: Color(0xfff5f5f5),
           ),
           child: Padding(
             padding:
@@ -123,7 +122,6 @@ class _TenderMessState extends State<TenderMess> {
                     children: [
                       TextButton(
                         onPressed: () {
-                          //TODO: Handle Active
                           setState(() {
                             _isActive = true;
                           });
@@ -153,13 +151,13 @@ class _TenderMessState extends State<TenderMess> {
                     ],
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 if (!_isActive)
-                  Text("Download old tenders here",
+                  const Text("Download old tenders here",
                       style: TextStyle(
                         fontSize: 14.0,
                       )),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Expanded(
                   child: FutureBuilder<List<MessTenderModel>>(
                       future: _isActive
@@ -180,7 +178,7 @@ class _TenderMessState extends State<TenderMess> {
                                       Container(
                                           height: size.height * 0.13,
                                           width: double.infinity,
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                             borderRadius: BorderRadius.only(
                                               topRight: Radius.circular(10.0),
                                               bottomRight:
@@ -226,7 +224,8 @@ class _TenderMessState extends State<TenderMess> {
                                                               color:
                                                                   Colors.black,
                                                             )),
-                                                        SizedBox(height: 5),
+                                                        const SizedBox(
+                                                            height: 5),
                                                         Text(data.description,
                                                             style:
                                                                 const TextStyle(
@@ -234,7 +233,8 @@ class _TenderMessState extends State<TenderMess> {
                                                               color: Colors
                                                                   .black54,
                                                             )),
-                                                        SizedBox(height: 5),
+                                                        const SizedBox(
+                                                            height: 5),
                                                         Text(data.date,
                                                             style:
                                                                 const TextStyle(
@@ -264,7 +264,7 @@ class _TenderMessState extends State<TenderMess> {
                                               ),
                                             ],
                                           )),
-                                      SizedBox(height: 20),
+                                      const SizedBox(height: 20),
                                     ],
                                   ),
                                 );
@@ -301,7 +301,7 @@ class _TenderMessState extends State<TenderMess> {
     }
   }
 
-  ReceivePort _port = ReceivePort();
+  final ReceivePort _port = ReceivePort();
 
   @override
   void initState() {
@@ -310,9 +310,6 @@ class _TenderMessState extends State<TenderMess> {
     IsolateNameServer.registerPortWithName(
         _port.sendPort, 'downloader_send_port');
     _port.listen((dynamic data) {
-      String id = data[0];
-      DownloadTaskStatus status = data[1];
-      int progress = data[2];
       setState(() {});
     });
 
