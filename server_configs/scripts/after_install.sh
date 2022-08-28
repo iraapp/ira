@@ -17,4 +17,5 @@ python manage.py collectstatic --no-input
 sudo chown -R www-data:www-data /var/www/
 
 # Restart services
+sudo a2enmod rewrite
 sudo service apache2 restart
