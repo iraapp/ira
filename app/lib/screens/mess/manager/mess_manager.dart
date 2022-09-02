@@ -1,13 +1,15 @@
+// ignore_for_file: prefer_const_constructors
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:ira/screens/mess/manager/menu_mess_manager.dart';
 import 'package:ira/screens/mess/manager/complaints_mess_manager.dart';
 import 'package:ira/screens/mess/factories/mess.dart';
 import 'package:ira/screens/mess/manager/feedback_mess_manager.dart';
-import 'package:ira/screens/mess/student/menu_mess_student.dart';
 import 'package:http/http.dart' as http;
+import 'package:ira/screens/mess/manager/mom_mess_manager.dart';
+import 'package:ira/screens/mess/manager/tenders_mess_manager.dart';
 
 class MessManagerScreen extends StatefulWidget {
   const MessManagerScreen({Key? key}) : super(key: key);
@@ -47,18 +49,16 @@ class _MessManagerScreenState extends State<MessManagerScreen> {
     "Feedback",
     "Complaint",
     "Menu",
-    "Mess Leave",
-    "Food Request",
+    "Tenders",
     "Mess MOM",
   ];
 
   final List<Widget> _messRoutes = [
-    const FeedbackMessManager(),
-    const ComplaintMessManager(),
-    const MessMenu(),
-    Container(),
-    Container(),
-    Container(),
+    FeedbackMessManager(),
+    ComplaintMessManager(),
+    const MenuMessManager(),
+    TendersMessManager(),
+    MOMMessManager(),
   ];
 
   @override
@@ -80,22 +80,11 @@ class _MessManagerScreenState extends State<MessManagerScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Row(
-                  children: const [
+                  // ignore: prefer_const_literals_to_create_immutables
+                  children: [
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 40.0),
-                      child: Text("Mess Secretary",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 26.0,
-                          )),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: const [
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 40.0),
-                      child: Text("Avinash",
+                      padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                      child: const Text("Mess Secretary",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 26.0,

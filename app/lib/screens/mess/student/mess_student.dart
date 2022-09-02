@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -49,8 +48,6 @@ class _MessStudentScreenState extends State<MessStudentScreen> {
     "Feedback",
     "Complaint",
     "Menu",
-    "Mess Leave",
-    "Food Request",
     "Mess MOM",
     "Tenders"
   ];
@@ -59,10 +56,6 @@ class _MessStudentScreenState extends State<MessStudentScreen> {
     FeedbackMess(),
     ComplaintsMess(),
     const MessMenu(),
-    Container(),
-    // MessLeaveMess(),
-    Container(),
-    // FoodRequestMess(),
     MOMMess(),
     TenderMess(),
   ];
@@ -86,8 +79,9 @@ class _MessStudentScreenState extends State<MessStudentScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Row(
-                  children: const [
-                    Padding(
+                  // ignore: prefer_const_literals_to_create_immutables
+                  children: [
+                    const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 40.0),
                       child: Text("Mess",
                           style: TextStyle(

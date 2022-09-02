@@ -1,10 +1,14 @@
 import 'dart:convert';
-
+import 'dart:isolate';
+import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:ira/screens/mess/student/mess_tender_model.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class TenderMess extends StatefulWidget {
   TenderMess({Key? key}) : super(key: key);
@@ -18,7 +22,7 @@ class TenderMess extends StatefulWidget {
 class _TenderMessState extends State<TenderMess> {
   bool _isActive = true;
 
-  Future<List<MessTenderModel>> _getMessTenderItems() async {
+  Future<List<MessTenderModel>> _getMessTenderActiveItems() async {
     String? idToken = await widget.secureStorage.read(key: 'idToken');
 
     final requestUrl = Uri.parse(widget.baseUrl + '/mess/tender');
@@ -32,9 +36,41 @@ class _TenderMessState extends State<TenderMess> {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      return data
-          .map<MessTenderModel>((json) => MessTenderModel.fromJson(json))
-          .toList();
+      List<MessTenderModel> _activeItems = [];
+      for (var d in data) {
+        final item = MessTenderModel.fromJson(d);
+        if (item.archived == false) {
+          _activeItems.add(item);
+        }
+      }
+      return _activeItems;
+    } else {
+      throw Exception('Failed to load post');
+    }
+  }
+
+  Future<List<MessTenderModel>> _getMessTenderArchivedItems() async {
+    String? idToken = await widget.secureStorage.read(key: 'idToken');
+
+    final requestUrl = Uri.parse(widget.baseUrl + '/mess/tender');
+    final response = await http.get(
+      requestUrl,
+      headers: <String, String>{
+        "Content-Type": "application/x-www-form-urlencoded",
+        'Authorization': 'idToken ' + idToken!
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      List<MessTenderModel> _archivedItems = [];
+      for (var d in data) {
+        final item = MessTenderModel.fromJson(d);
+        if (item.archived == true) {
+          _archivedItems.add(item);
+        }
+      }
+      return _archivedItems;
     } else {
       throw Exception('Failed to load post');
     }
@@ -64,7 +100,8 @@ class _TenderMessState extends State<TenderMess> {
         child: Container(
           width: double.infinity,
           decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(
+            // ignore: unnecessary_const
+            borderRadius: const BorderRadius.only(
               topRight: Radius.circular(40.0),
               bottomRight: Radius.circular(0.0),
               topLeft: Radius.circular(40.0),
@@ -85,8 +122,6 @@ class _TenderMessState extends State<TenderMess> {
                     children: [
                       TextButton(
                         onPressed: () {
-                          // ignore: todo
-                          //TODO: Handle Active.
                           setState(() {
                             _isActive = true;
                           });
@@ -117,14 +152,17 @@ class _TenderMessState extends State<TenderMess> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                const Text("Download old tenders here",
-                    style: TextStyle(
-                      fontSize: 14.0,
-                    )),
-                const SizedBox(height: 20),
+                if (!_isActive)
+                  const Text("Download old tenders here",
+                      style: TextStyle(
+                        fontSize: 14.0,
+                      )),
+                const SizedBox(height: 10),
                 Expanded(
                   child: FutureBuilder<List<MessTenderModel>>(
-                      future: _getMessTenderItems(),
+                      future: _isActive
+                          ? _getMessTenderActiveItems()
+                          : _getMessTenderArchivedItems(),
                       builder: (_, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
                           if (snapshot.hasData) {
@@ -138,9 +176,16 @@ class _TenderMessState extends State<TenderMess> {
                                   child: Column(
                                     children: [
                                       Container(
-                                          // height: size.height * 0.1,
+                                          height: size.height * 0.13,
                                           width: double.infinity,
                                           decoration: const BoxDecoration(
+                                            borderRadius: BorderRadius.only(
+                                              topRight: Radius.circular(10.0),
+                                              bottomRight:
+                                                  Radius.circular(10.0),
+                                              topLeft: Radius.circular(10.0),
+                                              bottomLeft: Radius.circular(10.0),
+                                            ),
                                             color: Colors.white,
                                             boxShadow: [
                                               BoxShadow(
@@ -151,21 +196,73 @@ class _TenderMessState extends State<TenderMess> {
                                               ),
                                             ],
                                           ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 10.0,
-                                                vertical: 20.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Text(data.title,
-                                                    style: const TextStyle(
-                                                      fontSize: 16,
-                                                      color: Colors.black,
-                                                    )),
-                                              ],
-                                            ),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 10.0,
+                                                        vertical: 8.0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(data.title,
+                                                            style:
+                                                                const TextStyle(
+                                                              fontSize: 18,
+                                                              color:
+                                                                  Colors.black,
+                                                            )),
+                                                        const SizedBox(
+                                                            height: 5),
+                                                        Text(data.description,
+                                                            style:
+                                                                const TextStyle(
+                                                              fontSize: 14,
+                                                              color: Colors
+                                                                  .black54,
+                                                            )),
+                                                        const SizedBox(
+                                                            height: 5),
+                                                        Text(data.date,
+                                                            style:
+                                                                const TextStyle(
+                                                              fontSize: 14,
+                                                              color: Colors
+                                                                  .black54,
+                                                            )),
+                                                      ],
+                                                    ),
+                                                    InkWell(
+                                                      onTap: () async {
+                                                        if (data.file !=
+                                                            'null') {
+                                                          await _downloadFile(
+                                                              data.file,
+                                                              data.id);
+                                                        }
+                                                      },
+                                                      child: SizedBox(
+                                                        height: 38.0,
+                                                        child: Image.asset(
+                                                            "assets/icons/download_cloud.png"),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
                                           )),
                                       const SizedBox(height: 20),
                                     ],
@@ -187,31 +284,49 @@ class _TenderMessState extends State<TenderMess> {
       ),
     );
   }
-}
 
-Future showAlertDialog(
-  BuildContext context, {
-  required String title,
-  required String content,
-  required String defaultActionText,
-  String? cancelActionText,
-}) {
-  return showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text(title),
-      content: Text(content),
-      actions: [
-        if (cancelActionText != null)
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: Text(cancelActionText),
-          ),
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(false),
-          child: Text(defaultActionText),
-        ),
-      ],
-    ),
-  );
+  Future<void> _downloadFile(String fileUrl, String id) async {
+    var status = await Permission.storage.request();
+    if (status.isGranted) {
+      final baseStorage = await getExternalStorageDirectory();
+      await FlutterDownloader.enqueue(
+        url: fileUrl,
+        savedDir: baseStorage!.path,
+        fileName: "tender" + id,
+        showNotification:
+            true, // show download progress in status bar (for Android)
+        openFileFromNotification:
+            true, // click on notification to open downloaded file (for Android)
+      );
+    }
+  }
+
+  final ReceivePort _port = ReceivePort();
+
+  @override
+  void initState() {
+    super.initState();
+
+    IsolateNameServer.registerPortWithName(
+        _port.sendPort, 'downloader_send_port');
+    _port.listen((dynamic data) {
+      setState(() {});
+    });
+
+    FlutterDownloader.registerCallback(downloadCallback);
+  }
+
+  @override
+  void dispose() {
+    IsolateNameServer.removePortNameMapping('downloader_send_port');
+    super.dispose();
+  }
+
+  @pragma('vm:entry-point')
+  static void downloadCallback(
+      String id, DownloadTaskStatus status, int progress) {
+    final SendPort? send =
+        IsolateNameServer.lookupPortByName('downloader_send_port');
+    send?.send([id, status, progress]);
+  }
 }

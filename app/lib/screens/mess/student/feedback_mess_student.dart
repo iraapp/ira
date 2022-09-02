@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -17,9 +16,9 @@ class FeedbackMess extends StatefulWidget {
 class _FeedbackMessState extends State<FeedbackMess> {
   final List<String> _messFill = ["Fill as Anonymous", "Use your credentials"];
   String _messFillValue = "Fill as Anonymous";
-  final List<String> _mess = ["1 B Mess", "120 Mess", "Girls Mess"];
+  final List<String> _messTypes = ["1 B Mess", "120 Mess", "Girls Mess"];
   String _messValue = "1 B Mess";
-  final List<String> _meals = [
+  final List<String> _messMeals = [
     "Breakfast",
     "Lunch",
     "Snacks",
@@ -30,12 +29,13 @@ class _FeedbackMessState extends State<FeedbackMess> {
 
   String? _description;
 
-  Future<dynamic> _submitFeedback(String mess, String description) async {
+  Future<dynamic> _submitFeedback(
+      String messType, String description, String messMeal) async {
     String? idToken = await widget.secureStorage.read(key: 'idToken');
-
     Map<String, dynamic> formMap = {
-      'mess_type': mess,
+      'mess_type': messType,
       'feedback': description,
+      'mess_meal': messMeal,
     };
 
     final requestUrl = Uri.parse(widget.baseUrl + '/mess/feedback');
@@ -93,8 +93,9 @@ class _FeedbackMessState extends State<FeedbackMess> {
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Padding(
+                  // ignore: prefer_const_literals_to_create_immutables
+                  children: [
+                    const Padding(
                       padding: EdgeInsets.all(16.0),
                       child: Text(
                         "Feedback",
@@ -166,7 +167,7 @@ class _FeedbackMessState extends State<FeedbackMess> {
                                     color: Colors.black,
                                   ),
                                   value: _messValue,
-                                  items: _mess.map((String items) {
+                                  items: _messTypes.map((String items) {
                                     return DropdownMenuItem(
                                       value: items,
                                       child: Text(
@@ -210,7 +211,7 @@ class _FeedbackMessState extends State<FeedbackMess> {
                                     color: Colors.black,
                                   ),
                                   value: _mealsValue,
-                                  items: _meals.map((String items) {
+                                  items: _messMeals.map((String items) {
                                     return DropdownMenuItem(
                                       value: items,
                                       child: Text(
@@ -239,8 +240,9 @@ class _FeedbackMessState extends State<FeedbackMess> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 40.0),
                           child: Row(
-                            children: const [
-                              Text("Description:",
+                            // ignore: prefer_const_literals_to_create_immutables
+                            children: [
+                              const Text("Description:",
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 16.0,
@@ -281,7 +283,10 @@ class _FeedbackMessState extends State<FeedbackMess> {
                                 child: ElevatedButton(
                                     onPressed: () async {
                                       final res = await _submitFeedback(
-                                          _messValue, _description.toString());
+                                        _messValue,
+                                        _description.toString(),
+                                        _mealsValue,
+                                      );
                                       if (res) {
                                         await showFeedbackDialog(context,
                                             title: "Thank you",

@@ -1,16 +1,62 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_flavor/flutter_flavor.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:ira/screens/mess/manager/feedback_model.dart';
+import 'package:http/http.dart' as http;
 
 class ComplaintMessManager extends StatefulWidget {
-  const ComplaintMessManager({Key? key}) : super(key: key);
+  ComplaintMessManager({Key? key}) : super(key: key);
+  final secureStorage = const FlutterSecureStorage();
+  final String baseUrl = FlavorConfig.instance.variables['baseUrl'];
 
   @override
   State<ComplaintMessManager> createState() => _ComplaintMessManagerState();
 }
 
 class _ComplaintMessManagerState extends State<ComplaintMessManager> {
-  bool _actionTaken = false;
-  final List<String> _filter = ["Filter", "Date", "Mess", "Action"];
+  final List<String> _filters = ["Filter", "Date", "Mess", "Action"];
   String _filterValue = "Filter";
+
+  Future<List<FeedbackModel>> _getMessFeedbackItems() async {
+    final String? token = await widget.secureStorage.read(key: 'staffToken');
+    final requestUrl = Uri.parse(widget.baseUrl + '/mess/feedback');
+    final response = await http.get(
+      requestUrl,
+      headers: <String, String>{
+        "Content-Type": "application/x-www-form-urlencoded",
+        'Authorization': token != null ? 'Token ' + token : '',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data
+          .map<FeedbackModel>((json) => FeedbackModel.fromJson(json))
+          .toList();
+    } else {
+      throw Exception('Failed to load post');
+    }
+  }
+
+  Future<void> _takeActionOnComplaint(int id) async {
+    final String? token = await widget.secureStorage.read(key: 'staffToken');
+
+    final requestUrl = Uri.parse(widget.baseUrl + '/mess/feedback/action/$id/');
+    final response = await http.put(
+      requestUrl,
+      headers: <String, String>{
+        "Content-Type": "application/x-www-form-urlencoded",
+        'Authorization': token != null ? 'Token ' + token : '',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return;
+    } else {
+      throw Exception('Failed to get');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +108,7 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                         color: Colors.black,
                       ),
                       value: _filterValue,
-                      items: _filter.map((String items) {
+                      items: _filters.map((String items) {
                         return DropdownMenuItem(
                           value: items,
                           child: Text(
@@ -85,155 +131,211 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                 ),
                 const SizedBox(height: 10.0),
                 Expanded(
-                  child: ListView.builder(
-                    itemCount: 5,
-                    itemBuilder: (BuildContext context, int index) {
-                      return GestureDetector(
-                        onTap: () async {
-                          await showComplaintDialog(context,
-                              title: "Pratham",
-                              subtitle: "1B Mess | Breakfast | 06-07-2022",
-                              content: "jkwheqk " * 30,
-                              defaultActionText: "Close");
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                          child: Column(
-                            children: [
-                              Container(
-                                  height: size.height * 0.25,
-                                  width: double.infinity,
-                                  decoration: const BoxDecoration(
-                                      borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(10.0),
-                                        bottomRight: Radius.circular(10.0),
-                                        topLeft: Radius.circular(10.0),
-                                        bottomLeft: Radius.circular(10.0),
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey,
-                                          offset: Offset(0.0, 1.0), //(x,y)
-                                          blurRadius: 1.0,
-                                        ),
-                                      ],
-                                      color: Colors.white),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                          borderRadius: const BorderRadius.only(
-                                            topRight: Radius.circular(10.0),
-                                            bottomRight: Radius.circular(0.0),
-                                            topLeft: Radius.circular(10.0),
-                                            bottomLeft: Radius.circular(0.0),
-                                          ),
-                                          color: !_actionTaken
-                                              ? Colors.red
-                                              : Colors.green,
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(10.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  const Text("Pratham",
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                      )),
-                                                  !_actionTaken
-                                                      ? SizedBox(
-                                                          height: 30.0,
-                                                          child: ElevatedButton(
-                                                            onPressed: null,
-                                                            style: ButtonStyle(
-                                                              backgroundColor:
-                                                                  MaterialStateProperty
-                                                                      .all(
-                                                                Colors.white,
-                                                              ),
-                                                              shape: MaterialStateProperty
-                                                                  .all<
-                                                                      RoundedRectangleBorder>(
-                                                                RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              15.0),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            child: const Text(
-                                                                "Take Action",
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontSize:
-                                                                      12.0,
-                                                                )),
-                                                          ),
-                                                        )
-                                                      : SizedBox(
-                                                          height: 30.0,
-                                                          child: ElevatedButton(
-                                                            onPressed: () {},
-                                                            child: const Icon(
-                                                              Icons.done,
-                                                              color:
-                                                                  Colors.green,
-                                                              size: 18.0,
-                                                            ),
-                                                            style:
-                                                                ElevatedButton
-                                                                    .styleFrom(
-                                                              primary:
-                                                                  Colors.white,
-                                                              shape:
-                                                                  const CircleBorder(),
-                                                            ),
-                                                          ),
-                                                        ),
+                  child: FutureBuilder<List<FeedbackModel>>(
+                      future: _getMessFeedbackItems(),
+                      builder: (_, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          if (snapshot.hasData) {
+                            return ListView.builder(
+                              itemCount: snapshot.data?.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                final data = snapshot.data![index];
+                                final time = DateTime.parse(data.createdAt);
+                                final day = time.day;
+                                final month = time.month;
+                                final year = time.year;
+                                final date = day.toString() +
+                                    "-" +
+                                    month.toString() +
+                                    "-" +
+                                    year.toString();
+
+                                final bool status = data.status;
+
+                                return GestureDetector(
+                                  onTap: () async {
+                                    await showComplaintDialog(
+                                      id: int.parse(data.id),
+                                      title: data.user,
+                                      subtitle:
+                                          "${data.messType} | ${data.messMeal} | $date",
+                                      content: data.body,
+                                      defaultActionText: "Close",
+                                      status: status,
+                                    );
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10.0),
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                            height: size.height * 0.25,
+                                            width: double.infinity,
+                                            decoration: const BoxDecoration(
+                                                borderRadius: BorderRadius.only(
+                                                  topRight:
+                                                      Radius.circular(10.0),
+                                                  bottomRight:
+                                                      Radius.circular(10.0),
+                                                  topLeft:
+                                                      Radius.circular(10.0),
+                                                  bottomLeft:
+                                                      Radius.circular(10.0),
+                                                ),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey,
+                                                    offset: Offset(
+                                                        0.0, 1.0), //(x,y)
+                                                    blurRadius: 1.0,
+                                                  ),
                                                 ],
-                                              ),
-                                              Builder(builder: (context) {
-                                                return const Text(
-                                                    "1B Mess | Breakfast | 06-07-2022",
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                    ));
-                                              }),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Wrap(
-                                          children: [
-                                            Text("jkwheqk " * 30,
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                )),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  )),
-                              const SizedBox(height: 20),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                                                color: Colors.white),
+                                            child: Column(
+                                              children: [
+                                                Container(
+                                                  width: double.infinity,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        const BorderRadius.only(
+                                                      topRight:
+                                                          Radius.circular(10.0),
+                                                      bottomRight:
+                                                          Radius.circular(0.0),
+                                                      topLeft:
+                                                          Radius.circular(10.0),
+                                                      bottomLeft:
+                                                          Radius.circular(0.0),
+                                                    ),
+                                                    color: !status
+                                                        ? Colors.red
+                                                        : Colors.green,
+                                                  ),
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            10.0),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Text(data.user,
+                                                                style:
+                                                                    const TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                )),
+                                                            !status
+                                                                ? SizedBox(
+                                                                    height:
+                                                                        30.0,
+                                                                    child:
+                                                                        ElevatedButton(
+                                                                      onPressed:
+                                                                          null,
+                                                                      style:
+                                                                          ButtonStyle(
+                                                                        backgroundColor:
+                                                                            MaterialStateProperty.all(
+                                                                          Colors
+                                                                              .white,
+                                                                        ),
+                                                                        shape: MaterialStateProperty.all<
+                                                                            RoundedRectangleBorder>(
+                                                                          RoundedRectangleBorder(
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(15.0),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      child: const Text(
+                                                                          "Take Action",
+                                                                          style:
+                                                                              TextStyle(
+                                                                            color:
+                                                                                Colors.black,
+                                                                            fontSize:
+                                                                                12.0,
+                                                                          )),
+                                                                    ),
+                                                                  )
+                                                                : SizedBox(
+                                                                    height:
+                                                                        30.0,
+                                                                    child:
+                                                                        ElevatedButton(
+                                                                      onPressed:
+                                                                          () {},
+                                                                      child:
+                                                                          const Icon(
+                                                                        Icons
+                                                                            .done,
+                                                                        color: Colors
+                                                                            .green,
+                                                                        size:
+                                                                            18.0,
+                                                                      ),
+                                                                      style: ElevatedButton
+                                                                          .styleFrom(
+                                                                        primary:
+                                                                            Colors.white,
+                                                                        shape:
+                                                                            const CircleBorder(),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                          ],
+                                                        ),
+                                                        Builder(
+                                                            builder: (context) {
+                                                          return Text(
+                                                              "${data.messType} | ${data.messMeal} | $date",
+                                                              style:
+                                                                  const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                              ));
+                                                        }),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Wrap(
+                                                    children: [
+                                                      Text(data.body,
+                                                          style:
+                                                              const TextStyle(
+                                                            color: Colors.black,
+                                                          )),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            )),
+                                        const SizedBox(height: 20),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          }
+                        }
+
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }),
                 ),
               ],
             ),
@@ -243,12 +345,13 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
     );
   }
 
-  Future showComplaintDialog(
-    BuildContext context, {
+  Future showComplaintDialog({
+    required int id,
     required String title,
     required String subtitle,
     required String content,
     required String defaultActionText,
+    required bool status,
   }) {
     return showDialog(
       context: context,
@@ -285,8 +388,9 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
             const SizedBox(height: 10.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Text("Details", style: TextStyle(fontSize: 14.0)),
+              // ignore: prefer_const_literals_to_create_immutables
+              children: [
+                const Text("Details", style: TextStyle(fontSize: 14.0)),
               ],
             ),
             const SizedBox(height: 20.0),
@@ -294,9 +398,10 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
               height: 40.0,
               child: ElevatedButton(
                 onPressed: () {
-                  if (!_actionTaken) {
+                  if (!status) {
                     setState(() {
-                      _actionTaken = !_actionTaken;
+                      // update the status of the complaint
+                      _takeActionOnComplaint(id);
                       Navigator.pop(context);
                     });
                   } else {
@@ -305,7 +410,7 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
-                    !_actionTaken ? Colors.red : Colors.green,
+                    !status ? Colors.red : Colors.green,
                   ),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
@@ -313,7 +418,7 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                     ),
                   ),
                 ),
-                child: Text(!_actionTaken ? "Take Action" : "Action Taken",
+                child: Text(!status ? "Take Action" : "Action Taken",
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 12.0,

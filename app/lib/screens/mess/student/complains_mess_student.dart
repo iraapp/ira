@@ -1,9 +1,7 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 
 class ComplaintsMess extends StatefulWidget {
@@ -30,14 +28,13 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
   String _mealsValue = "Breakfast";
   String? _description;
 
-  final ImagePicker _picker = ImagePicker();
-
-  Future<dynamic> _submitFeedback(int messNo, String description) async {
+  Future<dynamic> _submitFeedback(
+      String messType, String description, String messMeal) async {
     String? idToken = await widget.secureStorage.read(key: 'idToken');
-
     Map<String, dynamic> formMap = {
-      'mess_no': messNo.toString(),
+      'mess_type': messType,
       'feedback': description,
+      'mess_meal': messMeal,
     };
 
     final requestUrl = Uri.parse(widget.baseUrl + '/mess/feedback');
@@ -54,6 +51,7 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
     if (response.statusCode == 200) {
       return Future.value(true);
     }
+
     return Future.value(false);
   }
 
@@ -95,8 +93,9 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Padding(
+                  // ignore: prefer_const_literals_to_create_immutables
+                  children: [
+                    const Padding(
                       padding: EdgeInsets.all(16.0),
                       child: Text(
                         "Complaint",
@@ -241,8 +240,9 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 40.0),
                           child: Row(
-                            children: const [
-                              Text("Description:",
+                            // ignore: prefer_const_literals_to_create_immutables
+                            children: [
+                              const Text("Description:",
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 16.0,
@@ -258,7 +258,9 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
                           child: TextField(
                             maxLines: 5,
                             decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
+                              border: OutlineInputBorder(
+                                  //borderRadius: BorderRadius.circular(10.0),
+                                  ),
                               hintText: "Description",
                             ),
                             onChanged: (value) {
@@ -273,20 +275,6 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 0.0, vertical: 10.0),
-                          child: ElevatedButton(
-                              onPressed: () async {
-                                // Pick an image
-                                // ignore: unused_local_variable
-                                final XFile? image = await _picker.pickImage(
-                                    source: ImageSource.gallery);
-                                // ignore: todo
-                                // TODO: implement upload
-                              },
-                              child: const Text("Upload photo")),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
                               horizontal: 40.0, vertical: 20.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
@@ -295,9 +283,11 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
                                 width: 140.0,
                                 child: ElevatedButton(
                                     onPressed: () async {
-                                      int no = _mess.indexOf(_messValue);
                                       final res = await _submitFeedback(
-                                          no + 1, _description.toString());
+                                        _messValue,
+                                        _description.toString(),
+                                        _mealsValue,
+                                      );
                                       if (res) {
                                         await showFeedbackDialog(context,
                                             title: "Thank you",

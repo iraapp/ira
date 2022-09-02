@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:isolate';
 import 'dart:ui';
-import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ira/screens/mess/student/mess_mom_model.dart';
@@ -10,25 +12,26 @@ import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class MOMMess extends StatefulWidget {
-  MOMMess({Key? key}) : super(key: key);
+class MOMMessManager extends StatefulWidget {
+  MOMMessManager({Key? key}) : super(key: key);
   final secureStorage = const FlutterSecureStorage();
   final String baseUrl = FlavorConfig.instance.variables['baseUrl'];
 
   @override
-  State<MOMMess> createState() => _MOMMessState();
+  State<MOMMessManager> createState() => _MOMMessManagerState();
 }
 
-class _MOMMessState extends State<MOMMess> {
-  Future<List<MessMOMModel>> _getMessMOMItems() async {
-    String? idToken = await widget.secureStorage.read(key: 'idToken');
+class _MOMMessManagerState extends State<MOMMessManager> {
+  final TextEditingController _titleTextCtr = TextEditingController();
 
+  Future<List<MessMOMModel>> _getMessMOMItems() async {
+    final String? token = await widget.secureStorage.read(key: 'staffToken');
     final requestUrl = Uri.parse(widget.baseUrl + '/mess/mom');
     final response = await http.get(
       requestUrl,
       headers: <String, String>{
         "Content-Type": "application/x-www-form-urlencoded",
-        'Authorization': 'idToken ' + idToken!
+        'Authorization': token != null ? 'Token ' + token : '',
       },
     );
 
@@ -39,6 +42,40 @@ class _MOMMessState extends State<MOMMess> {
           .toList();
     } else {
       throw Exception('Failed to load post');
+    }
+  }
+
+  Future<bool> _submitMessMOMItem({
+    required String date,
+    required String filePath,
+    required String title,
+    required String description,
+  }) async {
+    try {
+      final String? token = await widget.secureStorage.read(key: 'staffToken');
+      final requestUrl = Uri.parse(widget.baseUrl + '/mess/mom');
+
+      var request = http.MultipartRequest('POST', requestUrl);
+      final headers = {'Authorization': token != null ? 'Token ' + token : ''};
+      request.headers.addAll(headers);
+      request.fields['date'] = date;
+      request.fields['title'] = title;
+      request.fields['description'] = description;
+      request.files.add(await http.MultipartFile.fromPath(
+        'file',
+        filePath,
+        contentType: MediaType('application', 'pdf'),
+      ));
+
+      final response = await request.send();
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        throw Exception('Failed to load post');
+      }
+    } catch (e) {
+      return false;
     }
   }
 
@@ -78,10 +115,36 @@ class _MOMMessState extends State<MOMMess> {
                 const EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
             child: Column(
               children: [
-                const Text("MOM",
-                    style: TextStyle(
-                      fontSize: 16,
-                    )),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Opacity(
+                      opacity: 0.0,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: const Text("  + Add  "),
+                      ),
+                    ),
+                    const Text("MOM",
+                        style: TextStyle(
+                          fontSize: 16,
+                        )),
+                    ElevatedButton(
+                        onPressed: () async {
+                          await showAddMOMDialog();
+                        },
+                        child: const Text("+ Add"),
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18.0)),
+                          ),
+                          backgroundColor:
+                              MaterialStateProperty.all<Color?>(Colors.blue),
+                        ))
+                  ],
+                ),
                 const SizedBox(height: 20),
                 Expanded(
                   child: FutureBuilder<List<MessMOMModel>>(
@@ -242,5 +305,163 @@ class _MOMMessState extends State<MOMMess> {
     final SendPort? send =
         IsolateNameServer.lookupPortByName('downloader_send_port');
     send?.send([id, status, progress]);
+  }
+
+  DateTime selectedDate = DateTime.now();
+  String _pdfFilePath = '';
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+  }
+
+  Future showAddMOMDialog() async {
+    bool _pdfUploaded = false;
+    return showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(builder: (context, setSte) {
+        return AlertDialog(
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(children: [
+                const Text(
+                  "Give Title",
+                  style: TextStyle(fontSize: 16.0),
+                ),
+                const SizedBox(width: 10),
+                Flexible(
+                  child: SizedBox(
+                    height: 40.0,
+                    child: TextField(
+                      controller: _titleTextCtr,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
+                )
+              ]),
+              const SizedBox(height: 10),
+              Row(children: [
+                const Text(
+                  "Date        ",
+                  style: TextStyle(fontSize: 16.0),
+                ),
+                const SizedBox(width: 10),
+                GestureDetector(
+                  onTap: () {
+                    _selectDate(context);
+                  },
+                  child: Container(
+                    height: 40.0,
+                    width: 200.0,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                        width: 1.0,
+                      ),
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child:
+                          Text(selectedDate.toLocal().toString().split(' ')[0]),
+                    ),
+                  ),
+                ),
+              ]),
+              const SizedBox(height: 10),
+              Row(children: [
+                const Text(
+                  "Upload PDF",
+                  style: TextStyle(fontSize: 16.0),
+                ),
+                const SizedBox(width: 20),
+                ElevatedButton(
+                    onPressed: () async {
+                      final file = await FilePicker.platform.pickFiles(
+                        type: FileType.custom,
+                        allowMultiple: false,
+                        allowedExtensions: ['pdf'],
+                      );
+                      if (file != null) {
+                        setSte(() {
+                          _pdfUploaded = true;
+                          final _pdfFile = file.files.first;
+                          _pdfFilePath = _pdfFile.path!;
+                        });
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Please select a file')));
+                      }
+                    },
+                    child: const Text("Upload"),
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0)),
+                      ),
+                      backgroundColor:
+                          MaterialStateProperty.all<Color?>(Colors.blue),
+                    )),
+                const SizedBox(width: 10),
+                !_pdfUploaded
+                    ? Checkbox(value: false, onChanged: (value) {})
+                    : Checkbox(value: true, onChanged: (value) {}),
+              ]),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: 100.0,
+                child: ElevatedButton(
+                    onPressed: !_pdfUploaded
+                        ? null
+                        : () async {
+                            // call the api to add the mom
+                            final title = _titleTextCtr.text;
+                            const description = "no description";
+                            final date =
+                                selectedDate.toLocal().toString().split(' ')[0];
+                            final pdf = _pdfFilePath;
+                            final bool res = await _submitMessMOMItem(
+                                title: title,
+                                description: description,
+                                date: date,
+                                filePath: pdf);
+                            if (res) {
+                              setState(() {});
+                              _titleTextCtr.clear();
+                              Navigator.pop(context);
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Error')));
+                            }
+                          },
+                    child: const Text("Add"),
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0)),
+                      ),
+                      backgroundColor:
+                          MaterialStateProperty.all<Color?>(Colors.blue),
+                    )),
+              )
+            ],
+          ),
+        );
+      }),
+    );
   }
 }

@@ -71,11 +71,11 @@ class FeedbackInstanceView(APIView):
 
 
 class FeedbackActionView(APIView):
-    permission_classes = [IsMessManager, ]
+    permission_classes = [IsAuthenticated, ]
 
-    def update(self, request, *args, **kwargs):
+    def put(self, request, *args, **kwargs):
         pk = kwargs.get("pk")
-        feedback = Feedback.objects.filter(id=pk).first()
+        feedback = MessFeedback.objects.filter(id=pk).first()
         feedback.status = True
         feedback.save()
         return Response(status=200, data={
@@ -154,7 +154,7 @@ mess tender view:
 
 
 class MessTenderView(APIView):
-    permission_classes = [IsMessManager, ]
+    permission_classes = [IsAuthenticated, ]
     model = MessTender
 
     def get(self, request, *args, **kwargs):
@@ -190,9 +190,9 @@ class MessTenderView(APIView):
 
 # To update tender State
 class MessTenderArchivedView(APIView):
-    permission_classes = [IsMessManager, ]
+    permission_classes = [IsAuthenticated, ]
 
-    def update(self, request, *args, **kwargs):
+    def put(self, request, *args, **kwargs):
         pk = kwargs.get("pk")
         data = MessTender.objects.filter(id=pk).first()
         data.archeived = True

@@ -83,6 +83,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('body', models.TextField(blank=True)),
+                ('mess_meal', models.CharField(max_length=50)),
                 ('created_at', models.DateTimeField(auto_now=True)),
                 ('status', models.BooleanField(default=False)),
                 ('mess_type', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='mess.mess')),
