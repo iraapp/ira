@@ -1,7 +1,6 @@
 from institute_app import settings
 from django.db import models
 
-
 class MenuItem(models.Model):
     name = models.CharField(max_length=30, default='')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -9,7 +8,6 @@ class MenuItem(models.Model):
 
     def __str__(self):
         return self.name
-
 
 class MenuSlot(models.Model):
     name = models.CharField(max_length=15, default='')
@@ -21,7 +19,6 @@ class MenuSlot(models.Model):
     def __str__(self):
         return self.name
 
-
 class WeekDay(models.Model):
     name = models.CharField(max_length=15, default='')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -29,7 +26,6 @@ class WeekDay(models.Model):
 
     def __str__(self):
         return self.name
-
 
 class Mess(models.Model):
     name = models.CharField(max_length=15, default='')
@@ -39,12 +35,10 @@ class Mess(models.Model):
     def __str__(self):
         return self.name
 
-
 class MessMenu(models.Model):
     slot = models.ForeignKey(MenuSlot, on_delete=models.CASCADE)
     items = models.ManyToManyField(MenuItem)
     weekdays = models.ManyToManyField(WeekDay)
-
 
 class MessMenu(models.Model):
     slot = models.ForeignKey(MenuSlot, on_delete=models.CASCADE)
@@ -53,8 +47,6 @@ class MessMenu(models.Model):
 
 # data base model for feedback
 # status is for whether the feedback is viewed by mess manager or not.
-
-
 class MessFeedback(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
