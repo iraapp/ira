@@ -65,8 +65,6 @@ class MessFeedback(models.Model):
     status = models.BooleanField(default=False)
 
 # data base model for mess mom
-
-
 class MessMom(models.Model):
     date = models.DateField(default=None, null=True)
     file = models.FileField(upload_to='mom/')
@@ -75,8 +73,6 @@ class MessMom(models.Model):
     created_at = models.DateTimeField(auto_now=True)
 
 # data base model for mess tender
-
-
 class MessTender(models.Model):
     archieved = models.BooleanField(default=False)
     date = models.DateField(default=None, null=True)
