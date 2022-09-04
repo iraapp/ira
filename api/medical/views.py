@@ -186,8 +186,7 @@ class AppointmentView(APIView):
             patient=user
         )
         instance.save()
-        serinstance = AppointmentSerializer(instance)
-        return Response(serinstance.data)
+        return Response(AppointmentSerializer(instance).data)
 
     def get(self, request):
         user = request.user
