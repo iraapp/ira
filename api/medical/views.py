@@ -7,8 +7,6 @@ from rest_framework.response import Response
 from authentication.models import User
 
 # views for medical manager
-
-
 class AddDoctorView(APIView):
     permission_classes = (IsMedicalManager,)
 
