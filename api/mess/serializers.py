@@ -1,4 +1,3 @@
-from curses import meta
 from mess.models import MenuItem
 from rest_framework import serializers
 
