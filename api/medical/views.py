@@ -4,7 +4,7 @@ from medical.models import *
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
-
+from authentication.models import User
 
 # views for medical manager
 class AddDoctorView(APIView):
@@ -72,7 +72,7 @@ class DoctorInstanceView(APIView):
         serialized_json = DoctorSerializer(data)
         return Response(data=serialized_json.data)
 
-    def update(self, request, *args, **kwargs):
+    def put(self, request, *args, **kwargs):
         pk = kwargs.get("pk")
         data = Doctor.objects.filter(id=pk).first()
         name = request.POST.get("name", None)
@@ -113,7 +113,7 @@ class StaffInstanceView(APIView):
         serialized_json = StaffSerializer(data)
         return Response(data=serialized_json.data)
 
-    def update(self, request, *args, **kwargs):
+    def put(self, request, *args, **kwargs):
         pk = kwargs.get("pk")
         data = Staff.objects.filter(id=pk).first()
         name = request.POST.get("name", None)
@@ -170,3 +170,77 @@ class StudentStaffInstanceView(APIView):
         data = Staff.objects.filter(id=pk).first()
         serialized_json = StaffSerializer(data)
         return Response(data=serialized_json.data)
+
+
+class AppointmentView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        doctor = request.POST.get("doctor", None)
+        doctorinstance = Doctor.objects.filter(id=doctor).first()
+        user = request.user
+        instance = Appointment.objects.create(
+            doctor=doctorinstance,
+            patient=user
+        )
+        instance.save()
+        return Response(AppointmentSerializer(instance).data)
+
+    def get(self, request):
+        user = request.user
+        appointments = Appointment.objects.filter(patient=user)
+        serializer = AppointmentSerializer(appointments, many=True)
+        return Response(serializer.data)
+
+
+class DoctorAppointmentView(APIView):
+    permission_classes = (IsMedicalManager,)
+
+    def get(self, request):
+        doctor = request.user
+        appointments = Appointment.objects.filter(doctor=doctor)
+        serializer = AppointmentSerializer(appointments, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        id = request.POST.get("id", None)
+        accepted = request.POST.get("accepted", None)
+        appointment = Appointment.objects.filter(id=id).first()
+        if accepted == "true":
+            date = request.POST.get("date", None)
+            time = request.POST.get("time", None)
+            appointment.date = date
+            appointment.time = time
+            appointment.accepted = True
+        else:
+            reason = request.POST.get("reason", None)
+            appointment.reason = reason
+            appointment.accepted = False
+        appointment.save()
+        serinstance = AppointmentSerializer(appointment)
+        return Response(serinstance.data)
+
+
+class MedicalHistoryView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        user = request.user
+        history = MedicalHistory.objects.filter(patient=user)
+        serializer = MedicalHistorySerializer(history, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        patient = request.POST.get("patient", None)
+        patientinstance = User.objects.filter(id=patient).first()
+        doctor = request.POST.get("doctor", None)
+        doctorinstance = User.objects.filter(id=doctor).first()
+        details = request.POST.get("details", None)
+        instance = MedicalHistory.objects.create(
+            patient=patientinstance,
+            doctor=doctorinstance,
+            details=details
+        )
+        instance.save()
+        serinstance = MedicalHistorySerializer(instance)
+        return Response(serinstance.data)

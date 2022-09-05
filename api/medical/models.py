@@ -1,4 +1,5 @@
 from django.db import models
+from institute_app import settings
 
 # Create your models here.
 
@@ -29,3 +30,28 @@ class Staff(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Appointment(models.Model):
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    patient = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    date = models.DateField(null=True)
+    time = models.TimeField(null=True)
+    acceptance = models.BooleanField(default=False)
+    reason = models.CharField(max_length=500, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+class MedicalHistory(models.Model):
+    patient = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    date = models.DateField(null=True)
+    time = models.TimeField(null=True)
+    inhouse = models.BooleanField(default=False)
+    prescription = models.CharField(max_length=500, null=True)
+    details = models.CharField(max_length=500, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
