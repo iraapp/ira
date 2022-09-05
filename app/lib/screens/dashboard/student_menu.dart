@@ -5,6 +5,7 @@ import 'package:ira/screens/medical/dashboard.dart';
 import 'package:ira/screens/mess/student/mess_student.dart';
 import 'package:ira/screens/team/team.dart';
 
+import '../hostel/secretary/hostel_secretary_screen.dart';
 import '../profile/profile.dart';
 
 studentMenu(context) {
@@ -116,6 +117,28 @@ studentMenu(context) {
       const SizedBox(height: 5.0),
       const Text(
         "Hostel",
+        style: TextStyle(fontSize: 12.0),
+      )
+    ]),
+    Column(children: [
+      CircleAvatar(
+        backgroundColor: Colors.blue,
+        child: IconButton(
+          icon: const Icon(Icons.person),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const HostelSecretaryScreen(),
+              ),
+            );
+          },
+          color: Colors.white,
+        ),
+      ),
+      const SizedBox(height: 5.0),
+      const Text(
+        "Hostel Secretary",
         style: TextStyle(fontSize: 12.0),
       )
     ]),
