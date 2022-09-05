@@ -29,10 +29,16 @@ class ComplaintType(models.Model):
     def __str__(self):
         return self.name
 
+class HostelComplaint(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    body = models.TextField(editable = True, null = False, blank = True)
+    hostel = models.ForeignKey(Hostel, on_delete=models.CASCADE, null = True)
+    created_at = models.DateTimeField(auto_now = True)
+    status = models.BooleanField(default = False)
+    complaint_type = models.ForeignKey(ComplaintType, on_delete=models.CASCADE, null = True)
+
 class HostelFeedback(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     body = models.TextField(editable = True, null = False, blank = True)
     hostel = models.ForeignKey(Hostel, on_delete=models.CASCADE, null = True)
     created_at = models.DateTimeField(auto_now = True)
-    complaint_type = models.ForeignKey(ComplaintType, on_delete=models.CASCADE)
-    status = models.BooleanField(default = False)
