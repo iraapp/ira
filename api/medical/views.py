@@ -206,16 +206,16 @@ class DoctorAppointmentView(APIView):
         id = request.POST.get("id", None)
         status = request.POST.get("status", None)
         appointment = Appointment.objects.filter(id=id).first()
-        if status == 2:
+        if status == APPOINTMENT_STATUS["APPROVED"]:
             date = request.POST.get("date", None)
             time = request.POST.get("time", None)
             appointment.date = date
             appointment.time = time
-            appointment.status = 2
+            appointment.status = APPOINTMENT_STATUS["APPROVED"]
         else:
             reason = request.POST.get("reason", None)
             appointment.reason = reason
-            appointment.status = 3
+            appointment.status = APPOINTMENT_STATUS["REJECTED"]
         appointment.save()
         serinstance = AppointmentSerializer(appointment)
         return Response(serinstance.data)

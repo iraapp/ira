@@ -2,6 +2,11 @@ from django.db import models
 from institute_app import settings
 
 # Create your models here.
+APPOINTMENT_STATUS = {
+    'REJECTED': 0,
+    'IN_PROGRESS': 1,
+    'APPROVED': 2
+}
 
 
 class Doctor(models.Model):
@@ -34,9 +39,9 @@ class Staff(models.Model):
 
 class Appointment(models.Model):
     STATUS = (
-        (1, 'in process'),
-        (2, 'accepted'),
-        (3, 'rejected'),
+        (APPOINTMENT_STATUS["REJECTED"], 'Rejected'),
+        (APPOINTMENT_STATUS["IN_PROGRESS"], 'In process'),
+        (APPOINTMENT_STATUS["APPROVED"], 'Approved'),
     )
 
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
