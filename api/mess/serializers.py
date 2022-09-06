@@ -2,12 +2,14 @@ from mess.models import MenuItem
 from rest_framework import serializers
 
 class MenuItemSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
     name = serializers.CharField(max_length=30)
 
     class Meta:
         model = MenuItem
 
 class MenuSlotSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
     name = serializers.CharField(max_length=15)
     start_time = serializers.TimeField()
     end_time = serializers.TimeField()
@@ -50,5 +52,6 @@ class MessTenderSer(serializers.Serializer):
     created_at = serializers.DateTimeField()
 
 class MessMenuSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
     slot = MenuSlotSerializer()
     items = MenuItemSerializer(many = True)
