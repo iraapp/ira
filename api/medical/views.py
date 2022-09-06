@@ -204,9 +204,9 @@ class DoctorAppointmentView(APIView):
 
     def post(self, request):
         id = request.POST.get("id", None)
-        accepted = request.POST.get("accepted", None)
+        status = request.POST.get("status", None)
         appointment = Appointment.objects.filter(id=id).first()
-        if accepted == 2:
+        if status == 2:
             date = request.POST.get("date", None)
             time = request.POST.get("time", None)
             appointment.date = date

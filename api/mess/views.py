@@ -18,7 +18,7 @@ class MessMenuAPI(APIView):
             data[day.name] = {}
             for slot in MenuSlot.objects.all():
                 data[day.name][slot.name] = MessMenuSerializer(
-                    MessMenu.objects.filter(slot = slot, weekdays = day).first()).data
+                    MessMenu.objects.filter(slot=slot, weekdays=day).first()).data
 
         return Response(data=data)
 
@@ -27,7 +27,7 @@ class MessMenuAPI(APIView):
 FeedbackView:
     Payload required:
         1. mess_type - mess type
-        2. feeback - feedback body
+        2. feedback - feedback body
 
 """
 
@@ -84,7 +84,6 @@ class FeedbackActionView(APIView):
         })
 
 
-
 class ComplaintView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -95,14 +94,14 @@ class ComplaintView(APIView):
 
     def post(self, request, *args, **kwargs):
         user = request.user
-        feedback = request.POST.get("feedback")
+        complaint = request.POST.get("complaint")
         mess_name = request.POST.get("mess_type")
         mess_meal = request.POST.get("mess_meal")
         file = request.FILES.get("file")
         mess_type = Mess.objects.filter(name=mess_name).first()
         MessComplaint.objects.create(
             user=user,
-            body=feedback,
+            body=complaint,
             mess_type=mess_type,
             mess_meal=mess_meal,
             file=file
@@ -128,9 +127,9 @@ class ComplaintActionView(APIView):
 
     def put(self, request, *args, **kwargs):
         pk = kwargs.get("pk")
-        feedback = MessComplaint.objects.filter(id=pk).first()
-        feedback.status = True
-        feedback.save()
+        complaint = MessComplaint.objects.filter(id=pk).first()
+        complaint.status = True
+        complaint.save()
         return Response(status=200, data={
 
             "msg": "Complaint action Updated."
@@ -243,12 +242,12 @@ class MessTenderView(APIView):
 
 # To update tender State
 class MessTenderArchivedView(APIView):
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsMessManager, ]
 
     def put(self, request, *args, **kwargs):
         pk = kwargs.get("pk")
         data = MessTender.objects.filter(id=pk).first()
-        data.archeived = True
+        data.archieved = True
         data.save()
         return Response(status=200, data={
             "msg": "tender archived successfully."
