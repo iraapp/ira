@@ -37,7 +37,6 @@ class Appointment(models.Model):
         (1, 'in process'),
         (2, 'accepted'),
         (3, 'rejected'),
-
     )
 
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)

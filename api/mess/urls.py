@@ -53,7 +53,6 @@ urlpatterns = [
          views.FeedbackActionView.as_view(), name="feedback action"),
     path('complaint/action/<int:pk>/',
          views.ComplaintActionView.as_view(), name="feedback action"),
-
     path('tender/archive/<int:pk>/', views.MessTenderArchivedView.as_view(),
          name="tender action"),
 ]

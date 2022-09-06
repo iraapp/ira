@@ -18,8 +18,6 @@ STAFF_ROLE_IDS = {
 }
 
 # Create your models here.
-
-
 class User(AbstractBaseUser, PermissionsMixin):
 
     # These fields tie to the roles!
@@ -63,12 +61,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Staff(models.Model):
     # These fields tie to the roles!
-
     STAFF_ROLE_CHOICES = (
         (STAFF_ROLE_IDS['guard'], 'Guard'),
         (STAFF_ROLE_IDS['mess_manager'], 'Mess Manager'),
         (STAFF_ROLE_IDS['medical_manager'], 'Medical Manager'),
-
     )
 
     first_name = models.CharField(max_length=30)
@@ -84,10 +80,8 @@ class Staff(models.Model):
     @property
     def is_authenticated(self):
         return True
-
     def __str__(self):
         return self.first_name + ' ' + self.last_name
-
 
 class StaffToken(models.Model):
     """
