@@ -7,8 +7,6 @@ from rest_framework.response import Response
 from authentication.models import User
 
 # views for medical manager
-
-
 class AddDoctorView(APIView):
     permission_classes = (IsMedicalManager,)
 
@@ -186,8 +184,7 @@ class AppointmentView(APIView):
             patient=user
         )
         instance.save()
-        serinstance = AppointmentSerializer(instance)
-        return Response(serinstance.data)
+        return Response(AppointmentSerializer(instance).data)
 
     def get(self, request):
         user = request.user
