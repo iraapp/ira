@@ -31,6 +31,15 @@ class MessFeedbackSerializer(serializers.Serializer):
     created_at = serializers.DateTimeField()
     status = serializers.BooleanField(default=False)
 
+class MessComplaintSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    user = serializers.StringRelatedField()
+    body = serializers.CharField(max_length=500)
+    mess_meal = serializers.CharField(max_length=50)
+    mess_type = MessSerializer()
+    file = serializers.FileField()
+    created_at = serializers.DateTimeField()
+    status = serializers.BooleanField(default=False)
 class MessMomSer(serializers.Serializer):
     id = serializers.IntegerField()
     date = serializers.DateField()

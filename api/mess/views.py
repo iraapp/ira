@@ -84,7 +84,60 @@ class FeedbackActionView(APIView):
         })
 
 
-# Minutes of meeting for meeting note: s3 implimentation is necessary for production
+
+class ComplaintView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        data = MessComplaint.objects.all()
+        serialized_json = MessComplaintSerializer(data, many=True)
+        return Response(data=serialized_json.data)
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        feedback = request.POST.get("feedback")
+        mess_name = request.POST.get("mess_type")
+        mess_meal = request.POST.get("mess_meal")
+        file = request.FILES.get("file")
+        mess_type = Mess.objects.filter(name=mess_name).first()
+        MessComplaint.objects.create(
+            user=user,
+            body=feedback,
+            mess_type=mess_type,
+            mess_meal=mess_meal,
+            file=file
+        )
+        return Response(status=200, data={
+
+            "msg": "Complaint submitted successfully."
+        })
+
+
+class ComplaintInstanceView(APIView):
+    permission_classes = [IsAuthenticated, ]
+
+    def get(self, request, *args, **kwargs):
+        feedback_id = kwargs.get("pk")
+        data = MessComplaint.objects.filter(id=feedback_id).first()
+        serialized_json = MessComplaintSerializer(data)
+        return Response(data=serialized_json.data)
+
+
+class ComplaintActionView(APIView):
+    permission_classes = [IsAuthenticated, ]
+
+    def put(self, request, *args, **kwargs):
+        pk = kwargs.get("pk")
+        feedback = MessComplaint.objects.filter(id=pk).first()
+        feedback.status = True
+        feedback.save()
+        return Response(status=200, data={
+
+            "msg": "Complaint action Updated."
+        })
+
+
+# Minutes of meeting for meeting note: s3 implementation is necessary for production
 """
 MessMomView:
 

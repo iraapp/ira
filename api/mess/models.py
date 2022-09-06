@@ -51,6 +51,16 @@ class MessFeedback(models.Model):
     created_at = models.DateTimeField(auto_now=True)
     status = models.BooleanField(default=False)
 
+class MessComplaint(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
+    body = models.TextField(editable=True, null=False, blank=True)
+    mess_meal = models.CharField(max_length=50)
+    mess_type = models.ForeignKey(Mess, on_delete=models.CASCADE, null=True)
+    file = models.FileField(upload_to='complaints/', null=True, blank=True)
+    created_at = models.DateTimeField(auto_now=True)
+    status = models.BooleanField(default=False)
+
 # data base model for mess mom
 class MessMom(models.Model):
     date = models.DateField(default=None, null=True)

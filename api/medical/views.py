@@ -209,16 +209,16 @@ class DoctorAppointmentView(APIView):
         id = request.POST.get("id", None)
         accepted = request.POST.get("accepted", None)
         appointment = Appointment.objects.filter(id=id).first()
-        if accepted == "true":
+        if accepted == 2:
             date = request.POST.get("date", None)
             time = request.POST.get("time", None)
             appointment.date = date
             appointment.time = time
-            appointment.accepted = True
+            appointment.status = 2
         else:
             reason = request.POST.get("reason", None)
             appointment.reason = reason
-            appointment.accepted = False
+            appointment.status = 3
         appointment.save()
         serinstance = AppointmentSerializer(appointment)
         return Response(serinstance.data)
@@ -239,8 +239,10 @@ class MedicalHistoryView(APIView):
         doctor = request.POST.get("doctor", None)
         doctorinstance = User.objects.filter(id=doctor).first()
         details = request.POST.get("details", None)
+        date = request.POST.get("date", None)
         instance = MedicalHistory.objects.create(
             patient=patientinstance,
+            date=date,
             doctor=doctorinstance,
             details=details
         )
