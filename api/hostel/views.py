@@ -1,5 +1,5 @@
-from hostel.serializers import ComplaintTypeSerializer, HostelFeedbackSerializer, HostelSerializer, MaintenanceStaffContactsSer
-from hostel.models import ComplaintType, Hostel, HostelFeedback, MaintenanceStaffContacts
+from hostel.serializers import ComplaintTypeSerializer, HostelComplaintSerializer, HostelFeedbackSerializer, HostelSerializer, MaintenanceStaffContactsSer
+from hostel.models import ComplaintType, Hostel, HostelComplaint, HostelFeedback, MaintenanceStaffContacts
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -56,8 +56,49 @@ class MaintenanceStaffContactsInstanceView(APIView):
             "msg": "Contact deleted successfully."
         })
 
+class HostelComplaintView(APIView):
+    permission_classes = []
+
+    def get(self, request):
+        data = HostelComplaint.objects.all()
+        serialized_json = HostelComplaintSerializer(data, many=True)
+
+        return Response(data=serialized_json.data)
+
+    def post(self, request):
+        user = request.user
+        body = request.POST.get('feedback')
+        hostel = request.POST.get('hostel')
+        complaint_type = request.POST.get('complaint_type')
+
+        hostel = Hostel.objects.filter(name=hostel).first()
+        complaint_type = ComplaintType.objects.filter(name = complaint_type).first()
+
+        HostelComplaint.objects.create(
+            user = user,
+            body = body,
+            hostel = hostel,
+            complaint_type = complaint_type
+        )
+
+        return Response(data={'msg': 'success'}, status=200)
+
+class HostelComplaintActionView(APIView):
+    permission_classes = [IsAuthenticated, ]
+
+    def put(self, request, *args, **kwargs):
+        pk = kwargs.get("pk")
+        complaint = HostelComplaint.objects.filter(id=pk).first()
+        complaint.status = True
+        complaint.save()
+        return Response(status=200, data={
+
+            "msg": "feedback action Updated."
+        })
+
+
 class HostelFeedbackView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
 
     def get(self, request):
         data = HostelFeedback.objects.all()
@@ -69,17 +110,13 @@ class HostelFeedbackView(APIView):
         user = request.user
         body = request.POST.get('feedback')
         hostel = request.POST.get('hostel')
-        complaint_type = request.POST.get('complaint_type')
 
         hostel = Hostel.objects.filter(name=hostel).first()
-        complaint_type = ComplaintType.objects.filter(
-            name=complaint_type).first()
 
         HostelFeedback.objects.create(
             user = user,
             body = body,
-            hostel = hostel,
-            complaint_type = complaint_type
+            hostel = hostel
         )
 
         return Response(data={'msg': 'success'}, status=200)

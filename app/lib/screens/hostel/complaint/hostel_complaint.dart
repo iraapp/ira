@@ -57,6 +57,32 @@ class _HostelComplaintState extends State<HostelComplaint> {
   }
 
   Future<dynamic> _submitHostelFeedback(
+      String hostel, String description) async {
+    String? idToken = await widget.secureStorage.read(key: 'idToken');
+
+    Map<String, dynamic> formMap = {
+      'hostel': hostel,
+      'feedback': description,
+    };
+
+    final requestUrl = Uri.parse(widget.baseUrl + '/hostel/feedback');
+    final response = await http.post(
+      requestUrl,
+      headers: <String, String>{
+        "Content-Type": "application/x-www-form-urlencoded",
+        'Authorization': 'idToken ' + idToken!
+      },
+      encoding: Encoding.getByName('utf-8'),
+      body: formMap,
+    );
+
+    if (response.statusCode == 200) {
+      return Future.value(true);
+    }
+    return Future.value(false);
+  }
+
+  Future<dynamic> _submitHostelComplaint(
       String hostel, String complaintType, String description) async {
     String? idToken = await widget.secureStorage.read(key: 'idToken');
 
@@ -66,7 +92,7 @@ class _HostelComplaintState extends State<HostelComplaint> {
       'feedback': description
     };
 
-    final requestUrl = Uri.parse(widget.baseUrl + '/hostel/feedback');
+    final requestUrl = Uri.parse(widget.baseUrl + '/hostel/complaint');
     final response = await http.post(
       requestUrl,
       headers: <String, String>{
@@ -127,9 +153,6 @@ class _HostelComplaintState extends State<HostelComplaint> {
 
                 _hostel = snapshot.data['hostel'];
                 _complaintTypes = snapshot.data['complaints'];
-                _complaintTypes = _complaintTypes
-                    .where((element) => element != 'Feedback')
-                    .toList();
 
                 if (_hostel.isNotEmpty && _complaintTypes.isNotEmpty) {
                   if (_hostelValue == "") _hostelValue = _hostel[0];
@@ -310,13 +333,19 @@ class _HostelComplaintState extends State<HostelComplaint> {
                                     child: ElevatedButton(
                                         onPressed: () async {
                                           if (_description.isNotEmpty) {
-                                            final res =
-                                                await _submitHostelFeedback(
-                                                    _hostelValue,
-                                                    widget.feedback
-                                                        ? "Feedback"
-                                                        : _complaintTypeValue,
-                                                    _description);
+                                            dynamic res;
+                                            if (widget.feedback == false) {
+                                              res =
+                                                  await _submitHostelComplaint(
+                                                      _hostelValue,
+                                                      _complaintTypeValue,
+                                                      _description);
+                                            } else {
+                                              res = await _submitHostelFeedback(
+                                                _hostelValue,
+                                                _description,
+                                              );
+                                            }
                                             if (res) {
                                               await showFeedbackDialog(context,
                                                   title: "Thank you",
