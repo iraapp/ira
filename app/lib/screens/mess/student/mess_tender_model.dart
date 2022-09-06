@@ -27,7 +27,7 @@ class MessTenderModel {
       file: json['file'].toString(),
       title: json['title'].toString(),
       description: json['description'].toString(),
-      archived: json['archived'],
+      archived: json['archieved'],
       createdAt: json['createdAt'].toString(),
     );
   }
