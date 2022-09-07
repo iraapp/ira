@@ -204,18 +204,18 @@ class DoctorAppointmentView(APIView):
 
     def post(self, request):
         id = request.POST.get("id", None)
-        accepted = request.POST.get("accepted", None)
+        status = request.POST.get("status", None)
         appointment = Appointment.objects.filter(id=id).first()
-        if accepted == "true":
+        if status == APPOINTMENT_STATUS["APPROVED"]:
             date = request.POST.get("date", None)
             time = request.POST.get("time", None)
             appointment.date = date
             appointment.time = time
-            appointment.accepted = True
+            appointment.status = APPOINTMENT_STATUS["APPROVED"]
         else:
             reason = request.POST.get("reason", None)
             appointment.reason = reason
-            appointment.accepted = False
+            appointment.status = APPOINTMENT_STATUS["REJECTED"]
         appointment.save()
         serinstance = AppointmentSerializer(appointment)
         return Response(serinstance.data)
@@ -236,8 +236,10 @@ class MedicalHistoryView(APIView):
         doctor = request.POST.get("doctor", None)
         doctorinstance = User.objects.filter(id=doctor).first()
         details = request.POST.get("details", None)
+        date = request.POST.get("date", None)
         instance = MedicalHistory.objects.create(
             patient=patientinstance,
+            date=date,
             doctor=doctorinstance,
             details=details
         )

@@ -2,6 +2,11 @@ from django.db import models
 from institute_app import settings
 
 # Create your models here.
+APPOINTMENT_STATUS = {
+    'REJECTED': 0,
+    'IN_PROGRESS': 1,
+    'APPROVED': 2
+}
 
 
 class Doctor(models.Model):
@@ -33,12 +38,18 @@ class Staff(models.Model):
 
 
 class Appointment(models.Model):
+    STATUS = (
+        (APPOINTMENT_STATUS["REJECTED"], 'Rejected'),
+        (APPOINTMENT_STATUS["IN_PROGRESS"], 'In process'),
+        (APPOINTMENT_STATUS["APPROVED"], 'Approved'),
+    )
+
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
     patient = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date = models.DateField(null=True)
     time = models.TimeField(null=True)
-    acceptance = models.BooleanField(default=False)
+    status = models.PositiveSmallIntegerField(choices=STATUS, default=1)
     reason = models.CharField(max_length=500, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -50,6 +61,7 @@ class MedicalHistory(models.Model):
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
     date = models.DateField(null=True)
     time = models.TimeField(null=True)
+    date = models.DateField(null=True)
     inhouse = models.BooleanField(default=False)
     prescription = models.CharField(max_length=500, null=True)
     details = models.CharField(max_length=500, null=True)
