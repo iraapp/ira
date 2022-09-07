@@ -25,7 +25,7 @@ class AppointmentSerializer(serializers.Serializer):
     patient = serializers.IntegerField()
     date = serializers.DateField()
     time = serializers.TimeField(format='%I:%M %p', input_formats='%I:%M %p')
-    acceptance = serializers.BooleanField()
+    status = serializers.CharField()
     reason = serializers.CharField(max_length=500)
 
 
