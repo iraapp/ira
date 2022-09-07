@@ -5,23 +5,21 @@ class AppointmentCard extends StatelessWidget {
   final String name;
   final String contact;
   final String specialization;
-  final String details;
   final String email;
   final String startTime;
   final String endTime;
   final String status;
   final String dateTime;
 
-  Map<String, MaterialColor> mp = {
-    'In progress': Colors.blue,
-    'Accepted': Colors.green,
-    'Rejected': Colors.red,
+  Map<String, MaterialColor> statusColor = {
+    'IN PROGRESS': Colors.blue,
+    'REJECTED': Colors.red,
+    'ACCEPTED': Colors.green,
   };
 
   AppointmentCard({
     Key? key,
     required this.name,
-    required this.details,
     required this.specialization,
     required this.contact,
     required this.email,
@@ -83,7 +81,7 @@ class AppointmentCard extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            email,
+                            status,
                             style: const TextStyle(
                               fontSize: 12.0,
                             ),
@@ -91,13 +89,6 @@ class AppointmentCard extends StatelessWidget {
                         ],
                       ),
                     ]),
-                    Text(
-                      details,
-                      overflow: TextOverflow.clip,
-                      style: const TextStyle(
-                        fontSize: 12.0,
-                      ),
-                    )
                   ],
                 ),
               ),
@@ -109,14 +100,18 @@ class AppointmentCard extends StatelessWidget {
                       padding:
                           const EdgeInsets.fromLTRB(10.0, 12.5, 10.0, 12.5),
                       decoration: BoxDecoration(
-                        color: mp[status],
+                        color: statusColor[status],
                         borderRadius: const BorderRadius.only(
                           bottomLeft: Radius.circular(20.0),
                         ),
                       ),
                       child: Center(
                         child: Text(
-                          status,
+                          status == 'IN PROGRESS'
+                              ? "In Progress"
+                              : status == 'REJECTED'
+                                  ? "Rejected"
+                                  : "Appointment Confirmed",
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 12.0,
