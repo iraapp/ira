@@ -1,3 +1,4 @@
+import json
 from authentication.permissions import IsMedicalManager
 from medical.serializers import *
 from medical.models import *
@@ -175,22 +176,31 @@ class StudentStaffInstanceView(APIView):
 class AppointmentView(APIView):
     permission_classes = (IsAuthenticated,)
 
+    def get(self, request):
+        user = request.user
+        appointments = Appointment.objects.filter(patient=user)
+        serializer = AppointmentSerializer(appointments, many=True)
+        return Response(serializer.data)
+
+
     def post(self, request):
-        doctor = request.POST.get("doctor", None)
+        doctor = json.loads(request.body.decode('utf-8')).get('doctor')
         doctorinstance = Doctor.objects.filter(id=doctor).first()
         user = request.user
+
+        appointment = Appointment.objects.filter(doctor=doctorinstance, patient=user).first();
+
+        if appointment:
+            return Response(status = 401, data={
+                'msg': 'Appointment already exists'
+            })
+
         instance = Appointment.objects.create(
             doctor=doctorinstance,
             patient=user
         )
         instance.save()
         return Response(AppointmentSerializer(instance).data)
-
-    def get(self, request):
-        user = request.user
-        appointments = Appointment.objects.filter(patient=user)
-        serializer = AppointmentSerializer(appointments, many=True)
-        return Response(serializer.data)
 
 
 class DoctorAppointmentView(APIView):
