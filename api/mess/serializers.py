@@ -1,14 +1,15 @@
-from curses import meta
 from mess.models import MenuItem
 from rest_framework import serializers
 
 class MenuItemSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
     name = serializers.CharField(max_length=30)
 
     class Meta:
         model = MenuItem
 
 class MenuSlotSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
     name = serializers.CharField(max_length=15)
     start_time = serializers.TimeField()
     end_time = serializers.TimeField()
@@ -32,6 +33,15 @@ class MessFeedbackSerializer(serializers.Serializer):
     created_at = serializers.DateTimeField()
     status = serializers.BooleanField(default=False)
 
+class MessComplaintSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    user = serializers.StringRelatedField()
+    body = serializers.CharField(max_length=500)
+    mess_meal = serializers.CharField(max_length=50)
+    mess_type = MessSerializer()
+    file = serializers.FileField()
+    created_at = serializers.DateTimeField()
+    status = serializers.BooleanField(default=False)
 class MessMomSer(serializers.Serializer):
     id = serializers.IntegerField()
     date = serializers.DateField()
@@ -51,5 +61,6 @@ class MessTenderSer(serializers.Serializer):
     created_at = serializers.DateTimeField()
 
 class MessMenuSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
     slot = MenuSlotSerializer()
     items = MenuItemSerializer(many = True)

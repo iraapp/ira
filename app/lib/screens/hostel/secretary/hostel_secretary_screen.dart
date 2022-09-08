@@ -1,35 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:ira/screens/medical/appointments/appointments.dart';
-import 'package:ira/screens/medical/doctor_details/doctor_details.dart';
-import 'package:ira/screens/medical/staff_contact/staff_contact.dart';
+import 'package:ira/screens/hostel/secretary/hostel_complaints_management.dart';
+import 'package:ira/screens/hostel/secretary/hostel_feedback_management.dart';
 
-import 'history/medical_history.dart';
-
-class MedicalStudentScreen extends StatefulWidget {
-  const MedicalStudentScreen({Key? key}) : super(key: key);
+class HostelSecretaryScreen extends StatefulWidget {
+  const HostelSecretaryScreen({Key? key}) : super(key: key);
 
   @override
-  State<MedicalStudentScreen> createState() => _MedicalStudentScreenState();
+  State<HostelSecretaryScreen> createState() => _HostelSecretaryScreenState();
 }
 
-class _MedicalStudentScreenState extends State<MedicalStudentScreen> {
+class _HostelSecretaryScreenState extends State<HostelSecretaryScreen> {
   final secureStorage = const FlutterSecureStorage();
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
 
-  final List<String> _medicalList = [
-    "Staff Contact",
-    "Doctors",
-    "History",
-    "Appointments",
-  ];
+  final List<String> _hostelList = ["Complaint", "Feedback"];
 
-  final List<Widget> _medicalRoutes = [
-    const StaffContactScreen(),
-    const DoctorDetailsScreen(),
-    const MedicalHistoryScreen(),
-    const MedicalAppointmentsScreen()
+  final List<Widget> _hostelRoutes = [
+    ComplaintHostelSecretary(),
+    HostelFeedbackManagement(),
   ];
 
   @override
@@ -54,7 +44,7 @@ class _MedicalStudentScreenState extends State<MedicalStudentScreen> {
                   children: const [
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 40.0),
-                      child: Text("Medical",
+                      child: Text("Hostel Secretary",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 26.0,
@@ -83,7 +73,7 @@ class _MedicalStudentScreenState extends State<MedicalStudentScreen> {
                   vertical: 40.0,
                 ),
                 child: GridView.builder(
-                  itemCount: _medicalList.length,
+                  itemCount: _hostelList.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
                     crossAxisSpacing: 20.0,
@@ -96,7 +86,7 @@ class _MedicalStudentScreenState extends State<MedicalStudentScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => _medicalRoutes[index]));
+                                builder: (context) => _hostelRoutes[index]));
                       },
                       child: Container(
                         width: 80.0,
@@ -119,7 +109,7 @@ class _MedicalStudentScreenState extends State<MedicalStudentScreen> {
                                   child: Image.asset(
                                       "assets/images/mess_icon.png")),
                               const SizedBox(height: 5.0),
-                              Text(_medicalList[index]),
+                              Text(_hostelList[index]),
                             ],
                           ),
                         ),

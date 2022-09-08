@@ -18,7 +18,7 @@ class MessMenuAPI(APIView):
             data[day.name] = {}
             for slot in MenuSlot.objects.all():
                 data[day.name][slot.name] = MessMenuSerializer(
-                    MessMenu.objects.filter(slot = slot, weekdays = day).first()).data
+                    MessMenu.objects.filter(slot=slot, weekdays=day).first()).data
 
         return Response(data=data)
 
@@ -27,7 +27,7 @@ class MessMenuAPI(APIView):
 FeedbackView:
     Payload required:
         1. mess_type - mess type
-        2. feeback - feedback body
+        2. feedback - feedback body
 
 """
 
@@ -84,7 +84,59 @@ class FeedbackActionView(APIView):
         })
 
 
-# Minutes of meeting for meeting note: s3 implimentation is necessary for production
+class ComplaintView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        data = MessComplaint.objects.all()
+        serialized_json = MessComplaintSerializer(data, many=True)
+        return Response(data=serialized_json.data)
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        complaint = request.POST.get("complaint")
+        mess_name = request.POST.get("mess_type")
+        mess_meal = request.POST.get("mess_meal")
+        file = request.FILES.get("file")
+        mess_type = Mess.objects.filter(name=mess_name).first()
+        MessComplaint.objects.create(
+            user=user,
+            body=complaint,
+            mess_type=mess_type,
+            mess_meal=mess_meal,
+            file=file
+        )
+        return Response(status=200, data={
+
+            "msg": "Complaint submitted successfully."
+        })
+
+
+class ComplaintInstanceView(APIView):
+    permission_classes = [IsAuthenticated, ]
+
+    def get(self, request, *args, **kwargs):
+        feedback_id = kwargs.get("pk")
+        data = MessComplaint.objects.filter(id=feedback_id).first()
+        serialized_json = MessComplaintSerializer(data)
+        return Response(data=serialized_json.data)
+
+
+class ComplaintActionView(APIView):
+    permission_classes = [IsAuthenticated, ]
+
+    def put(self, request, *args, **kwargs):
+        pk = kwargs.get("pk")
+        complaint = MessComplaint.objects.filter(id=pk).first()
+        complaint.status = True
+        complaint.save()
+        return Response(status=200, data={
+
+            "msg": "Complaint action Updated."
+        })
+
+
+# Minutes of meeting for meeting note: s3 implementation is necessary for production
 """
 MessMomView:
 
@@ -190,12 +242,12 @@ class MessTenderView(APIView):
 
 # To update tender State
 class MessTenderArchivedView(APIView):
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsMessManager, ]
 
     def put(self, request, *args, **kwargs):
         pk = kwargs.get("pk")
         data = MessTender.objects.filter(id=pk).first()
-        data.archeived = True
+        data.archieved = True
         data.save()
         return Response(status=200, data={
             "msg": "tender archived successfully."
@@ -210,3 +262,48 @@ class MessTenderInstanceView(APIView):
         data = self.model.objects.filter(id=tender_id).first()
         serialized_json = MessTenderSer(data)
         return Response(data=serialized_json.data)
+
+class MenuTimingView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        start_time = request.POST.get('start_time')
+        end_time = request.POST.get('end_time')
+        slot_id = request.POST.get('slot_id')
+
+        slot = MenuSlot.objects.filter(id = slot_id).first()
+
+        slot.start_time = start_time
+        slot.end_time = end_time
+        slot.save()
+
+        return Response(status = 200, data={
+            'msg': 'Successfully updated menu timings'
+        })
+
+class MenuItemUpdateView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        menu_id = request.POST.get('menu_id')
+        menu_item_id = request.POST.get('menu_item_id')
+        action = request.POST.get('action')
+
+        menu = MessMenu.objects.filter(id = menu_id).first()
+        menu_item = MenuItem.objects.filter(id = menu_item_id).first()
+
+        if action == 'remove':
+            menu.items.remove(menu_item)
+        elif action == 'add':
+            menu.items.add(menu_item)
+        else:
+            return Response(status = 400, data={
+                'msg': 'action field is malformed'
+            })
+
+
+        return Response(status = 200, data={
+            'msg': 'Successfully updated mess menu item'
+        })

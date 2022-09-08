@@ -1,4 +1,5 @@
 from email.policy import default
+from authentication.serializers import UserSerializer
 from rest_framework import serializers
 
 class MaintenanceStaffContactsSer(serializers.Serializer):
@@ -15,9 +16,17 @@ class HostelSerializer(serializers.Serializer):
 class ComplaintTypeSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=20)
 
-class HostelFeedbackSerializer(serializers.Serializer):
-    user = serializers.PrimaryKeyRelatedField(read_only=True)
+class HostelComplaintSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    created_at = serializers.DateTimeField(format='%d %b %Y', input_formats='%d %b %y')
+    user = UserSerializer()
     body = serializers.CharField()
     hostel = HostelSerializer()
-    complaint_type = ComplaintTypeSerializer()
     status = serializers.BooleanField()
+    complaint_type = ComplaintTypeSerializer()
+
+class HostelFeedbackSerializer(serializers.Serializer):
+    created_at = serializers.DateTimeField(format='%d %b %Y', input_formats='%d %b %y')
+    user = UserSerializer()
+    body = serializers.CharField()
+    hostel = HostelSerializer()

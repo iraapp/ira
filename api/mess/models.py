@@ -40,11 +40,6 @@ class Mess(models.Model):
         return self.name
 
 
-class MessMenu(models.Model):
-    slot = models.ForeignKey(MenuSlot, on_delete=models.CASCADE)
-    items = models.ManyToManyField(MenuItem)
-    weekdays = models.ManyToManyField(WeekDay)
-
 # data base model for feedback
 # status is for whether the feedback is viewed by mess manager or not.
 
@@ -53,8 +48,18 @@ class MessFeedback(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
     body = models.TextField(editable=True, null=False, blank=True)
-    mess_type = models.CharField(max_length=50)
+    mess_meal = models.CharField(max_length=50)
     mess_type = models.ForeignKey(Mess, on_delete=models.CASCADE, null=True)
+    created_at = models.DateTimeField(auto_now=True)
+    status = models.BooleanField(default=False)
+
+class MessComplaint(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
+    body = models.TextField(editable=True, null=False, blank=True)
+    mess_meal = models.CharField(max_length=50)
+    mess_type = models.ForeignKey(Mess, on_delete=models.CASCADE, null=True)
+    file = models.FileField(upload_to='complaints/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now=True)
     status = models.BooleanField(default=False)
 
