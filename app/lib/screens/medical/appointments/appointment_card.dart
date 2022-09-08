@@ -101,9 +101,14 @@ class AppointmentCard extends StatelessWidget {
                           const EdgeInsets.fromLTRB(10.0, 12.5, 10.0, 12.5),
                       decoration: BoxDecoration(
                         color: statusColor[status],
-                        borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(20.0),
-                        ),
+                        borderRadius: status == "ACCEPTED"
+                            ? const BorderRadius.only(
+                                bottomLeft: Radius.circular(20.0),
+                              )
+                            : const BorderRadius.only(
+                                bottomLeft: Radius.circular(20.0),
+                                bottomRight: Radius.circular(20.0),
+                              ),
                       ),
                       child: Center(
                         child: Text(
@@ -120,29 +125,31 @@ class AppointmentCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Expanded(
-                    child: Container(
-                      padding:
-                          const EdgeInsets.fromLTRB(10.0, 12.5, 10.0, 12.5),
-                      decoration: const BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.only(
-                          bottomRight: Radius.circular(20.0),
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          status == "Accepted"
-                              ? dateTime
-                              : startTime + " - " + endTime,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 12.0,
+                  status == "ACCEPTED"
+                      ? Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.fromLTRB(
+                                10.0, 12.5, 10.0, 12.5),
+                            decoration: const BoxDecoration(
+                              color: Colors.blue,
+                              borderRadius: BorderRadius.only(
+                                bottomRight: Radius.circular(20.0),
+                              ),
+                            ),
+                            child: Center(
+                              child: Text(
+                                dateTime,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12.0,
+                                ),
+                              ),
+                            ),
                           ),
+                        )
+                      : const SizedBox(
+                          width: 0,
                         ),
-                      ),
-                    ),
-                  ),
                 ],
               )
             ],
