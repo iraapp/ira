@@ -28,7 +28,6 @@ class _TendersMessManagerState extends State<TendersMessManager> {
 
   Future<List<MessTenderModel>> _getMessTenderActiveItems() async {
     final String? token = await widget.secureStorage.read(key: 'staffToken');
-
     final requestUrl = Uri.parse(widget.baseUrl + '/mess/tender');
     final response = await http.get(
       requestUrl,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 
 class ComplaintsMess extends StatefulWidget {
   ComplaintsMess({Key? key}) : super(key: key);
@@ -54,6 +55,9 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
 
     return Future.value(false);
   }
+
+  final ImagePicker _picker = ImagePicker();
+  bool _imageUploaded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -273,6 +277,44 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
                         const SizedBox(
                           height: 10.0,
                         ),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ElevatedButton(
+                                  onPressed: () async {
+                                    final XFile? image = await _picker
+                                        .pickImage(source: ImageSource.gallery);
+                                    if (image != null) {
+                                      setState(() {
+                                        _imageUploaded = true;
+                                        print(image);
+                                      });
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                              content: Text(
+                                                  'Please select an image file')));
+                                    }
+                                  },
+                                  child: const Text("Upload Image"),
+                                  style: ButtonStyle(
+                                    shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(0.0)),
+                                    ),
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color?>(
+                                            Colors.blue),
+                                  )),
+                              const SizedBox(width: 10),
+                              !_imageUploaded
+                                  ? Checkbox(
+                                      value: false, onChanged: (value) {})
+                                  : Checkbox(
+                                      value: true, onChanged: (value) {}),
+                            ]),
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 40.0, vertical: 20.0),

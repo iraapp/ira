@@ -51,7 +51,7 @@ class _MessMenuState extends State<MessMenu> {
           ),
           child: Padding(
             padding:
-                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 40.0),
             child: Column(
               children: [
                 Expanded(
@@ -82,32 +82,80 @@ class _MessMenuState extends State<MessMenu> {
                                       ),
                                     ),
                                     const SizedBox(height: 80.0),
-                                    const Text(
-                                      'Breakfast  (9:00 - 10:30)',
-                                      style: TextStyle(
-                                        fontSize: 18.0,
-                                      ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: const [
+                                        Text(
+                                          'Breakfast',
+                                          style: TextStyle(
+                                            fontSize: 18.0,
+                                          ),
+                                        ),
+                                        Text(
+                                          '9:00 AM - 10: AM',
+                                          style: TextStyle(
+                                            fontSize: 18.0,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                     const SizedBox(height: 40.0),
-                                    const Text(
-                                      'Lunch  (9:00 - 10:30)',
-                                      style: TextStyle(
-                                        fontSize: 18.0,
-                                      ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: const [
+                                        Text(
+                                          'Lunch',
+                                          style: TextStyle(
+                                            fontSize: 18.0,
+                                          ),
+                                        ),
+                                        Text(
+                                          '9:00 AM - 10: AM',
+                                          style: TextStyle(
+                                            fontSize: 18.0,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                     const SizedBox(height: 40.0),
-                                    const Text(
-                                      'Snacks  (9:00 - 10:30)',
-                                      style: TextStyle(
-                                        fontSize: 18.0,
-                                      ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: const [
+                                        Text(
+                                          'Snacks',
+                                          style: TextStyle(
+                                            fontSize: 18.0,
+                                          ),
+                                        ),
+                                        Text(
+                                          '9:00 AM - 10: AM',
+                                          style: TextStyle(
+                                            fontSize: 18.0,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                     const SizedBox(height: 40.0),
-                                    const Text(
-                                      'Dinner  (9:00 - 10:30)',
-                                      style: TextStyle(
-                                        fontSize: 18.0,
-                                      ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: const [
+                                        Text(
+                                          'Dinner',
+                                          style: TextStyle(
+                                            fontSize: 18.0,
+                                          ),
+                                        ),
+                                        Text(
+                                          '9:00 AM - 10: AM',
+                                          style: TextStyle(
+                                            fontSize: 18.0,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),

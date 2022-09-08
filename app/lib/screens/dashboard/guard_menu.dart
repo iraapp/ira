@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ira/screens/gate_pass/scan_gate_pass.dart';
+//import 'package:ira/screens/gate_pass/scan_gate_pass.dart';
 
 guardMenu(context) {
   return [
@@ -14,7 +14,8 @@ guardMenu(context) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const ScanGatePass(),
+                  // builder: (context) => const ScanGatePass(),
+                  builder: (context) => Container(),
                 ),
               );
             },

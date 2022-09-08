@@ -50,12 +50,12 @@ android {
         versionName flutterVersionName
     }
 
-    signingConfigs {
+ signingConfigs {
         debug {
-            storeFile file('key.jks')
-            storePassword 'instituteapp'
-            keyAlias 'androiddebugkey'
-            keyPassword 'instituteapp'
+            storeFile file('upload-keystore.jks')
+            storePassword 'password'
+            keyAlias 'uploadkeystore'
+            keyPassword 'password'
         }
     }
 
