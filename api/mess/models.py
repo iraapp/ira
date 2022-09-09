@@ -40,6 +40,11 @@ class Mess(models.Model):
         return self.name
 
 
+class MessMenu(models.Model):
+    slot = models.ForeignKey(MenuSlot, on_delete=models.CASCADE)
+    items = models.ManyToManyField(MenuItem)
+    weekdays = models.ManyToManyField(WeekDay)
+
 # data base model for feedback
 # status is for whether the feedback is viewed by mess manager or not.
 
@@ -52,6 +57,7 @@ class MessFeedback(models.Model):
     mess_type = models.ForeignKey(Mess, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(auto_now=True)
     status = models.BooleanField(default=False)
+
 
 class MessComplaint(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,

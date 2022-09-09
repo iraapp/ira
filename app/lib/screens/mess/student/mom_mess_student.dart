@@ -38,7 +38,7 @@ class _MOMMessState extends State<MOMMess> {
           .map<MessMOMModel>((json) => MessMOMModel.fromJson(json))
           .toList();
     } else {
-      throw Exception('Failed to load post');
+      throw Exception('API call failed');
     }
   }
 

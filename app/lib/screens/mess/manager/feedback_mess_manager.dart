@@ -31,7 +31,7 @@ class _FeedbackMessManagerState extends State<FeedbackMessManager> {
           .map<FeedbackModel>((json) => FeedbackModel.fromJson(json))
           .toList();
     } else {
-      throw Exception('Failed to load post');
+      throw Exception('API call failed');
     }
   }
 

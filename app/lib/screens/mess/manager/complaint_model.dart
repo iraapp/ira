@@ -1,31 +1,34 @@
-class FeedbackModel {
+class ComplaintModel {
   final String id;
   final String user;
   final String body;
-  final String messType;
   final String messMeal;
+  final String messType;
+  final String file;
   final String createdAt;
   final bool status;
 
-  FeedbackModel({
+  ComplaintModel({
     required this.id,
     required this.user,
     required this.body,
-    required this.messType,
     required this.messMeal,
+    required this.messType,
+    required this.file,
     required this.createdAt,
     required this.status,
   });
 
-  factory FeedbackModel.fromJson(Map<String, dynamic> json) {
-    return FeedbackModel(
+  factory ComplaintModel.fromJson(Map<String, dynamic> json) {
+    return ComplaintModel(
       id: json['id'].toString(),
       user: json['user'].toString(),
       body: json['body'].toString(),
+      messMeal: json['mess_meal'].toString(),
       messType: json["mess_type"] != null
           ? json["mess_type"]["name"].toString()
           : "NA",
-      messMeal: json['mess_meal'].toString(),
+      file: json['file'].toString(),
       createdAt: json['created_at'].toString(),
       status: json['status'],
     );

@@ -45,7 +45,7 @@ class _TenderMessState extends State<TenderMess> {
       }
       return _activeItems;
     } else {
-      throw Exception('Failed to load post');
+      throw Exception('API call failed');
     }
   }
 
@@ -72,7 +72,7 @@ class _TenderMessState extends State<TenderMess> {
       }
       return _archivedItems;
     } else {
-      throw Exception('Failed to load post');
+      throw Exception('API call failed');
     }
   }
 

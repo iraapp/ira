@@ -41,7 +41,7 @@ class _MOMMessManagerState extends State<MOMMessManager> {
           .map<MessMOMModel>((json) => MessMOMModel.fromJson(json))
           .toList();
     } else {
-      throw Exception('Failed to load post');
+      throw Exception('API call failed');
     }
   }
 
@@ -72,7 +72,7 @@ class _MOMMessManagerState extends State<MOMMessManager> {
       if (response.statusCode == 200) {
         return true;
       } else {
-        throw Exception('Failed to load post');
+        throw Exception('API call failed');
       }
     } catch (e) {
       return false;

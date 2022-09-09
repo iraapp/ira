@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:ira/screens/mess/student/weekday_carousel_student.dart';
 
 class MessMenu extends StatefulWidget {
   const MessMenu({Key? key}) : super(key: key);
@@ -9,14 +10,14 @@ class MessMenu extends StatefulWidget {
 }
 
 class _MessMenuState extends State<MessMenu> {
-  final List<String> _weekdays = [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday'
+  final List<Widget> _weekdaysCarousels = [
+    WeekDayCarouselStudent(weekDay: "Monday"),
+    WeekDayCarouselStudent(weekDay: "Tuesday"),
+    WeekDayCarouselStudent(weekDay: "Wednesday"),
+    WeekDayCarouselStudent(weekDay: "Thrusday"),
+    WeekDayCarouselStudent(weekDay: "Friday"),
+    WeekDayCarouselStudent(weekDay: "Saturday"),
+    WeekDayCarouselStudent(weekDay: "Sunday"),
   ];
   @override
   Widget build(BuildContext context) {
@@ -58,111 +59,7 @@ class _MessMenuState extends State<MessMenu> {
                   child: CarouselSlider(
                     options: CarouselOptions(
                         height: MediaQuery.of(context).size.height * 0.7),
-                    items: _weekdays.map((day) {
-                      return Builder(
-                        builder: (BuildContext context) {
-                          return Container(
-                              width: MediaQuery.of(context).size.width,
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 5.0),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0, vertical: 20.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Center(
-                                      child: Text(
-                                        day,
-                                        style: const TextStyle(fontSize: 20.0),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 80.0),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: const [
-                                        Text(
-                                          'Breakfast',
-                                          style: TextStyle(
-                                            fontSize: 18.0,
-                                          ),
-                                        ),
-                                        Text(
-                                          '9:00 AM - 10: AM',
-                                          style: TextStyle(
-                                            fontSize: 18.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 40.0),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: const [
-                                        Text(
-                                          'Lunch',
-                                          style: TextStyle(
-                                            fontSize: 18.0,
-                                          ),
-                                        ),
-                                        Text(
-                                          '9:00 AM - 10: AM',
-                                          style: TextStyle(
-                                            fontSize: 18.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 40.0),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: const [
-                                        Text(
-                                          'Snacks',
-                                          style: TextStyle(
-                                            fontSize: 18.0,
-                                          ),
-                                        ),
-                                        Text(
-                                          '9:00 AM - 10: AM',
-                                          style: TextStyle(
-                                            fontSize: 18.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 40.0),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: const [
-                                        Text(
-                                          'Dinner',
-                                          style: TextStyle(
-                                            fontSize: 18.0,
-                                          ),
-                                        ),
-                                        Text(
-                                          '9:00 AM - 10: AM',
-                                          style: TextStyle(
-                                            fontSize: 18.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ));
-                        },
-                      );
-                    }).toList(),
+                    items: _weekdaysCarousels,
                   ),
                 ),
               ],
