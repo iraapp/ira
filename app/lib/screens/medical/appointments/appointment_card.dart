@@ -10,9 +10,10 @@ class AppointmentCard extends StatelessWidget {
   final String endTime;
   final String status;
   final String dateTime;
+  final String reason;
 
-  Map<String, MaterialColor> statusColor = {
-    'IN PROGRESS': Colors.blue,
+  Map<String, Color> statusColor = {
+    'IN PROGRESS': const Color(0xffcfe007),
     'REJECTED': Colors.red,
     'ACCEPTED': Colors.green,
   };
@@ -27,6 +28,7 @@ class AppointmentCard extends StatelessWidget {
     required this.endTime,
     required this.status,
     required this.dateTime,
+    required this.reason,
   }) : super(key: key);
 
   @override
@@ -81,7 +83,7 @@ class AppointmentCard extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            status,
+                            email,
                             style: const TextStyle(
                               fontSize: 12.0,
                             ),
@@ -101,14 +103,15 @@ class AppointmentCard extends StatelessWidget {
                           const EdgeInsets.fromLTRB(10.0, 12.5, 10.0, 12.5),
                       decoration: BoxDecoration(
                         color: statusColor[status],
-                        borderRadius: status == "ACCEPTED"
-                            ? const BorderRadius.only(
-                                bottomLeft: Radius.circular(20.0),
-                              )
-                            : const BorderRadius.only(
-                                bottomLeft: Radius.circular(20.0),
-                                bottomRight: Radius.circular(20.0),
-                              ),
+                        borderRadius:
+                            status == "ACCEPTED" || status == "REJECTED"
+                                ? const BorderRadius.only(
+                                    bottomLeft: Radius.circular(20.0),
+                                  )
+                                : const BorderRadius.only(
+                                    bottomLeft: Radius.circular(20.0),
+                                    bottomRight: Radius.circular(20.0),
+                                  ),
                       ),
                       child: Center(
                         child: Text(
@@ -125,7 +128,7 @@ class AppointmentCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  status == "ACCEPTED"
+                  status == "ACCEPTED" || status == "REJECTED"
                       ? Expanded(
                           child: Container(
                             padding: const EdgeInsets.fromLTRB(
@@ -138,7 +141,7 @@ class AppointmentCard extends StatelessWidget {
                             ),
                             child: Center(
                               child: Text(
-                                dateTime,
+                                status == "ACCEPTED" ? dateTime : reason,
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 12.0,

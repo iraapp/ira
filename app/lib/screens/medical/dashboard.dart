@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ira/screens/medical/appointments/appointments.dart';
+import 'package:ira/screens/medical/bmi_calculator/bmi_calculator.dart';
 import 'package:ira/screens/medical/doctor_details/doctor_details.dart';
 import 'package:ira/screens/medical/staff_contact/staff_contact.dart';
 
@@ -23,13 +24,15 @@ class _MedicalStudentScreenState extends State<MedicalStudentScreen> {
     "Doctors",
     "History",
     "Appointments",
+    "BMI Calculator"
   ];
 
   final List<Widget> _medicalRoutes = [
     const StaffContactScreen(),
     const DoctorDetailsScreen(),
     const MedicalHistoryScreen(),
-    const MedicalAppointmentsScreen()
+    const MedicalAppointmentsScreen(),
+    const BMICalculator(),
   ];
 
   @override
