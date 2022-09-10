@@ -308,3 +308,21 @@ class MenuItemUpdateView(APIView):
         return Response(status=200, data={
             'msg': 'Successfully updated mess menu item'
         })
+
+class MessMenuItemAdd(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        menu_item_name = request.POST.get('menu_item_name')
+        menu_id = request.POST.get('menu_id')
+
+        menu_item = MenuItem(name = menu_item_name)
+        menu_item.save()
+
+        menu = MessMenu.objects.filter(id = menu_id).first()
+        menu.items.add(menu_item);
+
+        return Response(status = 200, data={
+            'msg': 'Menu item added successfully'
+        })

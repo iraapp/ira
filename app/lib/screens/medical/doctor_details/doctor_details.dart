@@ -7,6 +7,7 @@ import 'package:ira/screens/medical/doctor_details/doctor_card.dart';
 import 'package:http/http.dart' as http;
 
 class DoctorModel {
+  int id;
   String name;
   String contact;
   String specialization;
@@ -16,6 +17,7 @@ class DoctorModel {
   String details;
 
   DoctorModel({
+    required this.id,
     required this.name,
     required this.contact,
     required this.specialization,
@@ -27,6 +29,7 @@ class DoctorModel {
 
   factory DoctorModel.fromJson(Map<String, dynamic> json) {
     return DoctorModel(
+      id: json['id'],
       name: json['name'],
       contact: json['phone'],
       specialization: json['specialization'],
@@ -136,6 +139,7 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                         itemCount: snapshot.data['data'].length,
                         itemBuilder: (BuildContext context, int index) {
                           return DoctorCard(
+                            id: snapshot.data['data'][index].id,
                             name: snapshot.data['data'][index].name,
                             specialization:
                                 snapshot.data['data'][index].specialization,

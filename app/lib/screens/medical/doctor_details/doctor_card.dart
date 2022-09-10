@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:ira/screens/medical/doctor_details/take_appointment_dialog.dart';
 
 class DoctorCard extends StatelessWidget {
+  final int id;
   final String name;
   final String contact;
   final String specialization;
@@ -11,6 +13,7 @@ class DoctorCard extends StatelessWidget {
 
   const DoctorCard({
     Key? key,
+    required this.id,
     required this.name,
     required this.details,
     required this.specialization,
@@ -95,20 +98,30 @@ class DoctorCard extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Container(
-                      padding:
-                          const EdgeInsets.fromLTRB(10.0, 12.5, 10.0, 12.5),
+                      padding: const EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
                       decoration: const BoxDecoration(
                         color: Colors.green,
                         borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(20.0),
                         ),
                       ),
-                      child: const Center(
-                        child: Text(
-                          "Take Appointment",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12.0,
+                      child: Center(
+                        child: TextButton(
+                          onPressed: () async {
+                            await takeAppointmentDialog(
+                              context,
+                              id: id,
+                              name: name,
+                              specialization: specialization,
+                              contact: contact,
+                            );
+                          },
+                          child: const Text(
+                            "Take Appointment",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12.0,
+                            ),
                           ),
                         ),
                       ),
@@ -116,8 +129,7 @@ class DoctorCard extends StatelessWidget {
                   ),
                   Expanded(
                     child: Container(
-                      padding:
-                          const EdgeInsets.fromLTRB(10.0, 12.5, 10.0, 12.5),
+                      padding: const EdgeInsets.fromLTRB(10.0, 17, 10.0, 17),
                       decoration: const BoxDecoration(
                         color: Colors.blue,
                         borderRadius: BorderRadius.only(
