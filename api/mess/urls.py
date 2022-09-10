@@ -56,5 +56,6 @@ urlpatterns = [
     path('tender/archive/<int:pk>/', views.MessTenderArchivedView.as_view(),
          name="tender action"),
      path('menu/timing', views.MenuTimingView.as_view(), name="Menu timing"),
-     path('menu/item_update', views.MenuItemUpdateView.as_view(), name='Menu item update')
+     path('menu/item_update', views.MenuItemUpdateView.as_view(), name='Menu item update'),
+     path('menu/item_add', views.MessMenuItemAdd.as_view(), name="Menu item add"),
 ]
