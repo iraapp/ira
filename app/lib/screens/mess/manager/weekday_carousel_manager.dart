@@ -173,6 +173,30 @@ class _WeekDayCarouselManagerState extends State<WeekDayCarouselManager> {
     }
   }
 
+  Future<void> _addMenuItem(String menuItemName, String menuId) async {
+    final String? token = await secureStorage.read(key: 'staffToken');
+    Map<String, dynamic> formMap = {
+      'menu_id': menuId,
+      'menu_item_name': menuItemName,
+    };
+    final requestUrl = Uri.parse(baseUrl + '/mess/menu/item_add');
+    final response = await http.post(
+      requestUrl,
+      headers: <String, String>{
+        "Content-Type": "application/x-www-form-urlencoded",
+        'Authorization': 'Token ' + token!
+      },
+      encoding: Encoding.getByName('utf-8'),
+      body: formMap,
+    );
+
+    if (response.statusCode == 200) {
+      return;
+    } else {
+      throw Exception('API call failed');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -380,13 +404,15 @@ class _WeekDayCarouselManagerState extends State<WeekDayCarouselManager> {
                                     controller: _breakfastItemController,
                                     decoration: InputDecoration(
                                       suffixIcon: IconButton(
-                                          onPressed: () {
+                                          onPressed: () async {
                                             final MealItems _mealItem =
                                                 MealItems(
                                               name:
                                                   _breakfastItemController.text,
                                               id: "-1",
                                             );
+                                            await _addMenuItem(_mealItem.name,
+                                                breakfastMenuId);
                                             setState(() {
                                               breakfastItems.add(_mealItem);
                                               _breakfastItemController.clear();
@@ -543,12 +569,14 @@ class _WeekDayCarouselManagerState extends State<WeekDayCarouselManager> {
                                     controller: _lunchItemController,
                                     decoration: InputDecoration(
                                       suffixIcon: IconButton(
-                                          onPressed: () {
+                                          onPressed: () async {
                                             final MealItems _mealItem =
                                                 MealItems(
                                                     name: _lunchItemController
                                                         .text,
                                                     id: "-1");
+                                            await _addMenuItem(
+                                                _mealItem.name, lunchMenuId);
                                             setState(() {
                                               lunchItems.add(_mealItem);
                                               _lunchItemController.clear();
@@ -705,13 +733,14 @@ class _WeekDayCarouselManagerState extends State<WeekDayCarouselManager> {
                                     controller: _snacksItemController,
                                     decoration: InputDecoration(
                                       suffixIcon: IconButton(
-                                          onPressed: () {
+                                          onPressed: () async {
                                             final MealItems _mealItem =
                                                 MealItems(
                                               name: _snacksItemController.text,
                                               id: "-1",
                                             );
-
+                                            await _addMenuItem(
+                                                _mealItem.name, snacksMenuId);
                                             setState(() {
                                               snacksItems.add(_mealItem);
                                               _snacksItemController.clear();
@@ -868,14 +897,16 @@ class _WeekDayCarouselManagerState extends State<WeekDayCarouselManager> {
                                     controller: _dinnerItemController,
                                     decoration: InputDecoration(
                                       suffixIcon: IconButton(
-                                          onPressed: () {
-                                            final MealItems mealItem =
+                                          onPressed: () async {
+                                            final MealItems _mealItem =
                                                 MealItems(
                                                     name: _dinnerItemController
                                                         .text,
                                                     id: "-1");
+                                            await _addMenuItem(
+                                                _mealItem.name, dinnerMenuId);
                                             setState(() {
-                                              dinnerItems.add(mealItem);
+                                              dinnerItems.add(_mealItem);
                                               _dinnerItemController.clear();
                                             });
                                           },
