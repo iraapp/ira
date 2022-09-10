@@ -12,32 +12,36 @@ class WeekDayCarouselStudent extends StatelessWidget {
   final String baseUrl = FlavorConfig.instance.variables['baseUrl'];
 
   Future<WeekDay> _getWeekDayData() async {
-    String? idToken = await secureStorage.read(key: 'idToken');
-    final requestUrl = Uri.parse(baseUrl + '/mess/all_items');
-    final response = await http.get(
-      requestUrl,
-      headers: <String, String>{
-        "Content-Type": "application/x-www-form-urlencoded",
-        'Authorization': 'idToken ' + idToken!
-      },
-    );
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      final weekData = data[weekDay];
-      final MealType breakfast = MealType.fromJson(weekData["Breakfast"]);
-      final MealType lunch = MealType.fromJson(weekData["Lunch"]);
-      final MealType snacks = MealType.fromJson(weekData["Snacks"]);
-      final MealType dinner = MealType.fromJson(weekData["Dinner"]);
+    try {
+      String? idToken = await secureStorage.read(key: 'idToken');
+      final requestUrl = Uri.parse(baseUrl + '/mess/all_items');
+      final response = await http.get(
+        requestUrl,
+        headers: <String, String>{
+          "Content-Type": "application/x-www-form-urlencoded",
+          'Authorization': 'idToken ' + idToken!
+        },
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final weekData = data[weekDay];
+        final MealType breakfast = MealType.fromJson(weekData["Breakfast"]);
+        final MealType lunch = MealType.fromJson(weekData["Lunch"]);
+        final MealType snacks = MealType.fromJson(weekData["Snacks"]);
+        final MealType dinner = MealType.fromJson(weekData["Dinner"]);
 
-      List<MealType> _meals = [breakfast, lunch, snacks, dinner];
+        List<MealType> _meals = [breakfast, lunch, snacks, dinner];
 
-      Map<String, dynamic> weekDataMap = {
-        "weekday": weekDay,
-        "meals": _meals,
-      };
-      return WeekDay.fromJson(weekDataMap);
-    } else {
-      throw Exception('API call failed');
+        Map<String, dynamic> weekDataMap = {
+          "weekday": weekDay,
+          "meals": _meals,
+        };
+        return WeekDay.fromJson(weekDataMap);
+      } else {
+        throw Exception('API call failed');
+      }
+    } catch (e) {
+      return WeekDay(meals: [], weekday: "");
     }
   }
 
@@ -48,6 +52,11 @@ class WeekDayCarouselStudent extends StatelessWidget {
       builder: (BuildContext context, AsyncSnapshot<WeekDay> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasData) {
+            if (snapshot.data!.meals.isEmpty) {
+              return const Center(
+                child: Text("No data available"),
+              );
+            }
             final WeekDay data = snapshot.data!;
             return Container(
                 width: MediaQuery.of(context).size.width,

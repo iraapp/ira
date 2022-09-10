@@ -49,37 +49,46 @@ class _WeekDayCarouselManagerState extends State<WeekDayCarouselManager> {
   final String baseUrl = FlavorConfig.instance.variables['baseUrl'];
 
   Future<WeekDay> _getWeekDayData() async {
-    final String? token = await secureStorage.read(key: 'staffToken');
-    final requestUrl = Uri.parse(baseUrl + '/mess/all_items');
-    final response = await http.get(
-      requestUrl,
-      headers: <String, String>{
-        "Content-Type": "application/x-www-form-urlencoded",
-        'Authorization': token != null ? 'Token ' + token : '',
-      },
-    );
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      final weekData = data[widget.weekDay];
-      final MealType breakfast = MealType.fromJson(weekData["Breakfast"]);
-      final MealType lunch = MealType.fromJson(weekData["Lunch"]);
-      final MealType snacks = MealType.fromJson(weekData["Snacks"]);
-      final MealType dinner = MealType.fromJson(weekData["Dinner"]);
+    try {
+      final String? token = await secureStorage.read(key: 'staffToken');
+      final requestUrl = Uri.parse(baseUrl + '/mess/all_items');
+      final response = await http.get(
+        requestUrl,
+        headers: <String, String>{
+          "Content-Type": "application/x-www-form-urlencoded",
+          'Authorization': token != null ? 'Token ' + token : '',
+        },
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final weekData = data[widget.weekDay];
+        final MealType breakfast = MealType.fromJson(weekData["Breakfast"]);
+        final MealType lunch = MealType.fromJson(weekData["Lunch"]);
+        final MealType snacks = MealType.fromJson(weekData["Snacks"]);
+        final MealType dinner = MealType.fromJson(weekData["Dinner"]);
 
-      List<MealType> _meals = [breakfast, lunch, snacks, dinner];
+        List<MealType> _meals = [breakfast, lunch, snacks, dinner];
 
-      Map<String, dynamic> weekDataMap = {
-        "weekday": widget.weekDay,
-        "meals": _meals,
-      };
-      return WeekDay.fromJson(weekDataMap);
-    } else {
-      throw Exception('API call failed');
+        Map<String, dynamic> weekDataMap = {
+          "weekday": widget.weekDay,
+          "meals": _meals,
+        };
+        return WeekDay.fromJson(weekDataMap);
+      } else {
+        throw Exception('API call failed');
+      }
+    } catch (e) {
+      return WeekDay(meals: [], weekday: "");
     }
   }
 
   Future<void> _updateInitialData() async {
     final WeekDay data = await _getWeekDayData();
+    if (data.meals.isEmpty) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
     breakfastItems = [];
     lunchItems = [];
     snacksItems = [];
@@ -209,724 +218,758 @@ class _WeekDayCarouselManagerState extends State<WeekDayCarouselManager> {
         ? const Center(
             child: CircularProgressIndicator(),
           )
-        : Container(
-            width: MediaQuery.of(context).size.width,
-            margin: const EdgeInsets.symmetric(horizontal: 5.0),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(30.0),
-            ),
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Opacity(
-                          opacity: 0.0,
-                          child: TextButton(
-                            onPressed: () {},
-                            // ignore: prefer_const_literals_to_create_immutables
-                            child: Row(children: [
-                              const Text('Edit'),
-                              const Icon(Icons.edit)
-                            ]),
-                          ),
-                        ),
-                        Text(
-                          widget.weekDay,
-                          style: const TextStyle(fontSize: 20.0),
-                        ),
-                        TextButton(
-                          onPressed: () async {
-                            setState(() {
-                              _editingMode = !_editingMode;
-                              _isLoading = true;
-                            });
-                            // update data
-                            await _updateInitialData();
-                          },
-                          // ignore: prefer_const_literals_to_create_immutables
-                          child: _editingMode
-                              ? Row(children: const [
-                                  Text('Done'),
-                                  Icon(Icons.done)
-                                ])
-                              : Row(children: const [
-                                  Text('Edit'),
-                                  Icon(Icons.edit)
-                                ]),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20.0),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Breakfast',
-                              style: TextStyle(
-                                fontSize: 18.0,
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            _editingMode
-                                ? Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.black12),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 4.0),
-                                      child: Row(
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () async {
-                                              TimeOfDay initialTime =
-                                                  TimeOfDay.now();
-                                              final selectedTime =
-                                                  await showTimePicker(
-                                                context: context,
-                                                initialTime: initialTime,
-                                                initialEntryMode:
-                                                    TimePickerEntryMode.dial,
-                                              );
-                                              if (selectedTime != null) {
-                                                final hour = selectedTime.hour <
-                                                        10
-                                                    ? '0${selectedTime.hour}'
-                                                    : '${selectedTime.hour}';
-                                                final minute = selectedTime
-                                                            .minute <
-                                                        10
-                                                    ? '0${selectedTime.minute}'
-                                                    : '${selectedTime.minute}';
-                                                final String
-                                                    formattedTimeOfDay =
-                                                    hour.toString() +
-                                                        ':' +
-                                                        minute.toString() +
-                                                        ':00';
-
-                                                setState(() {
-                                                  breakfastStartTime =
-                                                      formattedTimeOfDay;
-                                                });
-                                                await _updateSlotTiming(
-                                                    breakfastStartTime,
-                                                    breakfastEndTime,
-                                                    breakfastSlotId);
-                                              }
-                                            },
-                                            child: Text(
-                                              breakfastStartTime,
-                                              style: const TextStyle(
-                                                fontSize: 18.0,
-                                              ),
-                                            ),
-                                          ),
-                                          const Text(
-                                            ' - ',
-                                            style: TextStyle(
-                                              fontSize: 18.0,
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () async {
-                                              TimeOfDay initialTime =
-                                                  TimeOfDay.now();
-                                              final selectedTime =
-                                                  await showTimePicker(
-                                                context: context,
-                                                initialTime: initialTime,
-                                                initialEntryMode:
-                                                    TimePickerEntryMode.dial,
-                                              );
-                                              if (selectedTime != null) {
-                                                final hour = selectedTime.hour <
-                                                        10
-                                                    ? '0${selectedTime.hour}'
-                                                    : '${selectedTime.hour}';
-                                                final minute = selectedTime
-                                                            .minute <
-                                                        10
-                                                    ? '0${selectedTime.minute}'
-                                                    : '${selectedTime.minute}';
-                                                final String
-                                                    formattedTimeOfDay =
-                                                    hour.toString() +
-                                                        ':' +
-                                                        minute.toString() +
-                                                        ':00';
-                                                setState(() {
-                                                  breakfastEndTime =
-                                                      formattedTimeOfDay;
-                                                });
-                                                await _updateSlotTiming(
-                                                    breakfastStartTime,
-                                                    breakfastEndTime,
-                                                    breakfastSlotId);
-                                              }
-                                            },
-                                            child: Text(
-                                              breakfastEndTime,
-                                              style: const TextStyle(
-                                                fontSize: 18.0,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                : viewTimings(
-                                    breakfastStartTime, breakfastEndTime),
-                          ],
-                        ),
-                        const SizedBox(height: 10.0),
-                        _editingMode
-                            ? Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SizedBox(
-                                    height: 30,
-                                    child: buildInputChips(
-                                        breakfastItems, breakfastMenuId),
-                                  ),
-                                  TextField(
-                                    controller: _breakfastItemController,
-                                    decoration: InputDecoration(
-                                      suffixIcon: IconButton(
-                                          onPressed: () async {
-                                            final MealItems _mealItem =
-                                                MealItems(
-                                              name:
-                                                  _breakfastItemController.text,
-                                              id: "-1",
-                                            );
-                                            await _addMenuItem(_mealItem.name,
-                                                breakfastMenuId);
-                                            setState(() {
-                                              breakfastItems.add(_mealItem);
-                                              _breakfastItemController.clear();
-                                            });
-                                          },
-                                          icon: const Icon(Icons.add)),
-                                      hintText: 'Add Item',
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : SizedBox(
-                                height: 30,
-                                child: buildChips(breakfastItems),
-                              ),
-                      ],
-                    ),
-                    const SizedBox(height: 20.0),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Lunch',
-                              style: TextStyle(
-                                fontSize: 18.0,
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            _editingMode
-                                ? Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.black12),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 4.0),
-                                      child: Row(
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () async {
-                                              TimeOfDay initialTime =
-                                                  TimeOfDay.now();
-                                              final selectedTime =
-                                                  await showTimePicker(
-                                                context: context,
-                                                initialTime: initialTime,
-                                                initialEntryMode:
-                                                    TimePickerEntryMode.dial,
-                                              );
-                                              if (selectedTime != null) {
-                                                final hour = selectedTime.hour <
-                                                        10
-                                                    ? '0${selectedTime.hour}'
-                                                    : '${selectedTime.hour}';
-                                                final minute = selectedTime
-                                                            .minute <
-                                                        10
-                                                    ? '0${selectedTime.minute}'
-                                                    : '${selectedTime.minute}';
-                                                final String
-                                                    formattedTimeOfDay =
-                                                    hour.toString() +
-                                                        ':' +
-                                                        minute.toString() +
-                                                        ':00';
-                                                setState(() {
-                                                  lunchStartTime =
-                                                      formattedTimeOfDay;
-                                                });
-                                                await _updateSlotTiming(
-                                                    lunchStartTime,
-                                                    lunchEndTime,
-                                                    lunchSlotId);
-                                              }
-                                            },
-                                            child: Text(
-                                              lunchStartTime,
-                                              style: const TextStyle(
-                                                fontSize: 18.0,
-                                              ),
-                                            ),
-                                          ),
-                                          const Text(
-                                            ' - ',
-                                            style: TextStyle(
-                                              fontSize: 18.0,
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () async {
-                                              TimeOfDay initialTime =
-                                                  TimeOfDay.now();
-                                              final selectedTime =
-                                                  await showTimePicker(
-                                                context: context,
-                                                initialTime: initialTime,
-                                                initialEntryMode:
-                                                    TimePickerEntryMode.dial,
-                                              );
-                                              if (selectedTime != null) {
-                                                final hour = selectedTime.hour <
-                                                        10
-                                                    ? '0${selectedTime.hour}'
-                                                    : '${selectedTime.hour}';
-                                                final minute = selectedTime
-                                                            .minute <
-                                                        10
-                                                    ? '0${selectedTime.minute}'
-                                                    : '${selectedTime.minute}';
-                                                final String
-                                                    formattedTimeOfDay =
-                                                    hour.toString() +
-                                                        ':' +
-                                                        minute.toString() +
-                                                        ':00';
-                                                setState(() {
-                                                  lunchEndTime =
-                                                      formattedTimeOfDay;
-                                                });
-                                                await _updateSlotTiming(
-                                                    lunchStartTime,
-                                                    lunchEndTime,
-                                                    lunchSlotId);
-                                              }
-                                            },
-                                            child: Text(
-                                              lunchEndTime,
-                                              style: const TextStyle(
-                                                fontSize: 18.0,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                : viewTimings(lunchStartTime, lunchEndTime),
-                          ],
-                        ),
-                        const SizedBox(height: 10.0),
-                        _editingMode
-                            ? Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SizedBox(
-                                    height: 30,
-                                    child: buildInputChips(
-                                        lunchItems, lunchMenuId),
-                                  ),
-                                  TextField(
-                                    controller: _lunchItemController,
-                                    decoration: InputDecoration(
-                                      suffixIcon: IconButton(
-                                          onPressed: () async {
-                                            final MealItems _mealItem =
-                                                MealItems(
-                                                    name: _lunchItemController
-                                                        .text,
-                                                    id: "-1");
-                                            await _addMenuItem(
-                                                _mealItem.name, lunchMenuId);
-                                            setState(() {
-                                              lunchItems.add(_mealItem);
-                                              _lunchItemController.clear();
-                                            });
-                                          },
-                                          icon: const Icon(Icons.add)),
-                                      hintText: 'Add Item',
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : SizedBox(
-                                height: 30,
-                                child: buildChips(lunchItems),
-                              ),
-                      ],
-                    ),
-                    const SizedBox(height: 20.0),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Snacks',
-                              style: TextStyle(
-                                fontSize: 18.0,
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            _editingMode
-                                ? Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.black12),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 4.0),
-                                      child: Row(
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () async {
-                                              TimeOfDay initialTime =
-                                                  TimeOfDay.now();
-                                              final selectedTime =
-                                                  await showTimePicker(
-                                                context: context,
-                                                initialTime: initialTime,
-                                                initialEntryMode:
-                                                    TimePickerEntryMode.dial,
-                                              );
-                                              if (selectedTime != null) {
-                                                final hour = selectedTime.hour <
-                                                        10
-                                                    ? '0${selectedTime.hour}'
-                                                    : '${selectedTime.hour}';
-                                                final minute = selectedTime
-                                                            .minute <
-                                                        10
-                                                    ? '0${selectedTime.minute}'
-                                                    : '${selectedTime.minute}';
-                                                final String
-                                                    formattedTimeOfDay =
-                                                    hour.toString() +
-                                                        ':' +
-                                                        minute.toString() +
-                                                        ':00';
-                                                setState(() {
-                                                  snacksStartTime =
-                                                      formattedTimeOfDay;
-                                                });
-                                                await _updateSlotTiming(
-                                                    snacksStartTime,
-                                                    snacksEndTime,
-                                                    snacksSlotId);
-                                              }
-                                            },
-                                            child: Text(
-                                              snacksStartTime,
-                                              style: const TextStyle(
-                                                fontSize: 18.0,
-                                              ),
-                                            ),
-                                          ),
-                                          const Text(
-                                            ' - ',
-                                            style: TextStyle(
-                                              fontSize: 18.0,
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () async {
-                                              TimeOfDay initialTime =
-                                                  TimeOfDay.now();
-                                              final selectedTime =
-                                                  await showTimePicker(
-                                                context: context,
-                                                initialTime: initialTime,
-                                                initialEntryMode:
-                                                    TimePickerEntryMode.dial,
-                                              );
-                                              if (selectedTime != null) {
-                                                final hour = selectedTime.hour <
-                                                        10
-                                                    ? '0${selectedTime.hour}'
-                                                    : '${selectedTime.hour}';
-                                                final minute = selectedTime
-                                                            .minute <
-                                                        10
-                                                    ? '0${selectedTime.minute}'
-                                                    : '${selectedTime.minute}';
-                                                final String
-                                                    formattedTimeOfDay =
-                                                    hour.toString() +
-                                                        ':' +
-                                                        minute.toString() +
-                                                        ':00';
-                                                setState(() {
-                                                  snacksEndTime =
-                                                      formattedTimeOfDay;
-                                                });
-                                                await _updateSlotTiming(
-                                                    snacksStartTime,
-                                                    snacksEndTime,
-                                                    snacksSlotId);
-                                              }
-                                            },
-                                            child: Text(
-                                              snacksEndTime,
-                                              style: const TextStyle(
-                                                fontSize: 18.0,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                : viewTimings(snacksStartTime, snacksEndTime),
-                          ],
-                        ),
-                        const SizedBox(height: 10.0),
-                        _editingMode
-                            ? Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SizedBox(
-                                    height: 30,
-                                    child: buildInputChips(
-                                        snacksItems, snacksMenuId),
-                                  ),
-                                  TextField(
-                                    controller: _snacksItemController,
-                                    decoration: InputDecoration(
-                                      suffixIcon: IconButton(
-                                          onPressed: () async {
-                                            final MealItems _mealItem =
-                                                MealItems(
-                                              name: _snacksItemController.text,
-                                              id: "-1",
-                                            );
-                                            await _addMenuItem(
-                                                _mealItem.name, snacksMenuId);
-                                            setState(() {
-                                              snacksItems.add(_mealItem);
-                                              _snacksItemController.clear();
-                                            });
-                                          },
-                                          icon: const Icon(Icons.add)),
-                                      hintText: 'Add Item',
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : SizedBox(
-                                height: 30,
-                                child: buildChips(snacksItems),
-                              ),
-                      ],
-                    ),
-                    const SizedBox(height: 20.0),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Dinner',
-                              style: TextStyle(
-                                fontSize: 18.0,
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            _editingMode
-                                ? Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.black12),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 4.0),
-                                      child: Row(
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () async {
-                                              TimeOfDay initialTime =
-                                                  TimeOfDay.now();
-                                              final selectedTime =
-                                                  await showTimePicker(
-                                                context: context,
-                                                initialTime: initialTime,
-                                                initialEntryMode:
-                                                    TimePickerEntryMode.dial,
-                                              );
-                                              if (selectedTime != null) {
-                                                final hour = selectedTime.hour <
-                                                        10
-                                                    ? '0${selectedTime.hour}'
-                                                    : '${selectedTime.hour}';
-                                                final minute = selectedTime
-                                                            .minute <
-                                                        10
-                                                    ? '0${selectedTime.minute}'
-                                                    : '${selectedTime.minute}';
-                                                final String
-                                                    formattedTimeOfDay =
-                                                    hour.toString() +
-                                                        ':' +
-                                                        minute.toString() +
-                                                        ':00';
-                                                setState(() {
-                                                  dinnerStartTime =
-                                                      formattedTimeOfDay;
-                                                });
-                                                await _updateSlotTiming(
-                                                    dinnerStartTime,
-                                                    dinnerEndTime,
-                                                    dinnerSlotId);
-                                              }
-                                            },
-                                            child: Text(
-                                              dinnerStartTime,
-                                              style: const TextStyle(
-                                                fontSize: 18.0,
-                                              ),
-                                            ),
-                                          ),
-                                          const Text(
-                                            ' - ',
-                                            style: TextStyle(
-                                              fontSize: 18.0,
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () async {
-                                              TimeOfDay initialTime =
-                                                  TimeOfDay.now();
-                                              final selectedTime =
-                                                  await showTimePicker(
-                                                context: context,
-                                                initialTime: initialTime,
-                                                initialEntryMode:
-                                                    TimePickerEntryMode.dial,
-                                              );
-                                              if (selectedTime != null) {
-                                                final hour = selectedTime.hour <
-                                                        10
-                                                    ? '0${selectedTime.hour}'
-                                                    : '${selectedTime.hour}';
-                                                final minute = selectedTime
-                                                            .minute <
-                                                        10
-                                                    ? '0${selectedTime.minute}'
-                                                    : '${selectedTime.minute}';
-                                                final String
-                                                    formattedTimeOfDay =
-                                                    hour.toString() +
-                                                        ':' +
-                                                        minute.toString() +
-                                                        ':00';
-                                                setState(() {
-                                                  dinnerEndTime =
-                                                      formattedTimeOfDay;
-                                                });
-                                                await _updateSlotTiming(
-                                                    dinnerStartTime,
-                                                    dinnerEndTime,
-                                                    dinnerSlotId);
-                                              }
-                                            },
-                                            child: Text(
-                                              dinnerEndTime,
-                                              style: const TextStyle(
-                                                fontSize: 18.0,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                : viewTimings(dinnerStartTime, dinnerEndTime),
-                          ],
-                        ),
-                        const SizedBox(height: 10.0),
-                        _editingMode
-                            ? Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SizedBox(
-                                    height: 30,
-                                    child: buildInputChips(
-                                        dinnerItems, dinnerMenuId),
-                                  ),
-                                  TextField(
-                                    controller: _dinnerItemController,
-                                    decoration: InputDecoration(
-                                      suffixIcon: IconButton(
-                                          onPressed: () async {
-                                            final MealItems _mealItem =
-                                                MealItems(
-                                                    name: _dinnerItemController
-                                                        .text,
-                                                    id: "-1");
-                                            await _addMenuItem(
-                                                _mealItem.name, dinnerMenuId);
-                                            setState(() {
-                                              dinnerItems.add(_mealItem);
-                                              _dinnerItemController.clear();
-                                            });
-                                          },
-                                          icon: const Icon(Icons.add)),
-                                      hintText: 'Add Item',
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : SizedBox(
-                                height: 30,
-                                child: buildChips(dinnerItems),
-                              ),
-                      ],
-                    ),
-                  ],
+        : breakfastItems.isEmpty
+            ? const Center(
+                child: Text("No data available"),
+              )
+            : Container(
+                width: MediaQuery.of(context).size.width,
+                margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(30.0),
                 ),
-              ),
-            ),
-          );
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10.0, vertical: 20.0),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Opacity(
+                              opacity: 0.0,
+                              child: TextButton(
+                                onPressed: () {},
+                                // ignore: prefer_const_literals_to_create_immutables
+                                child: Row(children: [
+                                  const Text('Edit'),
+                                  const Icon(Icons.edit)
+                                ]),
+                              ),
+                            ),
+                            Text(
+                              widget.weekDay,
+                              style: const TextStyle(fontSize: 20.0),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                setState(() {
+                                  _editingMode = !_editingMode;
+                                  _isLoading = true;
+                                });
+                                // update data
+                                await _updateInitialData();
+                              },
+                              // ignore: prefer_const_literals_to_create_immutables
+                              child: _editingMode
+                                  ? Row(children: const [
+                                      Text('Done'),
+                                      Icon(Icons.done)
+                                    ])
+                                  : Row(children: const [
+                                      Text('Edit'),
+                                      Icon(Icons.edit)
+                                    ]),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20.0),
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Breakfast',
+                                  style: TextStyle(
+                                    fontSize: 18.0,
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                _editingMode
+                                    ? Container(
+                                        decoration: BoxDecoration(
+                                          border:
+                                              Border.all(color: Colors.black12),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 4.0),
+                                          child: Row(
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  TimeOfDay initialTime =
+                                                      TimeOfDay.now();
+                                                  final selectedTime =
+                                                      await showTimePicker(
+                                                    context: context,
+                                                    initialTime: initialTime,
+                                                    initialEntryMode:
+                                                        TimePickerEntryMode
+                                                            .dial,
+                                                  );
+                                                  if (selectedTime != null) {
+                                                    final hour = selectedTime
+                                                                .hour <
+                                                            10
+                                                        ? '0${selectedTime.hour}'
+                                                        : '${selectedTime.hour}';
+                                                    final minute = selectedTime
+                                                                .minute <
+                                                            10
+                                                        ? '0${selectedTime.minute}'
+                                                        : '${selectedTime.minute}';
+                                                    final String
+                                                        formattedTimeOfDay =
+                                                        hour.toString() +
+                                                            ':' +
+                                                            minute.toString() +
+                                                            ':00';
+
+                                                    setState(() {
+                                                      breakfastStartTime =
+                                                          formattedTimeOfDay;
+                                                    });
+                                                    await _updateSlotTiming(
+                                                        breakfastStartTime,
+                                                        breakfastEndTime,
+                                                        breakfastSlotId);
+                                                  }
+                                                },
+                                                child: Text(
+                                                  breakfastStartTime,
+                                                  style: const TextStyle(
+                                                    fontSize: 18.0,
+                                                  ),
+                                                ),
+                                              ),
+                                              const Text(
+                                                ' - ',
+                                                style: TextStyle(
+                                                  fontSize: 18.0,
+                                                ),
+                                              ),
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  TimeOfDay initialTime =
+                                                      TimeOfDay.now();
+                                                  final selectedTime =
+                                                      await showTimePicker(
+                                                    context: context,
+                                                    initialTime: initialTime,
+                                                    initialEntryMode:
+                                                        TimePickerEntryMode
+                                                            .dial,
+                                                  );
+                                                  if (selectedTime != null) {
+                                                    final hour = selectedTime
+                                                                .hour <
+                                                            10
+                                                        ? '0${selectedTime.hour}'
+                                                        : '${selectedTime.hour}';
+                                                    final minute = selectedTime
+                                                                .minute <
+                                                            10
+                                                        ? '0${selectedTime.minute}'
+                                                        : '${selectedTime.minute}';
+                                                    final String
+                                                        formattedTimeOfDay =
+                                                        hour.toString() +
+                                                            ':' +
+                                                            minute.toString() +
+                                                            ':00';
+                                                    setState(() {
+                                                      breakfastEndTime =
+                                                          formattedTimeOfDay;
+                                                    });
+                                                    await _updateSlotTiming(
+                                                        breakfastStartTime,
+                                                        breakfastEndTime,
+                                                        breakfastSlotId);
+                                                  }
+                                                },
+                                                child: Text(
+                                                  breakfastEndTime,
+                                                  style: const TextStyle(
+                                                    fontSize: 18.0,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                    : viewTimings(
+                                        breakfastStartTime, breakfastEndTime),
+                              ],
+                            ),
+                            const SizedBox(height: 10.0),
+                            _editingMode
+                                ? Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      SizedBox(
+                                        height: 30,
+                                        child: buildInputChips(
+                                            breakfastItems, breakfastMenuId),
+                                      ),
+                                      TextField(
+                                        controller: _breakfastItemController,
+                                        decoration: InputDecoration(
+                                          suffixIcon: IconButton(
+                                              onPressed: () async {
+                                                final MealItems _mealItem =
+                                                    MealItems(
+                                                  name: _breakfastItemController
+                                                      .text,
+                                                  id: "-1",
+                                                );
+                                                await _addMenuItem(
+                                                    _mealItem.name,
+                                                    breakfastMenuId);
+                                                setState(() {
+                                                  breakfastItems.add(_mealItem);
+                                                  _breakfastItemController
+                                                      .clear();
+                                                });
+                                              },
+                                              icon: const Icon(Icons.add)),
+                                          hintText: 'Add Item',
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : SizedBox(
+                                    height: 30,
+                                    child: buildChips(breakfastItems),
+                                  ),
+                          ],
+                        ),
+                        const SizedBox(height: 20.0),
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Lunch',
+                                  style: TextStyle(
+                                    fontSize: 18.0,
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                _editingMode
+                                    ? Container(
+                                        decoration: BoxDecoration(
+                                          border:
+                                              Border.all(color: Colors.black12),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 4.0),
+                                          child: Row(
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  TimeOfDay initialTime =
+                                                      TimeOfDay.now();
+                                                  final selectedTime =
+                                                      await showTimePicker(
+                                                    context: context,
+                                                    initialTime: initialTime,
+                                                    initialEntryMode:
+                                                        TimePickerEntryMode
+                                                            .dial,
+                                                  );
+                                                  if (selectedTime != null) {
+                                                    final hour = selectedTime
+                                                                .hour <
+                                                            10
+                                                        ? '0${selectedTime.hour}'
+                                                        : '${selectedTime.hour}';
+                                                    final minute = selectedTime
+                                                                .minute <
+                                                            10
+                                                        ? '0${selectedTime.minute}'
+                                                        : '${selectedTime.minute}';
+                                                    final String
+                                                        formattedTimeOfDay =
+                                                        hour.toString() +
+                                                            ':' +
+                                                            minute.toString() +
+                                                            ':00';
+                                                    setState(() {
+                                                      lunchStartTime =
+                                                          formattedTimeOfDay;
+                                                    });
+                                                    await _updateSlotTiming(
+                                                        lunchStartTime,
+                                                        lunchEndTime,
+                                                        lunchSlotId);
+                                                  }
+                                                },
+                                                child: Text(
+                                                  lunchStartTime,
+                                                  style: const TextStyle(
+                                                    fontSize: 18.0,
+                                                  ),
+                                                ),
+                                              ),
+                                              const Text(
+                                                ' - ',
+                                                style: TextStyle(
+                                                  fontSize: 18.0,
+                                                ),
+                                              ),
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  TimeOfDay initialTime =
+                                                      TimeOfDay.now();
+                                                  final selectedTime =
+                                                      await showTimePicker(
+                                                    context: context,
+                                                    initialTime: initialTime,
+                                                    initialEntryMode:
+                                                        TimePickerEntryMode
+                                                            .dial,
+                                                  );
+                                                  if (selectedTime != null) {
+                                                    final hour = selectedTime
+                                                                .hour <
+                                                            10
+                                                        ? '0${selectedTime.hour}'
+                                                        : '${selectedTime.hour}';
+                                                    final minute = selectedTime
+                                                                .minute <
+                                                            10
+                                                        ? '0${selectedTime.minute}'
+                                                        : '${selectedTime.minute}';
+                                                    final String
+                                                        formattedTimeOfDay =
+                                                        hour.toString() +
+                                                            ':' +
+                                                            minute.toString() +
+                                                            ':00';
+                                                    setState(() {
+                                                      lunchEndTime =
+                                                          formattedTimeOfDay;
+                                                    });
+                                                    await _updateSlotTiming(
+                                                        lunchStartTime,
+                                                        lunchEndTime,
+                                                        lunchSlotId);
+                                                  }
+                                                },
+                                                child: Text(
+                                                  lunchEndTime,
+                                                  style: const TextStyle(
+                                                    fontSize: 18.0,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                    : viewTimings(lunchStartTime, lunchEndTime),
+                              ],
+                            ),
+                            const SizedBox(height: 10.0),
+                            _editingMode
+                                ? Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      SizedBox(
+                                        height: 30,
+                                        child: buildInputChips(
+                                            lunchItems, lunchMenuId),
+                                      ),
+                                      TextField(
+                                        controller: _lunchItemController,
+                                        decoration: InputDecoration(
+                                          suffixIcon: IconButton(
+                                              onPressed: () async {
+                                                final MealItems _mealItem =
+                                                    MealItems(
+                                                        name:
+                                                            _lunchItemController
+                                                                .text,
+                                                        id: "-1");
+                                                await _addMenuItem(
+                                                    _mealItem.name,
+                                                    lunchMenuId);
+                                                setState(() {
+                                                  lunchItems.add(_mealItem);
+                                                  _lunchItemController.clear();
+                                                });
+                                              },
+                                              icon: const Icon(Icons.add)),
+                                          hintText: 'Add Item',
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : SizedBox(
+                                    height: 30,
+                                    child: buildChips(lunchItems),
+                                  ),
+                          ],
+                        ),
+                        const SizedBox(height: 20.0),
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Snacks',
+                                  style: TextStyle(
+                                    fontSize: 18.0,
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                _editingMode
+                                    ? Container(
+                                        decoration: BoxDecoration(
+                                          border:
+                                              Border.all(color: Colors.black12),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 4.0),
+                                          child: Row(
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  TimeOfDay initialTime =
+                                                      TimeOfDay.now();
+                                                  final selectedTime =
+                                                      await showTimePicker(
+                                                    context: context,
+                                                    initialTime: initialTime,
+                                                    initialEntryMode:
+                                                        TimePickerEntryMode
+                                                            .dial,
+                                                  );
+                                                  if (selectedTime != null) {
+                                                    final hour = selectedTime
+                                                                .hour <
+                                                            10
+                                                        ? '0${selectedTime.hour}'
+                                                        : '${selectedTime.hour}';
+                                                    final minute = selectedTime
+                                                                .minute <
+                                                            10
+                                                        ? '0${selectedTime.minute}'
+                                                        : '${selectedTime.minute}';
+                                                    final String
+                                                        formattedTimeOfDay =
+                                                        hour.toString() +
+                                                            ':' +
+                                                            minute.toString() +
+                                                            ':00';
+                                                    setState(() {
+                                                      snacksStartTime =
+                                                          formattedTimeOfDay;
+                                                    });
+                                                    await _updateSlotTiming(
+                                                        snacksStartTime,
+                                                        snacksEndTime,
+                                                        snacksSlotId);
+                                                  }
+                                                },
+                                                child: Text(
+                                                  snacksStartTime,
+                                                  style: const TextStyle(
+                                                    fontSize: 18.0,
+                                                  ),
+                                                ),
+                                              ),
+                                              const Text(
+                                                ' - ',
+                                                style: TextStyle(
+                                                  fontSize: 18.0,
+                                                ),
+                                              ),
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  TimeOfDay initialTime =
+                                                      TimeOfDay.now();
+                                                  final selectedTime =
+                                                      await showTimePicker(
+                                                    context: context,
+                                                    initialTime: initialTime,
+                                                    initialEntryMode:
+                                                        TimePickerEntryMode
+                                                            .dial,
+                                                  );
+                                                  if (selectedTime != null) {
+                                                    final hour = selectedTime
+                                                                .hour <
+                                                            10
+                                                        ? '0${selectedTime.hour}'
+                                                        : '${selectedTime.hour}';
+                                                    final minute = selectedTime
+                                                                .minute <
+                                                            10
+                                                        ? '0${selectedTime.minute}'
+                                                        : '${selectedTime.minute}';
+                                                    final String
+                                                        formattedTimeOfDay =
+                                                        hour.toString() +
+                                                            ':' +
+                                                            minute.toString() +
+                                                            ':00';
+                                                    setState(() {
+                                                      snacksEndTime =
+                                                          formattedTimeOfDay;
+                                                    });
+                                                    await _updateSlotTiming(
+                                                        snacksStartTime,
+                                                        snacksEndTime,
+                                                        snacksSlotId);
+                                                  }
+                                                },
+                                                child: Text(
+                                                  snacksEndTime,
+                                                  style: const TextStyle(
+                                                    fontSize: 18.0,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                    : viewTimings(
+                                        snacksStartTime, snacksEndTime),
+                              ],
+                            ),
+                            const SizedBox(height: 10.0),
+                            _editingMode
+                                ? Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      SizedBox(
+                                        height: 30,
+                                        child: buildInputChips(
+                                            snacksItems, snacksMenuId),
+                                      ),
+                                      TextField(
+                                        controller: _snacksItemController,
+                                        decoration: InputDecoration(
+                                          suffixIcon: IconButton(
+                                              onPressed: () async {
+                                                final MealItems _mealItem =
+                                                    MealItems(
+                                                  name: _snacksItemController
+                                                      .text,
+                                                  id: "-1",
+                                                );
+                                                await _addMenuItem(
+                                                    _mealItem.name,
+                                                    snacksMenuId);
+                                                setState(() {
+                                                  snacksItems.add(_mealItem);
+                                                  _snacksItemController.clear();
+                                                });
+                                              },
+                                              icon: const Icon(Icons.add)),
+                                          hintText: 'Add Item',
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : SizedBox(
+                                    height: 30,
+                                    child: buildChips(snacksItems),
+                                  ),
+                          ],
+                        ),
+                        const SizedBox(height: 20.0),
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Dinner',
+                                  style: TextStyle(
+                                    fontSize: 18.0,
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                _editingMode
+                                    ? Container(
+                                        decoration: BoxDecoration(
+                                          border:
+                                              Border.all(color: Colors.black12),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 4.0),
+                                          child: Row(
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  TimeOfDay initialTime =
+                                                      TimeOfDay.now();
+                                                  final selectedTime =
+                                                      await showTimePicker(
+                                                    context: context,
+                                                    initialTime: initialTime,
+                                                    initialEntryMode:
+                                                        TimePickerEntryMode
+                                                            .dial,
+                                                  );
+                                                  if (selectedTime != null) {
+                                                    final hour = selectedTime
+                                                                .hour <
+                                                            10
+                                                        ? '0${selectedTime.hour}'
+                                                        : '${selectedTime.hour}';
+                                                    final minute = selectedTime
+                                                                .minute <
+                                                            10
+                                                        ? '0${selectedTime.minute}'
+                                                        : '${selectedTime.minute}';
+                                                    final String
+                                                        formattedTimeOfDay =
+                                                        hour.toString() +
+                                                            ':' +
+                                                            minute.toString() +
+                                                            ':00';
+                                                    setState(() {
+                                                      dinnerStartTime =
+                                                          formattedTimeOfDay;
+                                                    });
+                                                    await _updateSlotTiming(
+                                                        dinnerStartTime,
+                                                        dinnerEndTime,
+                                                        dinnerSlotId);
+                                                  }
+                                                },
+                                                child: Text(
+                                                  dinnerStartTime,
+                                                  style: const TextStyle(
+                                                    fontSize: 18.0,
+                                                  ),
+                                                ),
+                                              ),
+                                              const Text(
+                                                ' - ',
+                                                style: TextStyle(
+                                                  fontSize: 18.0,
+                                                ),
+                                              ),
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  TimeOfDay initialTime =
+                                                      TimeOfDay.now();
+                                                  final selectedTime =
+                                                      await showTimePicker(
+                                                    context: context,
+                                                    initialTime: initialTime,
+                                                    initialEntryMode:
+                                                        TimePickerEntryMode
+                                                            .dial,
+                                                  );
+                                                  if (selectedTime != null) {
+                                                    final hour = selectedTime
+                                                                .hour <
+                                                            10
+                                                        ? '0${selectedTime.hour}'
+                                                        : '${selectedTime.hour}';
+                                                    final minute = selectedTime
+                                                                .minute <
+                                                            10
+                                                        ? '0${selectedTime.minute}'
+                                                        : '${selectedTime.minute}';
+                                                    final String
+                                                        formattedTimeOfDay =
+                                                        hour.toString() +
+                                                            ':' +
+                                                            minute.toString() +
+                                                            ':00';
+                                                    setState(() {
+                                                      dinnerEndTime =
+                                                          formattedTimeOfDay;
+                                                    });
+                                                    await _updateSlotTiming(
+                                                        dinnerStartTime,
+                                                        dinnerEndTime,
+                                                        dinnerSlotId);
+                                                  }
+                                                },
+                                                child: Text(
+                                                  dinnerEndTime,
+                                                  style: const TextStyle(
+                                                    fontSize: 18.0,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                    : viewTimings(
+                                        dinnerStartTime, dinnerEndTime),
+                              ],
+                            ),
+                            const SizedBox(height: 10.0),
+                            _editingMode
+                                ? Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      SizedBox(
+                                        height: 30,
+                                        child: buildInputChips(
+                                            dinnerItems, dinnerMenuId),
+                                      ),
+                                      TextField(
+                                        controller: _dinnerItemController,
+                                        decoration: InputDecoration(
+                                          suffixIcon: IconButton(
+                                              onPressed: () async {
+                                                final MealItems _mealItem =
+                                                    MealItems(
+                                                        name:
+                                                            _dinnerItemController
+                                                                .text,
+                                                        id: "-1");
+                                                await _addMenuItem(
+                                                    _mealItem.name,
+                                                    dinnerMenuId);
+                                                setState(() {
+                                                  dinnerItems.add(_mealItem);
+                                                  _dinnerItemController.clear();
+                                                });
+                                              },
+                                              icon: const Icon(Icons.add)),
+                                          hintText: 'Add Item',
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : SizedBox(
+                                    height: 30,
+                                    child: buildChips(dinnerItems),
+                                  ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
   }
 
   Widget viewTimings(String startTime, String endTime) {
