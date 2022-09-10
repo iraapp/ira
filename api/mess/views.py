@@ -262,3 +262,48 @@ class MessTenderInstanceView(APIView):
         data = self.model.objects.filter(id=tender_id).first()
         serialized_json = MessTenderSer(data)
         return Response(data=serialized_json.data)
+
+class MenuTimingView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        start_time = request.POST.get('start_time')
+        end_time = request.POST.get('end_time')
+        slot_id = request.POST.get('slot_id')
+
+        slot = MenuSlot.objects.filter(id = slot_id).first()
+
+        slot.start_time = start_time
+        slot.end_time = end_time
+        slot.save()
+
+        return Response(status = 200, data={
+            'msg': 'Successfully updated menu timings'
+        })
+
+class MenuItemUpdateView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        menu_id = request.POST.get('menu_id')
+        menu_item_id = request.POST.get('menu_item_id')
+        action = request.POST.get('action')
+
+        menu = MessMenu.objects.filter(id = menu_id).first()
+        menu_item = MenuItem.objects.filter(id = menu_item_id).first()
+
+        if action == 'remove':
+            menu.items.remove(menu_item)
+        elif action == 'add':
+            menu.items.add(menu_item)
+        else:
+            return Response(status = 400, data={
+                'msg': 'action field is malformed'
+            })
+
+
+        return Response(status = 200, data={
+            'msg': 'Successfully updated mess menu item'
+        })

@@ -3,54 +3,56 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:ira/screens/medical/appointments/appointment_card.dart';
+import 'package:ira/screens/medical/doctor_details/doctor_details.dart';
 import 'package:http/http.dart' as http;
-import 'package:ira/screens/medical/history/history_card.dart';
 
-class MedicalHistoryModel {
-  String date;
-  String details;
-  String diagnosis;
-  String doctor;
-  bool inhouse;
-  String treatment;
+class AppointmentModel {
+  int id;
+  DoctorModel doctor;
+  dynamic date;
+  dynamic time;
+  String status;
+  dynamic reason;
 
-  MedicalHistoryModel({
-    required this.date,
-    required this.details,
-    required this.diagnosis,
+  AppointmentModel({
+    required this.id,
     required this.doctor,
-    required this.inhouse,
-    required this.treatment,
+    required this.date,
+    required this.time,
+    required this.status,
+    required this.reason,
   });
 
-  factory MedicalHistoryModel.fromJson(Map<String, dynamic> json) {
-    return MedicalHistoryModel(
+  factory AppointmentModel.fromJson(Map<String, dynamic> json) {
+    return AppointmentModel(
+      id: json['id'],
+      doctor: DoctorModel.fromJson(json['doctor']),
       date: json['date'],
-      details: json['details'],
-      diagnosis: json['diagnosis'],
-      doctor: json['doctor']['name'],
-      inhouse: json['inhouse'],
-      treatment: json['treatment'],
+      reason: json['reason'],
+      status: json['status'],
+      time: json['time'],
     );
   }
 }
 
-class MedicalHistoryScreen extends StatefulWidget {
-  const MedicalHistoryScreen({Key? key}) : super(key: key);
+class MedicalAppointmentsScreen extends StatefulWidget {
+  const MedicalAppointmentsScreen({Key? key}) : super(key: key);
 
   @override
-  State<MedicalHistoryScreen> createState() => _MedicalHistoryScreenState();
+  State<MedicalAppointmentsScreen> createState() =>
+      _MedicalAppointmentsScreenState();
 }
 
-class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
+class _MedicalAppointmentsScreenState extends State<MedicalAppointmentsScreen> {
   final secureStorage = const FlutterSecureStorage();
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
 
-  Future<List<MedicalHistoryModel>> fetchMedicalHistory() async {
+  Future<List<AppointmentModel>> fetchAppointments() async {
     String? idToken = await secureStorage.read(key: 'idToken');
     final response = await http.get(
         Uri.parse(
-          baseUrl + '/medical/medicalhistory/',
+          baseUrl + '/medical/appointment/',
         ),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -58,11 +60,10 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
         });
     if (response.statusCode == 200) {
       List decodedBody = jsonDecode(response.body);
-      List<MedicalHistoryModel> history = decodedBody
-          .map<MedicalHistoryModel>(
-              (json) => MedicalHistoryModel.fromJson(json))
+      List<AppointmentModel> appointments = decodedBody
+          .map<AppointmentModel>((json) => AppointmentModel.fromJson(json))
           .toList();
-      return Future.value(history);
+      return Future.value(appointments);
     }
 
     return Future.value([]);
@@ -90,7 +91,7 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
                   children: const [
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 40.0),
-                      child: Text("History",
+                      child: Text("Appointments",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 22.0,
@@ -119,9 +120,9 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
                   vertical: 20.0,
                 ),
                 child: FutureBuilder(
-                  future: fetchMedicalHistory(),
+                  future: fetchAppointments(),
                   builder: (BuildContext context,
-                      AsyncSnapshot<List<MedicalHistoryModel>> snapshot) {
+                      AsyncSnapshot<List<AppointmentModel>> snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting ||
                         snapshot.data == null) {
                       return const Scaffold(
@@ -132,13 +133,21 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
                     return ListView.builder(
                       itemCount: snapshot.data?.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return HistoryCard(
-                          date: snapshot.data![index].date,
-                          details: snapshot.data![index].details,
-                          diagnosis: snapshot.data![index].diagnosis,
-                          doctor: snapshot.data![index].doctor,
-                          inhouse: snapshot.data![index].inhouse,
-                          treatment: snapshot.data![index].treatment,
+                        return AppointmentCard(
+                          name: snapshot.data![index].doctor.name,
+                          // details: snapshot.data[index].,
+                          specialization:
+                              snapshot.data![index].doctor.specialization,
+                          contact: snapshot.data![index].doctor.contact,
+                          email: snapshot.data![index].doctor.mail,
+                          startTime: snapshot.data![index].doctor.startTime,
+                          endTime: snapshot.data![index].doctor.endTime,
+                          status: snapshot.data![index].status,
+                          dateTime: snapshot.data![index].time != null
+                              ? snapshot.data![index].time +
+                                  " " +
+                                  snapshot.data![index].date
+                              : "",
                         );
                       },
                     );

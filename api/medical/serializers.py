@@ -1,7 +1,10 @@
 from rest_framework import serializers
 
+from authentication.serializers import UserSerializer
+
 
 class DoctorSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
     name = serializers.CharField(max_length=30)
     phone = serializers.CharField(max_length=30)
     specialization = serializers.CharField(max_length=30)
@@ -21,20 +24,20 @@ class StaffSerializer(serializers.Serializer):
 
 class AppointmentSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
-    doctor = serializers.IntegerField()
-    patient = serializers.IntegerField()
-    date = serializers.DateField()
+    doctor = DoctorSerializer()
+    patient = UserSerializer()
+    date = serializers.DateField(format='%d %b %Y', input_formats=['%d %b %Y'])
     time = serializers.TimeField(format='%I:%M %p', input_formats='%I:%M %p')
-    acceptance = serializers.BooleanField()
+    status = serializers.CharField()
     reason = serializers.CharField(max_length=500)
 
 
 class MedicalHistorySerializer(serializers.Serializer):
-    id = serializers.IntegerField(read_only=True)
-    patient = serializers.IntegerField()
-    doctor = serializers.IntegerField()
-    date = serializers.DateField()
+    patient = UserSerializer()
+    doctor = DoctorSerializer()
+    date = serializers.DateField(format='%d %b %Y', input_formats=['%d %b %Y'])
     time = serializers.TimeField(format='%I:%M %p', input_formats='%I:%M %p')
     inhouse = serializers.BooleanField()
-    prescription = serializers.CharField(max_length=500)
-    details = serializers.CharField(max_length=500)
+    diagnosis = serializers.CharField()
+    treatment = serializers.CharField()
+    details = serializers.CharField()

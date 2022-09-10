@@ -1,23 +1,32 @@
 import 'package:flutter/material.dart';
 
-class DoctorCard extends StatelessWidget {
+// ignore: must_be_immutable
+class AppointmentCard extends StatelessWidget {
   final String name;
   final String contact;
   final String specialization;
-  final String details;
   final String email;
   final String startTime;
   final String endTime;
+  final String status;
+  final String dateTime;
 
-  const DoctorCard({
+  Map<String, MaterialColor> statusColor = {
+    'IN PROGRESS': Colors.blue,
+    'REJECTED': Colors.red,
+    'ACCEPTED': Colors.green,
+  };
+
+  AppointmentCard({
     Key? key,
     required this.name,
-    required this.details,
     required this.specialization,
     required this.contact,
     required this.email,
     required this.startTime,
     required this.endTime,
+    required this.status,
+    required this.dateTime,
   }) : super(key: key);
 
   @override
@@ -72,7 +81,7 @@ class DoctorCard extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            email,
+                            status,
                             style: const TextStyle(
                               fontSize: 12.0,
                             ),
@@ -80,13 +89,6 @@ class DoctorCard extends StatelessWidget {
                         ],
                       ),
                     ]),
-                    Text(
-                      details,
-                      overflow: TextOverflow.clip,
-                      style: const TextStyle(
-                        fontSize: 12.0,
-                      ),
-                    )
                   ],
                 ),
               ),
@@ -97,36 +99,24 @@ class DoctorCard extends StatelessWidget {
                     child: Container(
                       padding:
                           const EdgeInsets.fromLTRB(10.0, 12.5, 10.0, 12.5),
-                      decoration: const BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(20.0),
-                        ),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          "Take Appointment",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12.0,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      padding:
-                          const EdgeInsets.fromLTRB(10.0, 12.5, 10.0, 12.5),
-                      decoration: const BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.only(
-                          bottomRight: Radius.circular(20.0),
-                        ),
+                      decoration: BoxDecoration(
+                        color: statusColor[status],
+                        borderRadius: status == "ACCEPTED"
+                            ? const BorderRadius.only(
+                                bottomLeft: Radius.circular(20.0),
+                              )
+                            : const BorderRadius.only(
+                                bottomLeft: Radius.circular(20.0),
+                                bottomRight: Radius.circular(20.0),
+                              ),
                       ),
                       child: Center(
                         child: Text(
-                          startTime + " - " + endTime,
+                          status == 'IN PROGRESS'
+                              ? "In Progress"
+                              : status == 'REJECTED'
+                                  ? "Rejected"
+                                  : "Appointment Confirmed",
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 12.0,
@@ -135,6 +125,31 @@ class DoctorCard extends StatelessWidget {
                       ),
                     ),
                   ),
+                  status == "ACCEPTED"
+                      ? Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.fromLTRB(
+                                10.0, 12.5, 10.0, 12.5),
+                            decoration: const BoxDecoration(
+                              color: Colors.blue,
+                              borderRadius: BorderRadius.only(
+                                bottomRight: Radius.circular(20.0),
+                              ),
+                            ),
+                            child: Center(
+                              child: Text(
+                                dateTime,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      : const SizedBox(
+                          width: 0,
+                        ),
                 ],
               )
             ],

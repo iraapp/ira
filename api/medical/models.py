@@ -38,10 +38,16 @@ class Staff(models.Model):
 
 
 class Appointment(models.Model):
-    STATUS = (
-        (APPOINTMENT_STATUS["REJECTED"], 'Rejected'),
-        (APPOINTMENT_STATUS["IN_PROGRESS"], 'In process'),
-        (APPOINTMENT_STATUS["APPROVED"], 'Approved'),
+
+    IN_PROGRESS = "IN PROGRESS"
+    REJECTED = "REJECTED"
+    ACCEPTED = "ACCEPTED"
+
+    APPOINTMENT_STATUS = (
+        (IN_PROGRESS, 'In progress'),
+        (REJECTED, 'Rejected'),
+        (ACCEPTED, 'Accepted')
+
     )
 
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
@@ -49,8 +55,9 @@ class Appointment(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date = models.DateField(null=True)
     time = models.TimeField(null=True)
-    status = models.PositiveSmallIntegerField(choices=STATUS, default=1)
-    reason = models.CharField(max_length=500, null=True)
+    status = models.CharField(choices=APPOINTMENT_STATUS, default="IN PROGRESS", max_length=30)
+    reason = models.CharField(max_length=50, default="", null=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -63,7 +70,8 @@ class MedicalHistory(models.Model):
     time = models.TimeField(null=True)
     date = models.DateField(null=True)
     inhouse = models.BooleanField(default=False)
-    prescription = models.CharField(max_length=500, null=True)
+    diagnosis = models.CharField(max_length=50, null=True)
+    treatment = models.CharField(max_length=50, null=True)
     details = models.CharField(max_length=500, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
