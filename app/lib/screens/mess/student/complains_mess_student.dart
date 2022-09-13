@@ -17,8 +17,8 @@ class ComplaintsMess extends StatefulWidget {
 class _ComplaintsMessState extends State<ComplaintsMess> {
   final List<String> _messFill = ["Fill as Anonymous", "Use your credentials"];
   String _messFillValue = "Fill as Anonymous";
-  final List<String> _mess = ["1 B Mess", "120 Mess", "Girls Mess"];
-  String _messValue = "1 B Mess";
+  final List<String> _mess = ["1B Mess", "120 Mess", "Girls Mess"];
+  String _messValue = "1B Mess";
   final List<String> _meals = [
     "Breakfast",
     "Lunch",

@@ -157,6 +157,7 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                                     year.toString();
 
                                 final bool status = data.status;
+                                final String file = data.file;
 
                                 return GestureDetector(
                                   onTap: () async {
@@ -168,6 +169,7 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                                       content: data.body,
                                       defaultActionText: "Close",
                                       status: status,
+                                      filePath: file,
                                     );
                                   },
                                   child: Padding(
@@ -358,6 +360,7 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
     required String content,
     required String defaultActionText,
     required bool status,
+    required String filePath,
   }) {
     return showDialog(
       context: context,
@@ -385,6 +388,8 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
               ],
             ),
             const SizedBox(height: 10.0),
+            Image.network(widget.baseUrl + filePath, fit: BoxFit.cover),
+            const SizedBox(height: 10.0),
             Container(
                 color: const Color(0xfff5f5f5),
                 child: Padding(
@@ -392,22 +397,14 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                   child: Text(content, style: const TextStyle(fontSize: 14.0)),
                 )),
             const SizedBox(height: 10.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              // ignore: prefer_const_literals_to_create_immutables
-              children: [
-                const Text("Details", style: TextStyle(fontSize: 14.0)),
-              ],
-            ),
-            const SizedBox(height: 20.0),
             SizedBox(
               height: 40.0,
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (!status) {
+                    await _takeActionOnComplaint(id);
                     setState(() {
                       // update the status of the complaint
-                      _takeActionOnComplaint(id);
                       Navigator.pop(context);
                     });
                   } else {
