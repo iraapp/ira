@@ -148,6 +148,7 @@ class _MedicalAppointmentsScreenState extends State<MedicalAppointmentsScreen> {
                                   " " +
                                   snapshot.data![index].date
                               : "",
+                          reason: snapshot.data![index].reason,
                         );
                       },
                     );
