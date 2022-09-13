@@ -15,7 +15,7 @@ class IsMessManager(BasePermission):
     Allows access only to only mess managers.
     """
 
-    def has_permission(self, request):
+    def has_permission(self, request, _):
       return bool(request.user and
       request.user.role == STAFF_ROLE_IDS['mess_manager'])
 

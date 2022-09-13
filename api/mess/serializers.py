@@ -21,7 +21,6 @@ class WeekDaySerializer(serializers.Serializer):
 class MessSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     name = serializers.CharField(max_length=15)
-    week_days = WeekDaySerializer(many=True)
 
 
 class MessFeedbackSerializer(serializers.Serializer):
