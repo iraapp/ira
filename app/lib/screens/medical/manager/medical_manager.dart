@@ -102,8 +102,8 @@ class _MedicalManagerScreenState extends State<MedicalManagerScreen> {
                           child: Column(
                             children: [
                               SizedBox(
-                                  height: 60.0,
-                                  width: 60.0,
+                                  height: 40.0,
+                                  width: 40.0,
                                   child: Image.asset(
                                       "assets/images/mess_icon.png")),
                               const SizedBox(height: 4.0),
