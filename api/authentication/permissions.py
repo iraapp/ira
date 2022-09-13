@@ -25,6 +25,6 @@ class IsMedicalManager(BasePermission):
     Allows access only to only medical managers.
     """
 
-    def has_permission(self, request):
+    def has_permission(self, request, _):
       return bool(request.user and
       request.user.role == STAFF_ROLE_IDS['medical_manager'])
