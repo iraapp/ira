@@ -72,7 +72,6 @@ class StaffAuthenticationBackend(BaseBackend):
             raise exceptions.AuthenticationFailed('Invalid ID Token')
         try:
             staff_user = decoded_token.user
-            print(staff_user)
 
         except Exception:
             raise exceptions.AuthenticationFailed('No such user exists')
