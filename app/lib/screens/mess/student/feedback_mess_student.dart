@@ -16,8 +16,8 @@ class FeedbackMess extends StatefulWidget {
 class _FeedbackMessState extends State<FeedbackMess> {
   final List<String> _messFill = ["Fill as Anonymous", "Use your credentials"];
   String _messFillValue = "Fill as Anonymous";
-  final List<String> _messTypes = ["1 B Mess", "120 Mess", "Girls Mess"];
-  String _messValue = "1 B Mess";
+  final List<String> _messTypes = ["1B Mess", "120 Mess", "Girls Mess"];
+  String _messValue = "1B Mess";
   final List<String> _messMeals = [
     "Breakfast",
     "Lunch",
