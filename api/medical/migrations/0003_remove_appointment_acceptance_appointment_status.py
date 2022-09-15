@@ -1,6 +1,4 @@
-
 from django.db import migrations, models
-
 
 class Migration(migrations.Migration):
 
@@ -17,6 +15,7 @@ class Migration(migrations.Migration):
             model_name='appointment',
             name='status',
 
-            field=models.CharField(choices=[('IN PROGRESS', 'In progress'), ('REJECTED', 'Rejected'), ('ACCEPTED', 'Accepted')], default=1, max_length=30),
+            field=models.CharField(choices=[('IN PROGRESS', 'In progress'), (
+                'REJECTED', 'Rejected'), ('ACCEPTED', 'Accepted')], default=1, max_length=30),
         ),
     ]

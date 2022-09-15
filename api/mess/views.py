@@ -1,7 +1,7 @@
 from mess.serializers import *
 from mess.models import *
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from authentication.permissions import IsMessManager
 
@@ -85,7 +85,7 @@ class FeedbackActionView(APIView):
 
 
 class ComplaintView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get(self, request, *args, **kwargs):
         data = MessComplaint.objects.all()
@@ -107,7 +107,6 @@ class ComplaintView(APIView):
             file=file
         )
         return Response(status=200, data={
-
             "msg": "Complaint submitted successfully."
         })
 
