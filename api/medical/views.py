@@ -1,3 +1,4 @@
+import datetime
 import json
 from authentication.permissions import IsMedicalManager, IsMessManager
 from medical.serializers import *
@@ -64,14 +65,78 @@ class AddStaffView(APIView):
         return Response(serializer.data)
 
 
-class DoctorInstanceView(APIView):
+class UpdateDoctorView(APIView):
+    permission_classes = [IsMedicalManager]
+
+    def post(self, request):
+        body = json.loads(request.body.decode('utf8'))
+        id = body.get('id')
+        name = body.get('name')
+        phone = body.get('phone')
+        specialization = body.get('specialization')
+        start_time = body.get('start_time')
+        end_time = body.get('end_time')
+        date = body.get('date')
+        mail = body.get('email');
+        details =body.get('details');
+
+        print(id)
+
+        doctor = Doctor.objects.filter(id = id).first()
+
+        doctor.name = name;
+        doctor.phone = phone;
+        doctor.specialization = specialization;
+        doctor.start_time = start_time;
+        doctor.end_time = end_time;
+        doctor.date = date;
+        doctor.mail = mail;
+        doctor.details = details;
+
+        doctor.save()
+
+        return Response(status=200, data = {
+            'msg': 'Doctor updated successfully'
+        })
+
+
+class ManagerDoctorView(APIView):
     permission_classes = (IsMedicalManager,)
 
-    def get(self, request, *args, **kwargs):
-        pk = kwargs.get("pk")
-        data = Doctor.objects.filter(id=pk).first()
-        serialized_json = DoctorSerializer(data)
-        return Response(data=serialized_json.data)
+    def get(self, request):
+        doctors = Doctor.objects.all()
+        serializer = DoctorSerializer(doctors, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        body = json.loads(request.body.decode('utf8'))
+        name = body.get('name')
+        phone = body.get('phone')
+        specialization = body.get('specialization')
+        joined_at = datetime.date.today();
+        start_time = body.get('start_time')
+        end_time = body.get('end_time')
+        date = body.get('date')
+        mail = body.get('email');
+        details =body.get('details');
+
+        doctor = Doctor.objects.create(
+            name = name,
+            phone = phone,
+            specialization = specialization,
+            joined_at = joined_at,
+            start_time = datetime.time.fromisoformat(start_time),
+            end_time = datetime.time.fromisoformat(end_time),
+            date = datetime.date.fromisoformat(date),
+            mail = mail,
+            details = details,
+        )
+
+        doctor.save()
+
+        return Response(status=200, data = {
+            'msg': 'Doctor created successfully'
+        })
 
     def put(self, request, *args, **kwargs):
         pk = kwargs.get("pk")

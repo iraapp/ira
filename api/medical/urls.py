@@ -80,8 +80,6 @@ Note : All api url should start with medical/
 
 urlpatterns = [
     path('doctor/', views.AddDoctorView.as_view(), name="dooctor"),
-    path('doctor/<int:pk>/', views.DoctorInstanceView.as_view(),
-         name="doctor_instance"),
     path('staff/', views.AddStaffView.as_view(), name="staff"),
     path('staff/<int:pk>/', views.StaffInstanceView.as_view(), name="staff_instance"),
     path('student/doctor/', views.StudentDoctorView.as_view(), name="student_doctor"),
@@ -97,4 +95,6 @@ urlpatterns = [
          name="medical_history"),
      path('manager/staff', views.ManagerStaffView.as_view()),
      path('manager/staff/delete', views.ManagerStaffDelete.as_view()),
+     path('manager/doctor/', views.ManagerDoctorView.as_view(), name="student_doctor"),
+     path('manager/doctor/update', views.UpdateDoctorView.as_view())
 ]
