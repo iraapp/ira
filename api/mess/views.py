@@ -1,7 +1,7 @@
 from mess.serializers import *
 from mess.models import *
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from authentication.permissions import IsMessManager
 
@@ -107,7 +107,6 @@ class ComplaintView(APIView):
             file=file
         )
         return Response(status=200, data={
-
             "msg": "Complaint submitted successfully."
         })
 
@@ -263,6 +262,7 @@ class MessTenderInstanceView(APIView):
         serialized_json = MessTenderSer(data)
         return Response(data=serialized_json.data)
 
+
 class MenuTimingView(APIView):
 
     permission_classes = [IsAuthenticated]
@@ -272,15 +272,16 @@ class MenuTimingView(APIView):
         end_time = request.POST.get('end_time')
         slot_id = request.POST.get('slot_id')
 
-        slot = MenuSlot.objects.filter(id = slot_id).first()
+        slot = MenuSlot.objects.filter(id=slot_id).first()
 
         slot.start_time = start_time
         slot.end_time = end_time
         slot.save()
 
-        return Response(status = 200, data={
+        return Response(status=200, data={
             'msg': 'Successfully updated menu timings'
         })
+
 
 class MenuItemUpdateView(APIView):
 
@@ -291,22 +292,22 @@ class MenuItemUpdateView(APIView):
         menu_item_id = request.POST.get('menu_item_id')
         action = request.POST.get('action')
 
-        menu = MessMenu.objects.filter(id = menu_id).first()
-        menu_item = MenuItem.objects.filter(id = menu_item_id).first()
+        menu = MessMenu.objects.filter(id=menu_id).first()
+        menu_item = MenuItem.objects.filter(id=menu_item_id).first()
 
         if action == 'remove':
             menu.items.remove(menu_item)
         elif action == 'add':
             menu.items.add(menu_item)
         else:
-            return Response(status = 400, data={
+            return Response(status=400, data={
                 'msg': 'action field is malformed'
             })
 
-
-        return Response(status = 200, data={
+        return Response(status=200, data={
             'msg': 'Successfully updated mess menu item'
         })
+
 
 class MessMenuItemAdd(APIView):
 
@@ -316,12 +317,12 @@ class MessMenuItemAdd(APIView):
         menu_item_name = request.POST.get('menu_item_name')
         menu_id = request.POST.get('menu_id')
 
-        menu_item = MenuItem(name = menu_item_name)
+        menu_item = MenuItem(name=menu_item_name)
         menu_item.save()
 
-        menu = MessMenu.objects.filter(id = menu_id).first()
-        menu.items.add(menu_item);
+        menu = MessMenu.objects.filter(id=menu_id).first()
+        menu.items.add(menu_item)
 
-        return Response(status = 200, data={
+        return Response(status=200, data={
             'msg': 'Menu item added successfully'
         })
