@@ -80,8 +80,6 @@ class UpdateDoctorView(APIView):
         mail = body.get('email');
         details =body.get('details');
 
-        print(id)
-
         doctor = Doctor.objects.filter(id = id).first()
 
         doctor.name = name;
