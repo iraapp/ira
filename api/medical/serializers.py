@@ -17,6 +17,7 @@ class DoctorSerializer(serializers.Serializer):
 
 
 class StaffSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
     name = serializers.CharField(max_length=50)
     phone = serializers.CharField(max_length=50)
     designation = serializers.CharField(max_length=50)

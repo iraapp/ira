@@ -1,5 +1,5 @@
 import json
-from authentication.permissions import IsMedicalManager
+from authentication.permissions import IsMedicalManager, IsMessManager
 from medical.serializers import *
 from medical.models import *
 from rest_framework.views import APIView
@@ -151,6 +151,45 @@ class StudentStaffView(APIView):
         staffs = Staff.objects.all()
         serializer = StaffSerializer(staffs, many=True)
         return Response(serializer.data)
+
+
+class ManagerStaffView(APIView):
+    permission_classes = (IsMedicalManager,)
+
+    def get(self, request):
+        staffs = Staff.objects.all()
+        serializer = StaffSerializer(staffs, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        request.body = json.loads(request.body.decode('utf8'))
+        name = request.body.get('name')
+        profession = request.body.get('profession')
+        contact = request.body.get('contact')
+
+        staff = Staff.objects.create(
+            name = name,
+            designation = profession,
+            phone = contact
+        );
+
+        staff.save();
+
+        return Response(status = 200, data={ 'msg': 'Staff added successfully' })
+
+class ManagerStaffDelete(APIView):
+    permission_classes = [IsMedicalManager]
+
+    def post(self, request):
+        body = json.loads(request.body.decode('utf8'))
+
+        id = body.get('id')
+
+        staff = Staff.objects.filter(id = id).first()
+
+        staff.delete()
+
+        return Response(status=200, data={'msg': 'Staff record deleted successfully'})
 
 
 class StudentDoctorInstanceView(APIView):

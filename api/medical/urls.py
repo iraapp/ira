@@ -51,9 +51,9 @@ Note : All api url should start with medical/
      9. appointment/ - for student to book appointment
           -post payload required:
                1. doctor - doctor id
-          
+
           -get: returns all the appointment of student
-     
+
      10. doctor/appointment/ - for doctor to view or update his appointments
           -get: returns all the appointment of doctor
           -post: payload required:
@@ -95,6 +95,6 @@ urlpatterns = [
          name="doctor_appointment"),
     path('medicalhistory/', views.MedicalHistoryView.as_view(),
          name="medical_history"),
-
-
+     path('manager/staff', views.ManagerStaffView.as_view()),
+     path('manager/staff/delete', views.ManagerStaffDelete.as_view()),
 ]
