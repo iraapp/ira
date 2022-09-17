@@ -28,7 +28,6 @@ class _TendersMessManagerState extends State<TendersMessManager> {
 
   Future<List<MessTenderModel>> _getMessTenderActiveItems() async {
     final String? token = await widget.secureStorage.read(key: 'staffToken');
-
     final requestUrl = Uri.parse(widget.baseUrl + '/mess/tender');
     final response = await http.get(
       requestUrl,
@@ -49,7 +48,7 @@ class _TendersMessManagerState extends State<TendersMessManager> {
       }
       return _activeItems;
     } else {
-      throw Exception('Failed to load post');
+      throw Exception('API call failed');
     }
   }
 
@@ -76,7 +75,7 @@ class _TendersMessManagerState extends State<TendersMessManager> {
       }
       return _archivedItems;
     } else {
-      throw Exception('Failed to load post');
+      throw Exception('API call failed');
     }
   }
 
@@ -109,7 +108,7 @@ class _TendersMessManagerState extends State<TendersMessManager> {
       if (response.statusCode == 200) {
         return true;
       } else {
-        throw Exception('Failed to load post');
+        throw Exception('API call failed');
       }
     } catch (e) {
       return false;
@@ -209,22 +208,23 @@ class _TendersMessManagerState extends State<TendersMessManager> {
                     ],
                   ),
                 ),
-                Center(
-                  child: ElevatedButton(
-                      onPressed: () async {
-                        await showAddTenderDialog();
-                      },
-                      child: const Text("   + Add   "),
-                      style: ButtonStyle(
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0)),
-                        ),
-                        backgroundColor:
-                            MaterialStateProperty.all<Color?>(Colors.blue),
-                      )),
-                ),
+                if (_isActive)
+                  Center(
+                    child: ElevatedButton(
+                        onPressed: () async {
+                          await showAddTenderDialog();
+                        },
+                        child: const Text("   + Add   "),
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18.0)),
+                          ),
+                          backgroundColor:
+                              MaterialStateProperty.all<Color?>(Colors.blue),
+                        )),
+                  ),
                 const SizedBox(height: 10),
                 if (!_isActive)
                   const Text("Download old tenders here",
@@ -240,6 +240,11 @@ class _TendersMessManagerState extends State<TendersMessManager> {
                       builder: (_, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
                           if (snapshot.hasData) {
+                            if (snapshot.data!.isEmpty) {
+                              return const Center(
+                                child: Text("No data available"),
+                              );
+                            }
                             return ListView.builder(
                               itemCount: snapshot.data?.length,
                               itemBuilder: (BuildContext context, int index) {
@@ -320,19 +325,20 @@ class _TendersMessManagerState extends State<TendersMessManager> {
                                                     ),
                                                     Row(
                                                       children: [
-                                                        InkWell(
-                                                          onTap: () async {
-                                                            await _makeTenderArchive(
-                                                                int.parse(
-                                                                    data.id));
-                                                            setState(() {});
-                                                          },
-                                                          child: SizedBox(
-                                                            height: 38.0,
-                                                            child: Image.asset(
-                                                                "assets/icons/icon_delete.png"),
+                                                        if (_isActive)
+                                                          InkWell(
+                                                            onTap: () async {
+                                                              await _makeTenderArchive(
+                                                                  int.parse(
+                                                                      data.id));
+                                                              setState(() {});
+                                                            },
+                                                            child: SizedBox(
+                                                              height: 38.0,
+                                                              child: Image.asset(
+                                                                  "assets/icons/icon_delete.png"),
+                                                            ),
                                                           ),
-                                                        ),
                                                         const SizedBox(
                                                             width: 10),
                                                         InkWell(
