@@ -1,6 +1,5 @@
 from django.contrib import admin
-
-from mess.models import MenuItem, MenuSlot, Mess, MessFeedback, MessMenu, MessMom, MessTender, WeekDay
+from mess.models import MenuItem, MessComplaint, MenuSlot, Mess, MessFeedback, MessMenu, MessMom, MessTender, WeekDay
 
 # Register your models here.
 
@@ -12,3 +11,4 @@ admin.site.register(MessFeedback)
 admin.site.register(MessMom)
 admin.site.register(MessTender)
 admin.site.register(MessMenu)
+admin.site.register(MessComplaint)

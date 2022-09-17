@@ -1,7 +1,7 @@
 from mess.serializers import *
 from mess.models import *
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from authentication.permissions import IsMessManager
 
@@ -107,7 +107,6 @@ class ComplaintView(APIView):
             file=file
         )
         return Response(status=200, data={
-
             "msg": "Complaint submitted successfully."
         })
 
@@ -309,6 +308,7 @@ class MenuItemUpdateView(APIView):
             'msg': 'Successfully updated mess menu item'
         })
 
+
 class MessMenuItemAdd(APIView):
 
     permission_classes = [IsAuthenticated]
@@ -317,12 +317,12 @@ class MessMenuItemAdd(APIView):
         menu_item_name = request.POST.get('menu_item_name')
         menu_id = request.POST.get('menu_id')
 
-        menu_item = MenuItem(name = menu_item_name)
+        menu_item = MenuItem(name=menu_item_name)
         menu_item.save()
 
-        menu = MessMenu.objects.filter(id = menu_id).first()
-        menu.items.add(menu_item);
+        menu = MessMenu.objects.filter(id=menu_id).first()
+        menu.items.add(menu_item)
 
-        return Response(status = 200, data={
+        return Response(status=200, data={
             'msg': 'Menu item added successfully'
         })

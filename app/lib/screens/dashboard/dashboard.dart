@@ -10,6 +10,8 @@ import 'package:ira/services/auth.service.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:provider/provider.dart';
 
+import 'medical_manager_menu.dart';
+
 // ignore: must_be_immutable
 class Dashboard extends StatefulWidget {
   String role;
@@ -19,6 +21,7 @@ class Dashboard extends StatefulWidget {
     'student': StudentHeader(),
     'guard': StaffHeader(),
     'mess_manager': StaffHeader(),
+    'medical_manager': StaffHeader(),
   };
 
   roleBasedMenu(context) {
@@ -29,6 +32,8 @@ class Dashboard extends StatefulWidget {
         return guardMenu(context);
       case 'mess_manager':
         return messManagerMenu(context);
+      case 'medical_manager':
+        return medicalManagerMenu(context);
     }
     return const <Widget>[];
   }

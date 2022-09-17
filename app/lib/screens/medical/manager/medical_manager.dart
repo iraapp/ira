@@ -1,38 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:ira/screens/medical/appointments/appointments.dart';
-import 'package:ira/screens/medical/bmi_calculator/bmi_calculator.dart';
-import 'package:ira/screens/medical/doctor_details/doctor_details.dart';
-import 'package:ira/screens/medical/staff_contact/staff_contact.dart';
+import 'package:ira/screens/medical/manager/doctor_details/doctor_details_manager.dart';
+import 'package:ira/screens/medical/manager/staff_contact/staff_contact.dart';
 
-import 'history/medical_history.dart';
-
-class MedicalStudentScreen extends StatefulWidget {
-  const MedicalStudentScreen({Key? key}) : super(key: key);
+class MedicalManagerScreen extends StatefulWidget {
+  const MedicalManagerScreen({Key? key}) : super(key: key);
 
   @override
-  State<MedicalStudentScreen> createState() => _MedicalStudentScreenState();
+  State<MedicalManagerScreen> createState() => _MedicalManagerScreenState();
 }
 
-class _MedicalStudentScreenState extends State<MedicalStudentScreen> {
+class _MedicalManagerScreenState extends State<MedicalManagerScreen> {
   final secureStorage = const FlutterSecureStorage();
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
 
   final List<String> _medicalList = [
-    "Staff Contact",
+    "Maintenance Staff Contact",
     "Doctors",
-    "History",
-    "Appointments",
-    "BMI Calculator"
   ];
 
   final List<Widget> _medicalRoutes = [
-    const StaffContactScreen(),
-    const DoctorDetailsScreen(),
-    const MedicalHistoryScreen(),
-    const MedicalAppointmentsScreen(),
-    const BMICalculator(),
+    const StaffContactManagerScreen(),
+    const DoctorDetailsManager(),
   ];
 
   @override
@@ -57,7 +47,7 @@ class _MedicalStudentScreenState extends State<MedicalStudentScreen> {
                   children: const [
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 40.0),
-                      child: Text("Medical",
+                      child: Text("Medical Manager",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 26.0,
@@ -82,9 +72,7 @@ class _MedicalStudentScreenState extends State<MedicalStudentScreen> {
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 20.0,
-                  vertical: 40.0,
-                ),
+                    horizontal: 20.0, vertical: 40.0),
                 child: GridView.builder(
                   itemCount: _medicalList.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -103,6 +91,7 @@ class _MedicalStudentScreenState extends State<MedicalStudentScreen> {
                       },
                       child: Container(
                         width: 80.0,
+                        height: 80.0,
                         decoration: const BoxDecoration(
                             borderRadius: BorderRadius.only(
                               topRight: Radius.circular(10.0),
@@ -114,14 +103,13 @@ class _MedicalStudentScreenState extends State<MedicalStudentScreen> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SizedBox(
-                                  height: 50.0,
-                                  width: 50.0,
+                                  height: 40.0,
+                                  width: 40.0,
                                   child: Image.asset(
                                       "assets/images/mess_icon.png")),
-                              const SizedBox(height: 5.0),
+                              const SizedBox(height: 4.0),
                               Text(_medicalList[index]),
                             ],
                           ),

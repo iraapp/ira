@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'hostel',
     'team',
     'medical',
+    'timetable'
 ]
 
 AUTH_USER_MODEL = 'authentication.User'
