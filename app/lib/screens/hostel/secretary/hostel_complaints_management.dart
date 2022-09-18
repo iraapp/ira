@@ -37,7 +37,7 @@ class _ComplaintHostelSecretaryState extends State<ComplaintHostelSecretary> {
               (json) => HostelComplaintModel.fromJson(json))
           .toList();
     } else {
-      throw Exception('Failed to load post');
+      throw Exception('API call failed');
     }
   }
 

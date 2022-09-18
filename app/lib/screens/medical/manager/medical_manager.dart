@@ -1,64 +1,28 @@
-// ignore_for_file: prefer_const_constructors
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:ira/screens/mess/manager/menu_mess_manager.dart';
-import 'package:ira/screens/mess/manager/complaints_mess_manager.dart';
-import 'package:ira/screens/mess/factories/mess.dart';
-import 'package:ira/screens/mess/manager/feedback_mess_manager.dart';
-import 'package:http/http.dart' as http;
-import 'package:ira/screens/mess/manager/mom_mess_manager.dart';
-import 'package:ira/screens/mess/manager/tenders_mess_manager.dart';
+import 'package:ira/screens/medical/manager/doctor_details/doctor_details_manager.dart';
+import 'package:ira/screens/medical/manager/staff_contact/staff_contact.dart';
 
-class MessManagerScreen extends StatefulWidget {
-  const MessManagerScreen({Key? key}) : super(key: key);
+class MedicalManagerScreen extends StatefulWidget {
+  const MedicalManagerScreen({Key? key}) : super(key: key);
 
   @override
-  State<MessManagerScreen> createState() => _MessManagerScreenState();
+  State<MedicalManagerScreen> createState() => _MedicalManagerScreenState();
 }
 
-class _MessManagerScreenState extends State<MessManagerScreen> {
+class _MedicalManagerScreenState extends State<MedicalManagerScreen> {
   final secureStorage = const FlutterSecureStorage();
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
 
-  Future<Map<String, List<Mess>>> fetchMessData() async {
-    String? idToken = await secureStorage.read(key: 'idToken');
-    final response = await http.get(
-        Uri.parse(
-          baseUrl + '/mess/all_items',
-        ),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'idToken ' + idToken!
-        });
-
-    Map<String, List<Mess>> mmp = {};
-
-    if (response.statusCode == 200) {
-      List decodedData = jsonDecode(response.body) as List;
-      mmp = {
-        'data': decodedData.map<Mess>((json) => Mess.fromJson(json)).toList(),
-      };
-    }
-
-    return Future.value(mmp);
-  }
-
-  final List<String> _messList = [
-    "Feedback",
-    "Complaint",
-    "Menu",
-    "Tenders",
-    "Mess MOM",
+  final List<String> _medicalList = [
+    "Maintenance Staff Contact",
+    "Doctors",
   ];
 
-  final List<Widget> _messRoutes = [
-    FeedbackMessManager(),
-    ComplaintMessManager(),
-    const MenuMessManager(),
-    TendersMessManager(),
-    MOMMessManager(),
+  final List<Widget> _medicalRoutes = [
+    const StaffContactManagerScreen(),
+    const DoctorDetailsManager(),
   ];
 
   @override
@@ -80,11 +44,10 @@ class _MessManagerScreenState extends State<MessManagerScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Row(
-                  // ignore: prefer_const_literals_to_create_immutables
-                  children: [
+                  children: const [
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                      child: const Text("Mess Secretary",
+                      padding: EdgeInsets.symmetric(horizontal: 40.0),
+                      child: Text("Medical Manager",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 26.0,
@@ -111,7 +74,7 @@ class _MessManagerScreenState extends State<MessManagerScreen> {
                 padding: const EdgeInsets.symmetric(
                     horizontal: 20.0, vertical: 40.0),
                 child: GridView.builder(
-                  itemCount: _messList.length,
+                  itemCount: _medicalList.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
                     crossAxisSpacing: 20.0,
@@ -124,7 +87,7 @@ class _MessManagerScreenState extends State<MessManagerScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => _messRoutes[index]));
+                                builder: (context) => _medicalRoutes[index]));
                       },
                       child: Container(
                         width: 80.0,
@@ -142,12 +105,12 @@ class _MessManagerScreenState extends State<MessManagerScreen> {
                           child: Column(
                             children: [
                               SizedBox(
-                                  height: 60.0,
-                                  width: 60.0,
+                                  height: 40.0,
+                                  width: 40.0,
                                   child: Image.asset(
                                       "assets/images/mess_icon.png")),
                               const SizedBox(height: 4.0),
-                              Text(_messList[index]),
+                              Text(_medicalList[index]),
                             ],
                           ),
                         ),

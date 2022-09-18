@@ -45,7 +45,7 @@ class _TenderMessState extends State<TenderMess> {
       }
       return _activeItems;
     } else {
-      throw Exception('Failed to load post');
+      throw Exception('API call failed');
     }
   }
 
@@ -72,7 +72,7 @@ class _TenderMessState extends State<TenderMess> {
       }
       return _archivedItems;
     } else {
-      throw Exception('Failed to load post');
+      throw Exception('API call failed');
     }
   }
 
@@ -166,6 +166,11 @@ class _TenderMessState extends State<TenderMess> {
                       builder: (_, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
                           if (snapshot.hasData) {
+                            if (snapshot.data!.isEmpty) {
+                              return const Center(
+                                child: Text("No data available"),
+                              );
+                            }
                             return ListView.builder(
                               itemCount: snapshot.data?.length,
                               itemBuilder: (BuildContext context, int index) {

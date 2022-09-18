@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:ira/screens/mess/manager/feedback_model.dart';
+import 'package:ira/screens/mess/manager/complaint_model.dart';
 import 'package:http/http.dart' as http;
 
 class ComplaintMessManager extends StatefulWidget {
@@ -18,9 +18,9 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
   final List<String> _filters = ["Filter", "Date", "Mess", "Action"];
   String _filterValue = "Filter";
 
-  Future<List<FeedbackModel>> _getMessFeedbackItems() async {
+  Future<List<ComplaintModel>> _getMessComplaintItems() async {
     final String? token = await widget.secureStorage.read(key: 'staffToken');
-    final requestUrl = Uri.parse(widget.baseUrl + '/mess/feedback');
+    final requestUrl = Uri.parse(widget.baseUrl + '/mess/complaint');
     final response = await http.get(
       requestUrl,
       headers: <String, String>{
@@ -32,17 +32,18 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       return data
-          .map<FeedbackModel>((json) => FeedbackModel.fromJson(json))
+          .map<ComplaintModel>((json) => ComplaintModel.fromJson(json))
           .toList();
     } else {
-      throw Exception('Failed to load post');
+      throw Exception('API call failed');
     }
   }
 
   Future<void> _takeActionOnComplaint(int id) async {
     final String? token = await widget.secureStorage.read(key: 'staffToken');
 
-    final requestUrl = Uri.parse(widget.baseUrl + '/mess/feedback/action/$id/');
+    final requestUrl =
+        Uri.parse(widget.baseUrl + '/mess/complaint/action/$id/');
     final response = await http.put(
       requestUrl,
       headers: <String, String>{
@@ -131,11 +132,16 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                 ),
                 const SizedBox(height: 10.0),
                 Expanded(
-                  child: FutureBuilder<List<FeedbackModel>>(
-                      future: _getMessFeedbackItems(),
+                  child: FutureBuilder<List<ComplaintModel>>(
+                      future: _getMessComplaintItems(),
                       builder: (_, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
                           if (snapshot.hasData) {
+                            if (snapshot.data!.isEmpty) {
+                              return const Center(
+                                child: Text("No data available"),
+                              );
+                            }
                             return ListView.builder(
                               itemCount: snapshot.data?.length,
                               itemBuilder: (BuildContext context, int index) {
@@ -151,6 +157,7 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                                     year.toString();
 
                                 final bool status = data.status;
+                                final String file = data.file;
 
                                 return GestureDetector(
                                   onTap: () async {
@@ -162,6 +169,7 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                                       content: data.body,
                                       defaultActionText: "Close",
                                       status: status,
+                                      filePath: file,
                                     );
                                   },
                                   child: Padding(
@@ -352,6 +360,7 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
     required String content,
     required String defaultActionText,
     required bool status,
+    required String filePath,
   }) {
     return showDialog(
       context: context,
@@ -379,6 +388,8 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
               ],
             ),
             const SizedBox(height: 10.0),
+            Image.network(widget.baseUrl + filePath, fit: BoxFit.cover),
+            const SizedBox(height: 10.0),
             Container(
                 color: const Color(0xfff5f5f5),
                 child: Padding(
@@ -386,22 +397,14 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
                   child: Text(content, style: const TextStyle(fontSize: 14.0)),
                 )),
             const SizedBox(height: 10.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              // ignore: prefer_const_literals_to_create_immutables
-              children: [
-                const Text("Details", style: TextStyle(fontSize: 14.0)),
-              ],
-            ),
-            const SizedBox(height: 20.0),
             SizedBox(
               height: 40.0,
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (!status) {
+                    await _takeActionOnComplaint(id);
                     setState(() {
                       // update the status of the complaint
-                      _takeActionOnComplaint(id);
                       Navigator.pop(context);
                     });
                   } else {

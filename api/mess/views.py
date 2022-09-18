@@ -241,7 +241,7 @@ class MessTenderView(APIView):
 
 # To update tender State
 class MessTenderArchivedView(APIView):
-    permission_classes = [IsMessManager, ]
+    permission_classes = [IsAuthenticated, ]
 
     def put(self, request, *args, **kwargs):
         pk = kwargs.get("pk")

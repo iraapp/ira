@@ -1,8 +1,9 @@
-import 'dart:convert';
+import 'package:http_parser/http_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 
 class ComplaintsMess extends StatefulWidget {
   ComplaintsMess({Key? key}) : super(key: key);
@@ -16,8 +17,8 @@ class ComplaintsMess extends StatefulWidget {
 class _ComplaintsMessState extends State<ComplaintsMess> {
   final List<String> _messFill = ["Fill as Anonymous", "Use your credentials"];
   String _messFillValue = "Fill as Anonymous";
-  final List<String> _mess = ["1 B Mess", "120 Mess", "Girls Mess"];
-  String _messValue = "1 B Mess";
+  final List<String> _mess = ["1B Mess", "120 Mess", "Girls Mess"];
+  String _messValue = "1B Mess";
   final List<String> _meals = [
     "Breakfast",
     "Lunch",
@@ -27,33 +28,39 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
   ];
   String _mealsValue = "Breakfast";
   String? _description;
+  String _imagePath = "";
 
-  Future<dynamic> _submitFeedback(
-      String messType, String description, String messMeal) async {
-    String? idToken = await widget.secureStorage.read(key: 'idToken');
-    Map<String, dynamic> formMap = {
-      'mess_type': messType,
-      'feedback': description,
-      'mess_meal': messMeal,
-    };
+  Future<bool> _submitMessComplaint(String description, String messType,
+      String messMeal, String filePath) async {
+    try {
+      String? idToken = await widget.secureStorage.read(key: 'idToken');
+      final requestUrl = Uri.parse(widget.baseUrl + '/mess/complaint');
 
-    final requestUrl = Uri.parse(widget.baseUrl + '/mess/feedback');
-    final response = await http.post(
-      requestUrl,
-      headers: <String, String>{
-        "Content-Type": "application/x-www-form-urlencoded",
-        'Authorization': 'idToken ' + idToken!
-      },
-      encoding: Encoding.getByName('utf-8'),
-      body: formMap,
-    );
+      var request = http.MultipartRequest('POST', requestUrl);
+      final headers = {'Authorization': 'idToken ' + idToken!};
+      request.headers.addAll(headers);
+      request.fields['complaint'] = description;
+      request.fields['mess_type'] = messType;
+      request.fields['mess_meal'] = messMeal;
+      request.files.add(await http.MultipartFile.fromPath(
+        'file',
+        filePath,
+        contentType: MediaType('image', 'jpeg'),
+      ));
+      final response = await request.send();
 
-    if (response.statusCode == 200) {
-      return Future.value(true);
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        throw Exception('API call failed');
+      }
+    } catch (e) {
+      return false;
     }
-
-    return Future.value(false);
   }
+
+  final ImagePicker _picker = ImagePicker();
+  bool _imageUploaded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -273,6 +280,44 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
                         const SizedBox(
                           height: 10.0,
                         ),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ElevatedButton(
+                                  onPressed: () async {
+                                    final XFile? image = await _picker
+                                        .pickImage(source: ImageSource.gallery);
+                                    if (image != null) {
+                                      setState(() {
+                                        _imagePath = image.path;
+                                        _imageUploaded = true;
+                                      });
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                              content: Text(
+                                                  'Please select an image file')));
+                                    }
+                                  },
+                                  child: const Text("Upload Image"),
+                                  style: ButtonStyle(
+                                    shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(0.0)),
+                                    ),
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color?>(
+                                            Colors.blue),
+                                  )),
+                              const SizedBox(width: 10),
+                              !_imageUploaded
+                                  ? Checkbox(
+                                      value: false, onChanged: (value) {})
+                                  : Checkbox(
+                                      value: true, onChanged: (value) {}),
+                            ]),
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 40.0, vertical: 20.0),
@@ -283,18 +328,21 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
                                 width: 140.0,
                                 child: ElevatedButton(
                                     onPressed: () async {
-                                      final res = await _submitFeedback(
-                                        _messValue,
-                                        _description.toString(),
-                                        _mealsValue,
-                                      );
-                                      if (res) {
-                                        await showFeedbackDialog(context,
-                                            title: "Thank you",
-                                            content:
-                                                "We wil try to improve our service",
-                                            defaultActionText: "Close");
-                                        Navigator.of(context).pop();
+                                      if (_imagePath.isNotEmpty) {
+                                        final res = await _submitMessComplaint(
+                                          _description.toString(),
+                                          _messValue,
+                                          _mealsValue,
+                                          _imagePath,
+                                        );
+                                        if (res) {
+                                          await showFeedbackDialog(context,
+                                              title: "Thank you",
+                                              content:
+                                                  "We wil try to improve our service",
+                                              defaultActionText: "Close");
+                                          Navigator.of(context).pop();
+                                        }
                                       }
                                     },
                                     style: ButtonStyle(

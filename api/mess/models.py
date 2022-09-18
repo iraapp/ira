@@ -1,6 +1,7 @@
 from institute_app import settings
 from django.db import models
 
+
 class MenuItem(models.Model):
     name = models.CharField(max_length=30, default='')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -8,6 +9,7 @@ class MenuItem(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class MenuSlot(models.Model):
     name = models.CharField(max_length=15, default='')
@@ -19,6 +21,7 @@ class MenuSlot(models.Model):
     def __str__(self):
         return self.name
 
+
 class WeekDay(models.Model):
     name = models.CharField(max_length=15, default='')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -26,6 +29,7 @@ class WeekDay(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Mess(models.Model):
     name = models.CharField(max_length=15, default='')
@@ -35,6 +39,7 @@ class Mess(models.Model):
     def __str__(self):
         return self.name
 
+
 class MessMenu(models.Model):
     slot = models.ForeignKey(MenuSlot, on_delete=models.CASCADE)
     items = models.ManyToManyField(MenuItem)
@@ -42,6 +47,8 @@ class MessMenu(models.Model):
 
 # data base model for feedback
 # status is for whether the feedback is viewed by mess manager or not.
+
+
 class MessFeedback(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
@@ -50,6 +57,7 @@ class MessFeedback(models.Model):
     mess_type = models.ForeignKey(Mess, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(auto_now=True)
     status = models.BooleanField(default=False)
+
 
 class MessComplaint(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
@@ -62,6 +70,8 @@ class MessComplaint(models.Model):
     status = models.BooleanField(default=False)
 
 # data base model for mess mom
+
+
 class MessMom(models.Model):
     date = models.DateField(default=None, null=True)
     file = models.FileField(upload_to='mom/')
@@ -70,6 +80,8 @@ class MessMom(models.Model):
     created_at = models.DateTimeField(auto_now=True)
 
 # data base model for mess tender
+
+
 class MessTender(models.Model):
     archieved = models.BooleanField(default=False)
     date = models.DateField(default=None, null=True)
