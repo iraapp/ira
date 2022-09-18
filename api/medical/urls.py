@@ -72,7 +72,7 @@ Note : All api url should start with medical/
                3. date - date of medical history
                4. time - time of medical history
                5. prescription - prescription of medical history
-               6. patient - patient id
+               6. patient - patient email
                7. inhouse - true or false
           -get: returns all the medical history of student
 
@@ -93,8 +93,11 @@ urlpatterns = [
          name="doctor_appointment"),
     path('medicalhistory/', views.MedicalHistoryView.as_view(),
          name="medical_history"),
-     path('manager/staff', views.ManagerStaffView.as_view()),
-     path('manager/staff/delete', views.ManagerStaffDelete.as_view()),
-     path('manager/doctor/', views.ManagerDoctorView.as_view(), name="student_doctor"),
-     path('manager/doctor/update', views.UpdateDoctorView.as_view())
+    path('manager/staff', views.ManagerStaffView.as_view()),
+    path('manager/staff/delete', views.ManagerStaffDelete.as_view()),
+    path('manager/doctor/', views.ManagerDoctorView.as_view(), name="student_doctor"),
+    path('manager/doctor/update', views.UpdateDoctorView.as_view()),
+    path("search/doctor", views.SearchDoctors.as_view(), name="search_doctor"),
+    path("search/patient", views.SearchPatient.as_view(), name="search_patient")
+
 ]
