@@ -323,7 +323,7 @@ class AppointmentsPending(APIView):
 
         serializer = AppointmentSerializer(appointments, many=True)
         return Response(serializer.data)
-status = "ACCEPTED",
+
 class DoctorAppointmentView(APIView):
     permission_classes = (IsMedicalManager,)
 
