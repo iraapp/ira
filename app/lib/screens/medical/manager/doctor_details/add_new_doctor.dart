@@ -273,17 +273,18 @@ class _AddNewDoctor extends State<AddNewDoctor> {
                                 children: [
                                   const Text("Date"),
                                   TextButton(
-                                      onPressed: () {
-                                        _selectDate(
-                                          context,
-                                          dateFieldController,
-                                        );
-                                      },
-                                      child: Text(
-                                        dateFieldController.text.isEmpty
-                                            ? 'Select date'
-                                            : dateFieldController.text,
-                                      )),
+                                    onPressed: () {
+                                      _selectDate(
+                                        context,
+                                        dateFieldController,
+                                      );
+                                    },
+                                    child: Text(
+                                      dateFieldController.text.isEmpty
+                                          ? 'Select date'
+                                          : dateFieldController.text,
+                                    ),
+                                  ),
                                 ],
                               ),
                               Row(

@@ -28,6 +28,8 @@ class AppointmentSerializer(serializers.Serializer):
     patient = UserSerializer()
     date = serializers.DateField(format='%d %b %Y', input_formats=['%d %b %Y'])
     time = serializers.TimeField(format='%I:%M %p', input_formats='%I:%M %p')
+    start_time = serializers.TimeField(format='%I:%M %p', input_formats='%I:%M %p')
+    end_time = serializers.TimeField(format='%I:%M %p', input_formats='%I:%M %p')
     status = serializers.CharField()
     reason = serializers.CharField(max_length=500)
 

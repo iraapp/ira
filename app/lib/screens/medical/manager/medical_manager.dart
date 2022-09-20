@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:ira/screens/medical/manager/appointments/appointments_management.dart';
 import 'package:ira/screens/medical/manager/doctor_details/doctor_details_manager.dart';
 import 'package:ira/screens/medical/manager/staff_contact/staff_contact.dart';
 
@@ -18,11 +19,13 @@ class _MedicalManagerScreenState extends State<MedicalManagerScreen> {
   final List<String> _medicalList = [
     "Maintenance Staff Contact",
     "Doctors",
+    "Appointments"
   ];
 
   final List<Widget> _medicalRoutes = [
     const StaffContactManagerScreen(),
     const DoctorDetailsManager(),
+    const AppointmentsManagement(),
   ];
 
   @override
