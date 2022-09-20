@@ -55,6 +55,8 @@ class Appointment(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date = models.DateField(null=True)
     time = models.TimeField(null=True)
+    start_time = models.TimeField(null = True)
+    end_time = models.TimeField(null = True)
     status = models.CharField(choices=APPOINTMENT_STATUS, default="IN PROGRESS", max_length=30)
     reason = models.CharField(max_length=50, default="", null=True)
 
