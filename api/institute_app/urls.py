@@ -31,6 +31,7 @@ urlpatterns = [
     path('team/', include('team.urls')),
     path('medical/', include('medical.urls')),
     path('timetable/', include('timetable.urls')),
+    path('feed/', include('feed.urls'))
 ]
 
 
