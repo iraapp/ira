@@ -306,6 +306,26 @@ class AppointmentView(APIView):
         return Response(AppointmentSerializer(instance).data)
 
 
+
+class AppointmentManagerView(APIView):
+    permission_classes = [IsMedicalManager]
+
+    def get(self, request):
+        appointments = Appointment.objects.filter(status = "IN PROGRESS").all()
+        serializer = AppointmentSerializer(appointments, many=True)
+        return Response(serializer.data)
+
+class AppointmentsPending(APIView):
+    permission_classes = [IsMedicalManager]
+
+    def get(self, request):
+        now = datetime.datetime.now()
+
+        appointments = Appointment.objects.filter(status = "ACCEPTED", date__gt=now.date()).all()
+
+        serializer = AppointmentSerializer(appointments, many=True)
+        return Response(serializer.data)
+
 class DoctorAppointmentView(APIView):
     permission_classes = (IsMedicalManager,)
 
@@ -388,3 +408,52 @@ class SearchDoctors(APIView):
             serializer = DoctorSerializer(doctors)
             return Response(serializer.data)
         return Response(data={"msg": "No doctors found"}, status=404)
+
+class AppointmentManagerConfirm(APIView):
+    permission_classes = [IsMedicalManager]
+
+    def post(self, request):
+
+        body = json.loads(request.body.decode('utf-8'))
+
+        id = body.get('id')
+        date = body.get('date')
+        start_time = body.get('start_time')
+        end_time = body.get('end_time')
+
+        appointment = Appointment.objects.filter(id = id).first()
+
+        appointment.date = date;
+        appointment.start_time = start_time;
+        appointment.end_time = end_time;
+
+        appointment.status = "ACCEPTED";
+
+        appointment.save()
+
+        return Response(status = 200, data = {
+            'msg': 'Appointment Confirmed'
+        })
+
+class AppointmentManagerReject(APIView):
+
+    permission_classes = [IsMedicalManager]
+
+    def post(self, request):
+
+        body = json.loads(request.body.decode('utf-8'))
+
+        id = body.get('id')
+        reason = body.get('reason')
+
+        appointment = Appointment.objects.filter(id = id).first()
+
+        appointment.reason = reason
+
+        appointment.status = "REJECTED";
+
+        appointment.save()
+
+        return Response(status = 200, data = {
+            'msg': 'Appointment Rejected successfully'
+        })

@@ -93,11 +93,15 @@ urlpatterns = [
          name="doctor_appointment"),
     path('medicalhistory/', views.MedicalHistoryView.as_view(),
          name="medical_history"),
-    path('manager/staff', views.ManagerStaffView.as_view()),
-    path('manager/staff/delete', views.ManagerStaffDelete.as_view()),
-    path('manager/doctor/', views.ManagerDoctorView.as_view(), name="student_doctor"),
-    path('manager/doctor/update', views.UpdateDoctorView.as_view()),
     path("search/doctor", views.SearchDoctors.as_view(), name="search_doctor"),
-    path("search/patient", views.SearchPatient.as_view(), name="search_patient")
+    path("search/patient", views.SearchPatient.as_view(), name="search_patient"),
+     path('manager/staff', views.ManagerStaffView.as_view()),
+     path('manager/staff/delete', views.ManagerStaffDelete.as_view()),
+     path('manager/doctor/', views.ManagerDoctorView.as_view(), name="student_doctor"),
+     path('manager/doctor/update', views.UpdateDoctorView.as_view()),
+     path('manager/appointments', views.AppointmentManagerView.as_view()),
+     path('manager/appointments/pending', views.AppointmentsPending.as_view(),),
+     path('manager/appointment/confirm', views.AppointmentManagerConfirm.as_view()),
+     path('manager/appointment/reject', views.AppointmentManagerReject.as_view()),
 
 ]
