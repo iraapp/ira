@@ -4,7 +4,7 @@ from authentication.permissions import IsMedicalManager, IsMessManager
 from medical.serializers import *
 from medical.models import *
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from authentication.models import User
 
@@ -369,7 +369,7 @@ class MedicalHistoryView(APIView):
         return Response(serinstance.data)
 
 class SearchPatient(APIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsMedicalManager,)
 
     def get(self, request, *args, **kwargs):
         query = request.data["email"]
@@ -379,7 +379,7 @@ class SearchPatient(APIView):
         return Response(data={"msg": "No patient found"}, status=404)
 
 class SearchDoctors(APIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsMedicalManager,)
 
     def get(self, request, *args, **kwargs):
         query = request.data["name"]
