@@ -5,6 +5,7 @@ import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flip_card/flip_card.dart';
+import 'package:ira/shared/alert_snackbar.dart';
 import 'package:ira/shared/app_scaffold.dart';
 
 import '../../util/helpers.dart';
@@ -35,6 +36,7 @@ class _ProfileState extends State<Profile> {
       return Future.value(response.body);
     }
 
+    ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     return Future.value('invalid');
   }
 
@@ -105,16 +107,32 @@ class _ProfileState extends State<Profile> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text('Name: ' + profileData['name']),
-                                      const Text('ID No: '),
-                                      Text('Discipline: ' +
-                                          profileData['branch']),
-                                      Text('Programme: ' +
-                                          profileData['programme']),
-                                      Text('DOB: ' +
-                                          profileData['date_of_birth']),
-                                      Text('Valid Upto: ' +
-                                          profileData['valid_upto']),
+                                      Text(
+                                        'Name: ' + profileData['name'],
+                                        style: const TextStyle(fontSize: 13),
+                                      ),
+                                      const Text(
+                                        'ID No: ',
+                                        style: TextStyle(fontSize: 13),
+                                      ),
+                                      Text(
+                                        'Discipline: ' + profileData['branch'],
+                                        style: const TextStyle(fontSize: 13),
+                                      ),
+                                      Text(
+                                        'Programme: ' +
+                                            profileData['programme'],
+                                        style: const TextStyle(fontSize: 13),
+                                      ),
+                                      Text(
+                                        'DOB: ' + profileData['date_of_birth'],
+                                        style: const TextStyle(fontSize: 13),
+                                      ),
+                                      Text(
+                                        'Valid Upto: ' +
+                                            profileData['valid_upto'],
+                                        style: const TextStyle(fontSize: 13),
+                                      ),
                                     ],
                                   ),
                                   Column(children: [
@@ -122,7 +140,10 @@ class _ProfileState extends State<Profile> {
                                     const SizedBox(
                                       height: 10.0,
                                     ),
-                                    const Text('Dean Academics'),
+                                    const Text(
+                                      'Dean Academics',
+                                      style: TextStyle(fontSize: 13.0),
+                                    ),
                                   ]),
                                 ],
                               )
@@ -152,35 +173,47 @@ class _ProfileState extends State<Profile> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('E-mail: ' +
-                                  profileData['entry_no'] +
-                                  '@iitjammu.ac.in'),
+                              Text(
+                                'E-mail: ' +
+                                    profileData['entry_no'] +
+                                    '@iitjammu.ac.in',
+                                style: const TextStyle(fontSize: 13),
+                              ),
                               const SizedBox(
                                 height: 10.0,
                               ),
                               Text(
-                                  'Contact No: ' + profileData['phone_number']),
-                              const SizedBox(
-                                height: 10.0,
+                                'Contact No: ' + profileData['phone_number'],
+                                style: const TextStyle(fontSize: 13),
                               ),
-                              Text('Emergency No: ' +
-                                  profileData['emergency_no']),
                               const SizedBox(
                                 height: 10.0,
                               ),
                               Text(
-                                  'Blood Group: ' + profileData['blood_group']),
+                                'Emergency No: ' + profileData['emergency_no'],
+                                style: const TextStyle(fontSize: 13),
+                              ),
+                              const SizedBox(
+                                height: 10.0,
+                              ),
+                              Text(
+                                'Blood Group: ' + profileData['blood_group'],
+                                style: const TextStyle(fontSize: 13),
+                              ),
                               const SizedBox(
                                 height: 10.0,
                               ),
                               Text(
                                 'Permanent Address: ' + profileData['address'],
+                                style: const TextStyle(fontSize: 13),
                               ),
                               const SizedBox(
                                 height: 15.0,
                               ),
                               const Text(
-                                  'www.iitjammu.ac.in | +91-191-257-0633'),
+                                'www.iitjammu.ac.in | +91-191-257-0633',
+                                style: TextStyle(fontSize: 13),
+                              ),
                             ],
                           ),
                         ),

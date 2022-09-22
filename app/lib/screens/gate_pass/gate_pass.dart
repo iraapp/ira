@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ira/screens/gate_pass/purpose.dart';
+import 'package:ira/shared/alert_snackbar.dart';
 import 'package:ira/shared/app_scaffold.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -40,6 +41,8 @@ class GatePassScreen extends StatelessWidget {
         context,
         MaterialPageRoute(builder: (context) => const PurposeScreen()),
       );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
   }
 

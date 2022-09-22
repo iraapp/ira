@@ -4,6 +4,7 @@ import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ira/screens/mess/manager/feedback_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:ira/shared/alert_snackbar.dart';
 
 class FeedbackMessManager extends StatefulWidget {
   FeedbackMessManager({Key? key}) : super(key: key);
@@ -31,7 +32,8 @@ class _FeedbackMessManagerState extends State<FeedbackMessManager> {
           .map<FeedbackModel>((json) => FeedbackModel.fromJson(json))
           .toList();
     } else {
-      throw Exception('API call failed');
+      ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+      throw Exception('API Call Failed');
     }
   }
 

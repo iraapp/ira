@@ -4,6 +4,7 @@ import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ira/screens/hostel/secretary/models/hostel_complaint_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:ira/shared/alert_snackbar.dart';
 
 class ComplaintHostelSecretary extends StatefulWidget {
   ComplaintHostelSecretary({Key? key}) : super(key: key);
@@ -36,9 +37,10 @@ class _ComplaintHostelSecretaryState extends State<ComplaintHostelSecretary> {
           .map<HostelComplaintModel>(
               (json) => HostelComplaintModel.fromJson(json))
           .toList();
-    } else {
-      throw Exception('API call failed');
     }
+
+    ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+    throw Exception('API Call failed');
   }
 
   Future<void> _takeActionOnComplaint(int id) async {
@@ -57,7 +59,7 @@ class _ComplaintHostelSecretaryState extends State<ComplaintHostelSecretary> {
     if (response.statusCode == 200) {
       return;
     } else {
-      throw Exception('Failed to get');
+      ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
   }
 

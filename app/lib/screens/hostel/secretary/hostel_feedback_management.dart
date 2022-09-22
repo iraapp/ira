@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:ira/shared/alert_snackbar.dart';
 
 import 'models/hostel_feedback_model.dart';
 
@@ -35,6 +36,8 @@ class _HostelFeedbackManagementState extends State<HostelFeedbackManagement> {
           .map<HostelFeedbackModel>(
               (json) => HostelFeedbackModel.fromJson(json))
           .toList();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
 
     return data;

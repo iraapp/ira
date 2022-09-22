@@ -5,6 +5,7 @@ import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:ira/screens/medical/history/history_card.dart';
+import 'package:ira/shared/alert_snackbar.dart';
 
 class MedicalHistoryModel {
   String date;
@@ -63,6 +64,8 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
               (json) => MedicalHistoryModel.fromJson(json))
           .toList();
       return Future.value(history);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
 
     return Future.value([]);

@@ -6,6 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:ira/shared/alert_snackbar.dart';
 import 'package:localstorage/localstorage.dart';
 
 class AuthService with ChangeNotifier {
@@ -23,7 +24,9 @@ class AuthService with ChangeNotifier {
   final secureStorage = const FlutterSecureStorage();
   final localStorage = LocalStorage('store');
 
-  AuthService() {
+  BuildContext context;
+
+  AuthService({required this.context}) {
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
       if (account != null) {
         _user = account;
@@ -53,6 +56,8 @@ class AuthService with ChangeNotifier {
               isAuthenticatedStreamController.add(isAuthenticated);
               notifyListeners();
               successCallback();
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
             }
           },
         ).catchError((err) {

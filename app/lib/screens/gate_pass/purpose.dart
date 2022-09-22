@@ -5,6 +5,7 @@ import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:http/http.dart' as http;
 import 'package:ira/screens/gate_pass/gate_pass.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:ira/shared/alert_snackbar.dart';
 import 'package:ira/shared/app_scaffold.dart';
 
 class PurposeScreen extends StatefulWidget {
@@ -41,8 +42,10 @@ class _PurposeScreenState extends State<PurposeScreen> {
         'purpose': decodedBody['purpose'],
         'status': decodedBody['status'] ? 'true' : 'false',
       };
-    } else {
+    } else if (response.statusCode != 401 || response.statusCode != 404) {
       mmp['qr'] = 'invalid';
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
 
     return Future.value(mmp);
@@ -150,6 +153,9 @@ class _PurposeScreenState extends State<PurposeScreen> {
                                             ),
                                           ),
                                         );
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(alertSnackbar);
                                       }
                                     }
                                   },

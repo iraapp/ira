@@ -9,6 +9,7 @@ import 'package:ira/screens/mess/student/menu_mess_student.dart';
 import 'package:ira/screens/mess/student/mom_mess_student.dart';
 import 'package:ira/screens/mess/student/tender_mess_student.dart';
 import 'package:http/http.dart' as http;
+import 'package:ira/shared/alert_snackbar.dart';
 
 class MessStudentScreen extends StatefulWidget {
   const MessStudentScreen({Key? key}) : super(key: key);
@@ -40,6 +41,7 @@ class _MessStudentScreenState extends State<MessStudentScreen> {
         'data': decodedData.map<Mess>((json) => Mess.fromJson(json)).toList(),
       };
     }
+    ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
 
     return Future.value(mmp);
   }
@@ -141,12 +143,15 @@ class _MessStudentScreenState extends State<MessStudentScreen> {
                           child: Column(
                             children: [
                               SizedBox(
-                                  height: 60.0,
-                                  width: 60.0,
+                                  height: 40.0,
+                                  width: 40.0,
                                   child: Image.asset(
                                       "assets/images/mess_icon.png")),
                               const SizedBox(height: 4.0),
-                              Text(_messList[index]),
+                              Text(
+                                _messList[index],
+                                style: const TextStyle(fontSize: 12.0),
+                              ),
                             ],
                           ),
                         ),

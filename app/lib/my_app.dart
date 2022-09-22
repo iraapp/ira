@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<AuthService>(
-          create: (_) => AuthService(),
+          create: (_) => AuthService(context: context),
         )
       ],
       child: FlavorBanner(

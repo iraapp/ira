@@ -9,6 +9,7 @@ import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ira/screens/mess/student/mess_mom_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:ira/shared/alert_snackbar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -40,9 +41,10 @@ class _MOMMessManagerState extends State<MOMMessManager> {
       return data
           .map<MessMOMModel>((json) => MessMOMModel.fromJson(json))
           .toList();
-    } else {
-      throw Exception('API call failed');
     }
+    ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+
+    throw Exception('API Call Failed');
   }
 
   Future<bool> _submitMessMOMItem({
@@ -231,7 +233,8 @@ class _MOMMessManagerState extends State<MOMMessManager> {
                                                         if (data.file !=
                                                             'null') {
                                                           await _downloadFile(
-                                                              data.file,
+                                                              widget.baseUrl +
+                                                                  data.file,
                                                               data.id);
                                                         }
                                                       },

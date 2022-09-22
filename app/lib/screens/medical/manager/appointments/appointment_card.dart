@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:ira/screens/medical/manager/appointments/appointments_management.dart';
 import 'package:http/http.dart' as http;
+import 'package:ira/shared/alert_snackbar.dart';
 
 // ignore: must_be_immutable
 class AppointmentCard extends StatelessWidget {
@@ -357,6 +358,8 @@ Future showConfirmDialog(
                 if (response.statusCode == 200) {
                   updateView();
                   Navigator.pop(context);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
                 }
               }
             },
@@ -439,6 +442,8 @@ Future showRejectionDialog(
 
                 if (response.statusCode == 200) {
                   Navigator.pop(context);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
                 }
               }
             },
