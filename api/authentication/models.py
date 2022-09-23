@@ -17,18 +17,44 @@ STAFF_ROLE_IDS = {
     'medical_manager': 3,
 }
 
+USER_ROLES={
+    'student': 1,
+    'employee': 2,
+    'admin': 3,
+    'swo_office': 4,
+    'academic_office_ug': 5,
+    'academic_office_pg': 6,
+    'gymkhana': 7,
+    'cultural_board':8,
+    'technical_board':9,
+    'sports_board':10,
+    'hostel_board':11,
+    'academic_board_ug':12,
+    'academic_board_pg':13,
+    'ira_team':14,
+}
+
 # Create your models here.
 class User(AbstractBaseUser, PermissionsMixin):
 
     # These fields tie to the roles!
-    STUDENT = 1
-    EMPLOYEE = 2
-    ADMIN = 3
+    
 
     ROLE_CHOICES = (
-        (ADMIN, 'Admin'),
-        (STUDENT, 'Student'),
-        (EMPLOYEE, 'Employee')
+        (USER_ROLES['admin'], 'Admin'),
+        (USER_ROLES['student'], 'Student'),
+        (USER_ROLES['employee'], 'Employee'),
+        (USER_ROLES['swo_office'], 'SWO Office'),
+        (USER_ROLES['academic_office_ug'], 'Academic Office UG'),
+        (USER_ROLES['academic_office_pg'], 'Academic Office PG'),
+        (USER_ROLES['gymkhana'], 'Gymkhana'),
+        (USER_ROLES['cultural_board'], 'Cultural Board'),
+        (USER_ROLES['technical_board'], 'Technical Board'),
+        (USER_ROLES['sports_board'], 'Sports Board'),
+        (USER_ROLES['hostel_board'], 'Hostel Board'),
+        (USER_ROLES['academic_board_ug'], 'Academic Board UG'),
+        (USER_ROLES['academic_board_pg'], 'Academic Board PG'),
+        (USER_ROLES['ira_team'], 'IRA Team'),
     )
 
     # Roles created here
