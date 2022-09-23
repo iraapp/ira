@@ -31,6 +31,7 @@ USER_ROLES={
     'hostel_board':11,
     'academic_board_ug':12,
     'academic_board_pg':13,
+    'ira_team':14,
 }
 
 # Create your models here.
@@ -53,6 +54,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         (USER_ROLES['hostel_board'], 'Hostel Board'),
         (USER_ROLES['academic_board_ug'], 'Academic Board UG'),
         (USER_ROLES['academic_board_pg'], 'Academic Board PG'),
+        (USER_ROLES['ira_team'], 'IRA Team'),
     )
 
     # Roles created here

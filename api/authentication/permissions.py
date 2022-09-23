@@ -119,3 +119,12 @@ class IsAcademicBoardPG(BasePermission):
     def has_permission(self, request, _):
       return bool(request.user and
       request.user.role == USER_ROLES['academic_board_pg'])
+
+class IsIraTeam(BasePermission):
+    """
+    Allows access only to only ira team.
+    """
+
+    def has_permission(self, request, _):
+      return bool(request.user and
+      request.user.role == USER_ROLES['ira_team'])
