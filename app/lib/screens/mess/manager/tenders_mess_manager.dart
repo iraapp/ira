@@ -49,7 +49,7 @@ class _TendersMessManagerState extends State<TendersMessManager> {
       }
       return _activeItems;
     }
-    ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+    // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     throw Exception('API Call failed');
   }
 
@@ -76,7 +76,7 @@ class _TendersMessManagerState extends State<TendersMessManager> {
       }
       return _archivedItems;
     }
-    ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+    // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     throw Exception('API Call Failed');
   }
 
@@ -131,7 +131,7 @@ class _TendersMessManagerState extends State<TendersMessManager> {
     if (response.statusCode == 200) {
       return;
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
   }
 

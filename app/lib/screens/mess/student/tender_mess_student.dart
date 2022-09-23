@@ -46,7 +46,7 @@ class _TenderMessState extends State<TenderMess> {
       }
       return _activeItems;
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
       throw Exception('API Call Failed');
     }
   }
@@ -74,7 +74,7 @@ class _TenderMessState extends State<TenderMess> {
       }
       return _archivedItems;
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
       throw Exception('API Call Failed');
     }
   }

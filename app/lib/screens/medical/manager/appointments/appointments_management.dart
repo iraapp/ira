@@ -77,7 +77,7 @@ class _AppointmentsManagementState extends State<AppointmentsManagement> {
           )
           .toList();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
 
     return Future.value(mmp);
@@ -105,7 +105,7 @@ class _AppointmentsManagementState extends State<AppointmentsManagement> {
           )
           .toList();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
 
     return Future.value(mmp);

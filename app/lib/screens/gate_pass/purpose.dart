@@ -45,7 +45,7 @@ class _PurposeScreenState extends State<PurposeScreen> {
     } else if (response.statusCode != 401 || response.statusCode != 404) {
       mmp['qr'] = 'invalid';
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
 
     return Future.value(mmp);
@@ -154,8 +154,8 @@ class _PurposeScreenState extends State<PurposeScreen> {
                                           ),
                                         );
                                       } else {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(alertSnackbar);
+                                        // ScaffoldMessenger.of(context)
+                                        //     .showSnackBar(alertSnackbar);
                                       }
                                     }
                                   },

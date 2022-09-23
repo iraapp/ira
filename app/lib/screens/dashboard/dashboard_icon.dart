@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class DashboardIcon extends StatelessWidget {
   Icon icon;
   String title;
-  MaterialPageRoute pageRoute;
+  Widget pageRoute;
 
   DashboardIcon({
     Key? key,
@@ -23,7 +23,9 @@ class DashboardIcon extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              pageRoute,
+              MaterialPageRoute(
+                builder: (context) => pageRoute,
+              ),
             );
           },
           color: Colors.white,

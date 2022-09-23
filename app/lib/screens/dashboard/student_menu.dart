@@ -13,51 +13,37 @@ studentMenu(context) {
     DashboardIcon(
       icon: const Icon(Icons.person),
       title: "Id Card",
-      pageRoute: MaterialPageRoute(
-        builder: (context) => Profile(),
-      ),
+      pageRoute: Profile(),
     ),
     DashboardIcon(
       icon: const Icon(Icons.food_bank),
       title: "Mess",
-      pageRoute: MaterialPageRoute(
-        builder: (context) => const MessStudentScreen(),
-      ),
+      pageRoute: const MessStudentScreen(),
     ),
     DashboardIcon(
       icon: const Icon(Icons.admin_panel_settings_rounded),
       title: "Gate Pass",
-      pageRoute: MaterialPageRoute(
-        builder: (context) => const PurposeScreen(),
-      ),
+      pageRoute: const PurposeScreen(),
     ),
     DashboardIcon(
       icon: const Icon(Icons.people),
       title: "Team",
-      pageRoute: MaterialPageRoute(
-        builder: (context) => const TeamScreen(),
-      ),
+      pageRoute: const TeamScreen(),
     ),
     DashboardIcon(
       icon: const Icon(Icons.person),
       title: "Hostel",
-      pageRoute: MaterialPageRoute(
-        builder: (context) => const HostelStudentScreen(),
-      ),
+      pageRoute: const HostelStudentScreen(),
     ),
     DashboardIcon(
       icon: const Icon(Icons.person),
       title: "H. Secretary",
-      pageRoute: MaterialPageRoute(
-        builder: (context) => const HostelSecretaryScreen(),
-      ),
+      pageRoute: const HostelSecretaryScreen(),
     ),
     DashboardIcon(
       icon: const Icon(Icons.medical_services),
       title: "Medical",
-      pageRoute: MaterialPageRoute(
-        builder: (context) => const MedicalStudentScreen(),
-      ),
+      pageRoute: const MedicalStudentScreen(),
     ),
   ];
 }

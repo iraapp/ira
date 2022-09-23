@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:localstorage/localstorage.dart';
 
 String capitalize(String str) {
@@ -8,6 +9,7 @@ String capitalize(String str) {
 class StudentDrawerHeader extends StatelessWidget {
   StudentDrawerHeader({Key? key}) : super(key: key);
   final localStorage = LocalStorage('store');
+  final baseUrl = FlavorConfig.instance.variables['baseUrl'];
 
   @override
   Widget build(BuildContext context) {
@@ -33,11 +35,14 @@ class StudentDrawerHeader extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const CircleAvatar(
-                  radius: 40,
-                  child: Icon(
-                    Icons.account_circle,
-                    size: 80,
+                CircleAvatar(
+                  radius: 42,
+                  backgroundColor: Colors.blue.shade800,
+                  child: CircleAvatar(
+                    radius: 38,
+                    child: ClipOval(
+                        child: Image.network(
+                            baseUrl + '/media/images/ashutosh.jpg')),
                   ),
                 ),
                 const SizedBox(

@@ -10,6 +10,7 @@ import 'package:ira/screens/dashboard/student_menu.dart';
 import 'package:ira/screens/dashboard/student_header.dart';
 import 'package:ira/screens/login/login.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import 'medical_manager_menu.dart';
 
@@ -78,59 +79,47 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: AppDrawer(role: widget.role),
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        elevation: 0,
-        title: widget.roleHeaderMap[widget.role],
-      ),
-      body: Column(children: [
-        Expanded(
-          child: Container(
-            color: Colors.blue,
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              decoration: const BoxDecoration(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
-                ),
-              ),
-              child: Column(
-                children: [
-                  Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(20.0),
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            opacity: 0.6,
-                            fit: BoxFit.cover,
-                            image: NetworkImage(
-                                widget.baseUrl + '/media/images/release.png'),
-                          ),
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(20.0),
-                          ),
-                        ),
-                        child: SizedBox(
-                          height: 150.0,
-                          child: GridView.count(
-                            crossAxisCount: 4,
-                            children: widget.roleBasedMenu(context),
-                          ),
-                        ),
-                      ),
-                    ],
+        drawer: AppDrawer(role: widget.role),
+        appBar: AppBar(
+          backgroundColor: Colors.blue,
+          elevation: 0,
+          title: widget.roleHeaderMap[widget.role],
+        ),
+        body: SlidingUpPanel(
+          minHeight: MediaQuery.of(context).size.height - 280,
+          maxHeight: MediaQuery.of(context).size.height,
+          parallaxEnabled: true,
+          parallaxOffset: 1.0,
+          panel: const GeneralFeed(),
+          body: Container(
+            // color: Colors.blue,
+            width: MediaQuery.of(context).size.width,
+            decoration: const BoxDecoration(
+              color: Colors.blue,
+            ),
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(20.0),
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      opacity: 0.5,
+                      fit: BoxFit.cover,
+                      image: NetworkImage(
+                          widget.baseUrl + '/media/images/release.png'),
+                    ),
                   ),
-                  const GeneralFeed(),
-                ],
-              ),
+                  child: SizedBox(
+                    height: 180.0,
+                    child: GridView.count(
+                      crossAxisCount: 4,
+                      children: widget.roleBasedMenu(context),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-        ),
-      ]),
-    );
+        ));
   }
 }

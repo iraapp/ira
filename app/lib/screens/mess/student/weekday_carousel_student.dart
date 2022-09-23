@@ -39,7 +39,7 @@ class WeekDayCarouselStudent extends StatelessWidget {
         };
         return WeekDay.fromJson(weekDataMap);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+        // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
         throw Exception('API Call Failed');
       }
     } catch (e) {

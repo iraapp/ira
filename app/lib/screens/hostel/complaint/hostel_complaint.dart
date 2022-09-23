@@ -37,7 +37,7 @@ Future<Map<String, List<String>>> getHostelListAndComplaintTypes(
     decodedBody['complaints']
         .forEach((complaint) => {mmp['complaints']?.add(complaint['name'])});
   } else {
-    ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+    // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
   }
 
   return mmp;
@@ -82,7 +82,7 @@ class _HostelComplaintState extends State<HostelComplaint> {
     if (response.statusCode == 200) {
       return Future.value(true);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
     return Future.value(false);
   }
@@ -111,7 +111,7 @@ class _HostelComplaintState extends State<HostelComplaint> {
     if (response.statusCode == 200) {
       return Future.value(true);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
     return Future.value(false);
   }

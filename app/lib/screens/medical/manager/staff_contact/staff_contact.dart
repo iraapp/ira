@@ -61,7 +61,7 @@ class _StaffContactManagerScreenState extends State<StaffContactManagerScreen> {
           .map<StaffModel>((json) => StaffModel.fromJson(json))
           .toList();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
 
     return Future.value(mmp);
@@ -282,7 +282,7 @@ Future addStaffDialog(
               if (response.statusCode == 200) {
                 Navigator.of(context).pop(false);
               } else {
-                ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+                // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
               }
             }
           },

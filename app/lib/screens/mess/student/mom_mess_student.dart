@@ -39,7 +39,7 @@ class _MOMMessState extends State<MOMMess> {
           .map<MessMOMModel>((json) => MessMOMModel.fromJson(json))
           .toList();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
       throw Exception('API Call Failed');
     }
   }

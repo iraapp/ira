@@ -41,7 +41,7 @@ class _MessStudentScreenState extends State<MessStudentScreen> {
         'data': decodedData.map<Mess>((json) => Mess.fromJson(json)).toList(),
       };
     }
-    ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+    // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
 
     return Future.value(mmp);
   }

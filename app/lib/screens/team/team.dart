@@ -65,7 +65,7 @@ class _TeamScreenState extends State<TeamScreen> {
             decodedBody.map<Member>((json) => Member.fromJson(json)).toList()
       };
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
       mmp = {'team': []};
     }
 

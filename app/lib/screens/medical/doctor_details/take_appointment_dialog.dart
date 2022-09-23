@@ -26,7 +26,7 @@ Future<bool> _requestAppointment(int id, BuildContext context) async {
   if (response.statusCode == 200) {
     return Future.value(true);
   } else {
-    ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+    // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
   }
 
   return Future.value(false);

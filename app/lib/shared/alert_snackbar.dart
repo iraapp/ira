@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
-const SnackBar alertSnackbar = SnackBar(
-  backgroundColor: Colors.red,
-  padding: EdgeInsets.all(20),
-  content: Text(
-    "Failed to communicate with the servers",
-    style: TextStyle(
-      color: Colors.white,
+SnackBar alertSnackbar(String message, MaterialColor backgroundColor) {
+  return SnackBar(
+    backgroundColor: backgroundColor,
+    padding: const EdgeInsets.all(20),
+    content: Text(
+      message,
+      style: const TextStyle(
+        color: Colors.white,
+      ),
     ),
-  ),
-);
+  );
+}

@@ -57,7 +57,7 @@ class AuthService with ChangeNotifier {
               notifyListeners();
               successCallback();
             } else {
-              ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+              // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
             }
           },
         ).catchError((err) {

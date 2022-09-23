@@ -374,8 +374,8 @@ class _AddNewDoctor extends State<AddNewDoctor> {
                                           Navigator.pop(context);
                                           widget.updateView!();
                                         } else {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(alertSnackbar);
+                                          // ScaffoldMessenger.of(context)
+                                          //     .showSnackBar(alertSnackbar);
                                         }
                                       } else {
                                         final response = await http.post(
@@ -411,8 +411,8 @@ class _AddNewDoctor extends State<AddNewDoctor> {
                                           Navigator.pop(context);
                                           widget.updateView!();
                                         } else {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(alertSnackbar);
+                                          // ScaffoldMessenger.of(context)
+                                          //     .showSnackBar(alertSnackbar);
                                         }
                                       }
                                     }

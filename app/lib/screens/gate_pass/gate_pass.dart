@@ -42,7 +42,7 @@ class GatePassScreen extends StatelessWidget {
         MaterialPageRoute(builder: (context) => const PurposeScreen()),
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
   }
 

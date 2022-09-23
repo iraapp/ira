@@ -41,7 +41,7 @@ class _StaffLoginState extends State<StaffLogin> {
     if (response.statusCode == 200) {
       return Future.value(staffToken);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
       return Future.value('invalid');
     }
   }
@@ -162,8 +162,8 @@ class _StaffLoginState extends State<StaffLogin> {
                                       ),
                                     );
                                   } else {
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(alertSnackbar);
+                                    // ScaffoldMessenger.of(context)
+                                    //     .showSnackBar(alertSnackbar);
                                   }
                                 }
                               },

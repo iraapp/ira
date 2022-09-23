@@ -76,7 +76,7 @@ class _WeekDayCarouselManagerState extends State<WeekDayCarouselManager> {
         };
         return WeekDay.fromJson(weekDataMap);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+        // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
         throw Exception('API Call Failed');
       }
     } catch (e) {
@@ -154,7 +154,7 @@ class _WeekDayCarouselManagerState extends State<WeekDayCarouselManager> {
     if (response.statusCode == 200) {
       return;
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
   }
 
@@ -180,7 +180,7 @@ class _WeekDayCarouselManagerState extends State<WeekDayCarouselManager> {
     if (response.statusCode == 200) {
       return;
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
   }
 
@@ -204,7 +204,7 @@ class _WeekDayCarouselManagerState extends State<WeekDayCarouselManager> {
     if (response.statusCode == 200) {
       return;
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
   }
 

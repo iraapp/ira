@@ -65,7 +65,7 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
           .toList();
       return Future.value(history);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
 
     return Future.value([]);

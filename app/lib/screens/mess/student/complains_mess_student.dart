@@ -53,7 +53,7 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
       if (response.statusCode == 200) {
         return true;
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+        // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
         throw Exception('API Call Failed');
       }
     } catch (e) {

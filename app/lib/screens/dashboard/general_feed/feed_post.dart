@@ -75,7 +75,7 @@ class FeedPost extends StatelessWidget {
                   style: TextStyle(color: Colors.white, fontSize: 12.0),
                 ),
                 style: OutlinedButton.styleFrom(
-                  backgroundColor: Colors.blue,
+                  backgroundColor: Colors.blue.shade800,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20.0),
                   ),

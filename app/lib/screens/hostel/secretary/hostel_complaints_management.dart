@@ -39,7 +39,7 @@ class _ComplaintHostelSecretaryState extends State<ComplaintHostelSecretary> {
           .toList();
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+    // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     throw Exception('API Call failed');
   }
 
@@ -59,7 +59,7 @@ class _ComplaintHostelSecretaryState extends State<ComplaintHostelSecretary> {
     if (response.statusCode == 200) {
       return;
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
   }
 

@@ -67,7 +67,7 @@ class MaintenanceStaffContact extends StatelessWidget {
             .toList(),
       };
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
 
     return Future.value(mmp);

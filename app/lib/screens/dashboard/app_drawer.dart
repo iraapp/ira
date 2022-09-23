@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ira/screens/dashboard/student_drawer_header.dart';
+import 'package:ira/screens/gate_pass/gate_pass.dart';
+import 'package:ira/screens/gate_pass/purpose.dart';
+import 'package:ira/screens/hostel/dashboard.dart';
 import 'package:ira/screens/login/login.dart';
+import 'package:ira/screens/medical/dashboard.dart';
+import 'package:ira/screens/mess/student/mess_student.dart';
+import 'package:ira/screens/profile/profile.dart';
+import 'package:ira/screens/team/team.dart';
 import 'package:ira/services/auth.service.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:provider/provider.dart';
@@ -29,29 +36,83 @@ class _AppDrawerState extends State<AppDrawer> {
       children: [
         StudentDrawerHeader(),
         const Divider(),
-        const ListTile(
-          leading: Icon(
+        ListTile(
+          leading: const Icon(
             Icons.home,
           ),
-          title: Text(
+          selected: true,
+          title: const Text(
             "Home",
           ),
+          onTap: () {
+            Navigator.pop(context);
+          },
         ),
-        const ListTile(
-          leading: Icon(Icons.person),
-          title: Text("Hostel"),
+        ListTile(
+          leading: const Icon(Icons.person),
+          title: const Text("Hostel"),
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const HostelStudentScreen(),
+                ));
+          },
         ),
-        const ListTile(
-          leading: Icon(Icons.food_bank),
-          title: Text("Mess"),
+        ListTile(
+          leading: const Icon(Icons.food_bank),
+          title: const Text("Mess"),
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MessStudentScreen(),
+                ));
+          },
         ),
-        const ListTile(
-          leading: Icon(Icons.medical_services),
-          title: Text("Medical"),
+        ListTile(
+          leading: const Icon(Icons.medical_services),
+          title: const Text("Medical"),
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MedicalStudentScreen(),
+                ));
+          },
         ),
-        const ListTile(
-          leading: Icon(Icons.people),
-          title: Text("Team"),
+        ListTile(
+          leading: const Icon(Icons.person),
+          title: const Text("Id Card"),
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Profile(),
+                ));
+          },
+        ),
+        ListTile(
+          leading: const Icon(Icons.admin_panel_settings_rounded),
+          title: const Text("Gate Pass"),
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const PurposeScreen(),
+                ));
+          },
+        ),
+        ListTile(
+          leading: const Icon(Icons.people),
+          title: const Text("Team"),
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const TeamScreen(),
+                ));
+          },
         ),
         ListTile(
           hoverColor: Colors.blue,

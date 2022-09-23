@@ -36,7 +36,7 @@ class _ProfileState extends State<Profile> {
       return Future.value(response.body);
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+    // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     return Future.value('invalid');
   }
 

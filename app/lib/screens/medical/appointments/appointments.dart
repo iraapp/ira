@@ -66,7 +66,7 @@ class _MedicalAppointmentsScreenState extends State<MedicalAppointmentsScreen> {
           .toList();
       return Future.value(appointments);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
 
     return Future.value([]);
