@@ -1,3 +1,4 @@
+from authentication.serializers import UserSerializer
 from mess.models import MenuItem
 from rest_framework import serializers
 
@@ -39,7 +40,7 @@ class MessFeedbackSerializer(serializers.Serializer):
 
 class MessComplaintSerializer(serializers.Serializer):
     id = serializers.IntegerField()
-    user = serializers.StringRelatedField()
+    user = UserSerializer()
     body = serializers.CharField(max_length=500)
     mess_meal = serializers.CharField(max_length=50)
     mess_type = MessSerializer()
