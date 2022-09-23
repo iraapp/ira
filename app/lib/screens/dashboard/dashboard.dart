@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ira/screens/dashboard/app_drawer.dart';
 import 'package:ira/screens/dashboard/general_feed/general_feed.dart';
@@ -17,6 +18,8 @@ class Dashboard extends StatefulWidget {
   String role;
   final secureStorage = const FlutterSecureStorage();
   final localStorage = LocalStorage('store');
+  final baseUrl = FlavorConfig.instance.variables['baseUrl'];
+
   final roleHeaderMap = {
     'student': StudentHeader(),
     'guard': StaffHeader(),
@@ -88,7 +91,7 @@ class _DashboardState extends State<Dashboard> {
             child: Container(
               width: MediaQuery.of(context).size.width,
               decoration: const BoxDecoration(
-                color: Color(0xFFE5E5E5),
+                color: Colors.transparent,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(30),
                   topRight: Radius.circular(30),
@@ -96,35 +99,30 @@ class _DashboardState extends State<Dashboard> {
               ),
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(20.0),
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(20.0),
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey,
-                                offset: Offset(0, 2),
-                                blurRadius: 5.0,
-                              ),
-                            ],
+                  Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(20.0),
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            opacity: 0.6,
+                            fit: BoxFit.cover,
+                            image: NetworkImage(
+                                widget.baseUrl + '/media/images/release.png'),
                           ),
-                          child: SizedBox(
-                            height: 150.0,
-                            child: GridView.count(
-                              crossAxisCount: 4,
-                              children: widget.roleBasedMenu(context),
-                            ),
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(20.0),
                           ),
                         ),
-                      ],
-                    ),
+                        child: SizedBox(
+                          height: 150.0,
+                          child: GridView.count(
+                            crossAxisCount: 4,
+                            children: widget.roleBasedMenu(context),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   const GeneralFeed(),
                 ],
