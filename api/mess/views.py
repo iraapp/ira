@@ -239,6 +239,14 @@ class MessTenderView(APIView):
             })
 
 
+class MessNameView(APIView):
+    permission_classes = [IsAuthenticated, ]
+
+    def get(self, request, *args, **kwargs):
+        data = Mess.objects.all()
+        serialized_json = MessSerializer(data, many=True)
+        return Response(data=serialized_json.data)
+
 # To update tender State
 class MessTenderArchivedView(APIView):
     permission_classes = [IsAuthenticated, ]
