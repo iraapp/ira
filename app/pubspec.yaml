@@ -55,6 +55,8 @@ dependencies:
   sliding_up_panel: ^2.0.0+1
   connectivity_plus: ^2.3.7
   flutter_quill: ^6.0.5
+  cached_network_image: ^3.2.1
+  firebase_core: ^1.23.0
 
 dev_dependencies:
   flutter_test:
@@ -85,6 +87,7 @@ flutter:
     - assets/icons/
     # .env.symlink is a symlink to .env file present at root of the project.
     - .env.symlink
+    - assets/google_fonts/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

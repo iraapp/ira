@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
@@ -31,21 +32,22 @@ class AuthService with ChangeNotifier {
         _user = account;
         _user?.authentication.then(
           (googleKey) async {
-            final response = await http.get(
-              Uri.parse(
-                baseUrl + '/auth/login',
-              ),
-              headers: <String, String>{
-                'Content-Type': 'application/json; charset=UTF-8',
-                'Authorization': 'idToken ' + googleKey.idToken!
-              },
-            );
+            final response = await http.post(
+                Uri.parse(
+                  baseUrl + '/auth/login',
+                ),
+                headers: <String, String>{
+                  'Content-Type': 'application/json; charset=UTF-8',
+                },
+                body: jsonEncode({
+                  'idToken': googleKey.idToken,
+                }));
 
             if (response.statusCode == 200) {
               isAuthenticated = true;
               await secureStorage.write(
                 key: 'idToken',
-                value: googleKey.idToken,
+                value: jsonDecode(response.body)['idToken'],
               );
               await localStorage.setItem('role', 'student');
 

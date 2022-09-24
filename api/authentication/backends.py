@@ -1,54 +1,29 @@
 from pathlib import Path
 from django.contrib.auth.backends import BaseBackend
-from .models import StaffToken, User
+from .models import StaffToken, UserToken
 from rest_framework import authentication
 from rest_framework import exceptions
-from google.auth.transport import requests
-from google.oauth2 import id_token
-
-import environ
-import os
-
-# Intializing django environ
-env = environ.Env()
-
-# Set the project base directory
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Take environment variables from .env file
-environ.Env.read_env(os.path.join(BASE_DIR.parent, '.env'))
 
 
-class GoogleAuthenticationBackend(authentication.BaseAuthentication):
-    def authenticate(self, request):
+class UserAuthenticationBackend(authentication.TokenAuthentication):
 
-        authorization_header = request.META.get("HTTP_AUTHORIZATION")
+    keyword = 'idToken'
+    model = UserToken
 
-        if not authorization_header:
-            return None
-
-        decoded_token = None
+    def authenticate_credentials(self, token):
+        try:
+            decoded_token = UserToken.objects.get(key=token)
+        except UserToken.DoesNotExist:
+            raise exceptions.AuthenticationFailed('Invalid token.')
 
         try:
-            if authorization_header.split(' ')[0] != 'idToken':
-                return None
+            user = decoded_token.user
 
-            token = authorization_header.split(' ')[1]
-            decoded_token = id_token.verify_oauth2_token(
-                token, requests.Request(), env('GOOGLE_OAUTH_CLIENT_ID'))
-
-        except Exception as e:
-            print(e)
-            raise exceptions.AuthenticationFailed('Invalid ID Token')
-        try:
-            email = decoded_token.get("email")
         except Exception:
             raise exceptions.AuthenticationFailed('No such user exists')
 
-        user, _ = User.objects.get_or_create(email=email, role=1)
-
         # allow users to make API calls only after profile is completed
-        return (user, None)
+        return (user, decoded_token)
 
 
 class StaffAuthenticationBackend(BaseBackend):
@@ -68,8 +43,8 @@ class StaffAuthenticationBackend(BaseBackend):
             token = authorization_header.split(' ')[1]
             decoded_token = StaffToken.objects.get(key=token)
         except Exception as e:
-
-            raise exceptions.AuthenticationFailed('Invalid ID Token')
+            print(e)
+            raise exceptions.AuthenticationFailed('Invalid staff token')
         try:
             staff_user = decoded_token.user
 

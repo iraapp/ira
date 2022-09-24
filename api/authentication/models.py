@@ -38,7 +38,7 @@ USER_ROLES={
 class User(AbstractBaseUser, PermissionsMixin):
 
     # These fields tie to the roles!
-    
+
 
     ROLE_CHOICES = (
         (USER_ROLES['admin'], 'Admin'),
@@ -85,6 +85,35 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = 'users'
 
 
+class UserToken(models.Model):
+    """
+    The staff authorization token model.
+    """
+    key = models.CharField(_("Key"), max_length=40, primary_key=True)
+    user = models.OneToOneField(
+        User, related_name='id_token',
+        on_delete=models.CASCADE, verbose_name=_("User")
+    )
+    created = models.DateTimeField(_("Created"), auto_now_add=True)
+
+    class Meta:
+        abstract = 'rest_framework.authtoken' not in settings.INSTALLED_APPS
+        verbose_name = _("User Token")
+        verbose_name_plural = _("User Tokens")
+
+    def save(self, *args, **kwargs):
+        if not self.key:
+            self.key = self.generate_key()
+        return super().save(*args, **kwargs)
+
+    @classmethod
+    def generate_key(cls):
+        return binascii.hexlify(os.urandom(20)).decode()
+
+    def __str__(self):
+        return self.key
+
+
 class Staff(models.Model):
     # These fields tie to the roles!
     STAFF_ROLE_CHOICES = (
@@ -108,6 +137,7 @@ class Staff(models.Model):
         return True
     def __str__(self):
         return self.first_name + ' ' + self.last_name
+
 
 class StaffToken(models.Model):
     """

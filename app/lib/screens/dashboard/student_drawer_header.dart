@@ -38,11 +38,13 @@ class StudentDrawerHeader extends StatelessWidget {
                 CircleAvatar(
                   radius: 42,
                   backgroundColor: Colors.blue.shade800,
-                  child: CircleAvatar(
+                  child: const CircleAvatar(
                     radius: 38,
                     child: ClipOval(
-                        child: Image.network(
-                            baseUrl + '/media/images/ashutosh.jpg')),
+                        child: Icon(
+                      Icons.person,
+                      size: 60,
+                    )),
                   ),
                 ),
                 const SizedBox(

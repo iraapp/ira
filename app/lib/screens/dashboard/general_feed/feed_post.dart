@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:isolate';
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
@@ -32,8 +33,9 @@ class _FeedPostState extends State<FeedPost> {
     super.initState();
     var myJSON = jsonDecode(widget.data.body);
     _controller = quill.QuillController(
-        document: quill.Document.fromJson(myJSON),
-        selection: const TextSelection.collapsed(offset: 0));
+      document: quill.Document.fromJson(myJSON),
+      selection: const TextSelection.collapsed(offset: 0),
+    );
 
     IsolateNameServer.registerPortWithName(
         _port.sendPort, 'downloader_send_port');
@@ -170,13 +172,39 @@ class _FeedPostState extends State<FeedPost> {
                                 children: [
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(20.0),
-                                    child: Image.network(
-                                      baseUrl +
-                                          widget.data.attachments[index]
-                                              ['file'],
-                                      width: MediaQuery.of(context).size.width *
-                                          0.6,
-                                      fit: BoxFit.fill,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return SimpleDialog(
+                                              children: [
+                                                Image(
+                                                  image: CachedNetworkImageProvider(
+                                                      baseUrl +
+                                                          widget.data
+                                                                  .attachments[
+                                                              index]['file']),
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  fit: BoxFit.fill,
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      },
+                                      child: Image(
+                                        image: CachedNetworkImageProvider(
+                                            baseUrl +
+                                                widget.data.attachments[index]
+                                                    ['file']),
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.6,
+                                        fit: BoxFit.fill,
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(
