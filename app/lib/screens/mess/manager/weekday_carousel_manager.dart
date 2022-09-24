@@ -4,7 +4,6 @@ import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:ira/screens/mess/student/mess_menu_model.dart';
-import 'package:ira/shared/alert_snackbar.dart';
 
 class WeekDayCarouselManager extends StatefulWidget {
   WeekDayCarouselManager({required this.weekDay, Key? key}) : super(key: key);

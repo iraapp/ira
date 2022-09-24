@@ -6,7 +6,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:ira/constants/constants.dart';
 import 'package:ira/screens/dashboard/dashboard.dart';
-import 'package:ira/shared/alert_snackbar.dart';
 import 'package:ira/shared/app_scaffold.dart';
 import 'package:localstorage/localstorage.dart';
 

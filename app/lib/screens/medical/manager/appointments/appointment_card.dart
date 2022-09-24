@@ -6,7 +6,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:ira/screens/medical/manager/appointments/appointments_management.dart';
 import 'package:http/http.dart' as http;
-import 'package:ira/shared/alert_snackbar.dart';
 
 // ignore: must_be_immutable
 class AppointmentCard extends StatelessWidget {

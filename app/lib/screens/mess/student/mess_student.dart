@@ -9,7 +9,6 @@ import 'package:ira/screens/mess/student/menu_mess_student.dart';
 import 'package:ira/screens/mess/student/mom_mess_student.dart';
 import 'package:ira/screens/mess/student/tender_mess_student.dart';
 import 'package:http/http.dart' as http;
-import 'package:ira/shared/alert_snackbar.dart';
 
 class MessStudentScreen extends StatefulWidget {
   const MessStudentScreen({Key? key}) : super(key: key);
