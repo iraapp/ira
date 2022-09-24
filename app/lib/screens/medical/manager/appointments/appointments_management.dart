@@ -75,6 +75,8 @@ class _AppointmentsManagementState extends State<AppointmentsManagement> {
             (json) => AppointmentManagerModel.fromJson(json),
           )
           .toList();
+    } else {
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
 
     return Future.value(mmp);
@@ -101,6 +103,8 @@ class _AppointmentsManagementState extends State<AppointmentsManagement> {
             (json) => AppointmentManagerModel.fromJson(json),
           )
           .toList();
+    } else {
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
 
     return Future.value(mmp);

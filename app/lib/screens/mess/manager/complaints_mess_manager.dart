@@ -34,9 +34,9 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
       return data
           .map<ComplaintModel>((json) => ComplaintModel.fromJson(json))
           .toList();
-    } else {
-      throw Exception('API call failed');
     }
+    // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+    throw Exception('API Call failed');
   }
 
   Future<void> _takeActionOnComplaint(int id) async {
@@ -55,7 +55,7 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
     if (response.statusCode == 200) {
       return;
     } else {
-      throw Exception('Failed to get');
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
   }
 

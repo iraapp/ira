@@ -36,9 +36,10 @@ class _ComplaintHostelSecretaryState extends State<ComplaintHostelSecretary> {
           .map<HostelComplaintModel>(
               (json) => HostelComplaintModel.fromJson(json))
           .toList();
-    } else {
-      throw Exception('API call failed');
     }
+
+    // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+    throw Exception('API Call failed');
   }
 
   Future<void> _takeActionOnComplaint(int id) async {
@@ -57,7 +58,7 @@ class _ComplaintHostelSecretaryState extends State<ComplaintHostelSecretary> {
     if (response.statusCode == 200) {
       return;
     } else {
-      throw Exception('Failed to get');
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
   }
 

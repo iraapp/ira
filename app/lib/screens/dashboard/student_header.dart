@@ -24,29 +24,14 @@ class StudentHeader extends StatelessWidget {
           }
 
           String displayName = localStorage.getItem('displayName');
-          String entry = localStorage.getItem('entry');
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                capitalize(displayName.split(' ')[0]) +
-                    ' ' +
-                    capitalize(displayName.split(' ')[1]),
-                style: const TextStyle(
-                  fontSize: 30.0,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(
-                height: 10.0,
-              ),
-              Text(
-                entry.toUpperCase(),
-                style: const TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ],
+
+          return Text(
+            capitalize(displayName.split(' ')[0]) +
+                ' ' +
+                capitalize(displayName.split(' ')[1]),
+            style: const TextStyle(
+              color: Colors.white,
+            ),
           );
         });
   }

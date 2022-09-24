@@ -19,7 +19,7 @@ class HostelComplaint extends StatefulWidget {
 }
 
 Future<Map<String, List<String>>> getHostelListAndComplaintTypes(
-    baseUrl, idToken) async {
+    baseUrl, idToken, BuildContext context) async {
   final response = await http.get(
       Uri.parse(baseUrl + '/hostel/hostel-complaint-list'),
       headers: <String, String>{
@@ -35,6 +35,8 @@ Future<Map<String, List<String>>> getHostelListAndComplaintTypes(
         .forEach((hostel) => {mmp['hostel']?.add(hostel['name'])});
     decodedBody['complaints']
         .forEach((complaint) => {mmp['complaints']?.add(complaint['name'])});
+  } else {
+    // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
   }
 
   return mmp;
@@ -52,7 +54,7 @@ class _HostelComplaintState extends State<HostelComplaint> {
   @override
   void initState() {
     Future<String?> idToken = widget.secureStorage.read(key: 'idToken');
-    future = getHostelListAndComplaintTypes(widget.baseUrl, idToken);
+    future = getHostelListAndComplaintTypes(widget.baseUrl, idToken, context);
     super.initState();
   }
 
@@ -78,6 +80,8 @@ class _HostelComplaintState extends State<HostelComplaint> {
 
     if (response.statusCode == 200) {
       return Future.value(true);
+    } else {
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
     return Future.value(false);
   }
@@ -105,6 +109,8 @@ class _HostelComplaintState extends State<HostelComplaint> {
 
     if (response.statusCode == 200) {
       return Future.value(true);
+    } else {
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
     return Future.value(false);
   }

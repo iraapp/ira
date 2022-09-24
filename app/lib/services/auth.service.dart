@@ -23,7 +23,9 @@ class AuthService with ChangeNotifier {
   final secureStorage = const FlutterSecureStorage();
   final localStorage = LocalStorage('store');
 
-  AuthService() {
+  BuildContext context;
+
+  AuthService({required this.context}) {
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
       if (account != null) {
         _user = account;
@@ -53,6 +55,8 @@ class AuthService with ChangeNotifier {
               isAuthenticatedStreamController.add(isAuthenticated);
               notifyListeners();
               successCallback();
+            } else {
+              // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
             }
           },
         ).catchError((err) {

@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:ira/screens/dashboard/app_drawer.dart';
+import 'package:ira/screens/dashboard/general_feed/general_feed.dart';
 import 'package:ira/screens/dashboard/guard_menu.dart';
 import 'package:ira/screens/dashboard/mess_manager_menu.dart';
 import 'package:ira/screens/dashboard/staff_header.dart';
 import 'package:ira/screens/dashboard/student_menu.dart';
 import 'package:ira/screens/dashboard/student_header.dart';
 import 'package:ira/screens/login/login.dart';
-import 'package:ira/services/auth.service.dart';
 import 'package:localstorage/localstorage.dart';
-import 'package:provider/provider.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import 'medical_manager_menu.dart';
 
@@ -17,6 +19,8 @@ class Dashboard extends StatefulWidget {
   String role;
   final secureStorage = const FlutterSecureStorage();
   final localStorage = LocalStorage('store');
+  final baseUrl = FlavorConfig.instance.variables['baseUrl'];
+
   final roleHeaderMap = {
     'student': StudentHeader(),
     'guard': StaffHeader(),
@@ -74,104 +78,48 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    AuthService authService = Provider.of(context);
-
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        elevation: 0,
-        leading: const Icon(Icons.menu),
-        actions: [
-          Container(
-            margin: const EdgeInsets.only(right: 10.0),
-            child: const Icon(Icons.notifications),
-          )
-        ],
-      ),
-      body: Column(children: [
-        Container(
-          height: 130.0,
-          width: MediaQuery.of(context).size.width,
-          decoration: const BoxDecoration(
-            color: Colors.blue,
-          ),
-          alignment: Alignment.topLeft,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(30.0, 10.0, 30.0, 10.0),
-            child: widget.roleHeaderMap[widget.role],
-          ),
+        drawer: AppDrawer(role: widget.role),
+        appBar: AppBar(
+          backgroundColor: Colors.blue,
+          elevation: 0,
+          title: widget.roleHeaderMap[widget.role],
         ),
-        Expanded(
-          child: Container(
-            color: Colors.blue,
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              decoration: const BoxDecoration(
-                color: Color(0xFFE5E5E5),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(20.0),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(20.0),
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey,
-                            offset: Offset(0, 2),
-                            blurRadius: 5.0,
-                          ),
-                        ],
-                      ),
-                      child: SizedBox(
-                        height: 150.0,
-                        child: GridView.count(
-                          crossAxisCount: 4,
-                          children: widget.roleBasedMenu(context),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(
-          height: 20.0,
-        ),
-        TextButton(
-          child: const Text(
-            'Sign Out',
-            style: TextStyle(
+        body: SlidingUpPanel(
+          minHeight: MediaQuery.of(context).size.height - 280,
+          maxHeight: MediaQuery.of(context).size.height,
+          parallaxEnabled: true,
+          parallaxOffset: 1.0,
+          panel: const GeneralFeed(),
+          body: Container(
+            // color: Colors.blue,
+            width: MediaQuery.of(context).size.width,
+            decoration: const BoxDecoration(
               color: Colors.blue,
             ),
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(20.0),
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      opacity: 0.5,
+                      fit: BoxFit.cover,
+                      image: NetworkImage(
+                          widget.baseUrl + '/media/images/release.png'),
+                    ),
+                  ),
+                  child: SizedBox(
+                    height: 180.0,
+                    child: GridView.count(
+                      crossAxisCount: 4,
+                      children: widget.roleBasedMenu(context),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-          onPressed: () async {
-            if (widget.role == 'student') {
-              await authService.signOut();
-            } else {
-              await widget.secureStorage.delete(key: 'staffToken');
-              await widget.secureStorage.delete(key: 'role');
-            }
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const LoginScreen(),
-              ),
-            );
-          },
-        )
-      ]),
-    );
+        ));
   }
 }

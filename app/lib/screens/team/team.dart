@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ira/shared/app_scaffold.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
@@ -63,6 +64,7 @@ class _TeamScreenState extends State<TeamScreen> {
             decodedBody.map<Member>((json) => Member.fromJson(json)).toList()
       };
     } else {
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
       mmp = {'team': []};
     }
 
@@ -122,7 +124,7 @@ class _TeamScreenState extends State<TeamScreen> {
                               ),
                             ),
                             const SizedBox(
-                              height: 30.0,
+                              height: 20.0,
                             ),
                             SizedBox(
                               height: 450,
@@ -134,15 +136,29 @@ class _TeamScreenState extends State<TeamScreen> {
                                 itemBuilder: (BuildContext context, int index) {
                                   return Column(
                                     children: [
+                                      const Divider(),
+                                      const SizedBox(
+                                        height: 10.0,
+                                      ),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceEvenly,
                                         children: [
-                                          Image.asset(
-                                            'assets/images/' +
-                                                team![index].profile,
-                                            width: 100,
-                                            height: 100,
+                                          CircleAvatar(
+                                            radius: 50,
+                                            backgroundColor: Colors.black,
+                                            child: CircleAvatar(
+                                              radius: 48,
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              child: ClipOval(
+                                                child: Image.network(
+                                                  baseUrl +
+                                                      '/media/images/' +
+                                                      team![index].profile,
+                                                ),
+                                              ),
+                                            ),
                                           ),
                                           Column(
                                             children: [
@@ -164,16 +180,27 @@ class _TeamScreenState extends State<TeamScreen> {
                                                   IconButton(
                                                     onPressed: () => openUrl(
                                                         team[index].linkedIn),
-                                                    icon: const Icon(
-                                                      Icons
-                                                          .assignment_ind_rounded,
+                                                    icon: CircleAvatar(
+                                                      radius: 22,
+                                                      backgroundColor:
+                                                          Colors.blue,
+                                                      child: CircleAvatar(
+                                                        radius: 20,
+                                                        child: SvgPicture.asset(
+                                                            "assets/svgs/LinkedIn_icon_circle.svg"),
+                                                      ),
                                                     ),
                                                   ),
                                                   IconButton(
                                                     onPressed: () => openUrl(
                                                         team[index].github),
-                                                    icon:
-                                                        const Icon(Icons.code),
+                                                    icon: CircleAvatar(
+                                                      radius: 20,
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      child: Image.asset(
+                                                          "assets/images/github_icon.png"),
+                                                    ),
                                                   ),
                                                 ],
                                               )

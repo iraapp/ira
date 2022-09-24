@@ -31,7 +31,8 @@ class _FeedbackMessManagerState extends State<FeedbackMessManager> {
           .map<FeedbackModel>((json) => FeedbackModel.fromJson(json))
           .toList();
     } else {
-      throw Exception('API call failed');
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+      throw Exception('API Call Failed');
     }
   }
 

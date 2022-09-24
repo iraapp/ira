@@ -71,6 +71,8 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
       mmp['data'] = decodedBody
           .map<DoctorModel>((json) => DoctorModel.fromJson(json))
           .toList();
+    } else {
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
 
     return Future.value(mmp);

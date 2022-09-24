@@ -372,6 +372,9 @@ class _AddNewDoctor extends State<AddNewDoctor> {
                                         if (response.statusCode == 200) {
                                           Navigator.pop(context);
                                           widget.updateView!();
+                                        } else {
+                                          // ScaffoldMessenger.of(context)
+                                          //     .showSnackBar(alertSnackbar);
                                         }
                                       } else {
                                         final response = await http.post(
@@ -406,6 +409,9 @@ class _AddNewDoctor extends State<AddNewDoctor> {
                                         if (response.statusCode == 200) {
                                           Navigator.pop(context);
                                           widget.updateView!();
+                                        } else {
+                                          // ScaffoldMessenger.of(context)
+                                          //     .showSnackBar(alertSnackbar);
                                         }
                                       }
                                     }

@@ -45,7 +45,8 @@ class _TenderMessState extends State<TenderMess> {
       }
       return _activeItems;
     } else {
-      throw Exception('API call failed');
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+      throw Exception('API Call Failed');
     }
   }
 
@@ -72,7 +73,8 @@ class _TenderMessState extends State<TenderMess> {
       }
       return _archivedItems;
     } else {
-      throw Exception('API call failed');
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+      throw Exception('API Call Failed');
     }
   }
 
@@ -254,7 +256,8 @@ class _TenderMessState extends State<TenderMess> {
                                                         if (data.file !=
                                                             'null') {
                                                           await _downloadFile(
-                                                              data.file,
+                                                              widget.baseUrl +
+                                                                  data.file,
                                                               data.id);
                                                         }
                                                       },

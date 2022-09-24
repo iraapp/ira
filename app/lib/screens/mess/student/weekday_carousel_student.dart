@@ -11,7 +11,7 @@ class WeekDayCarouselStudent extends StatelessWidget {
   final secureStorage = const FlutterSecureStorage();
   final String baseUrl = FlavorConfig.instance.variables['baseUrl'];
 
-  Future<WeekDay> _getWeekDayData() async {
+  Future<WeekDay> _getWeekDayData(BuildContext context) async {
     try {
       String? idToken = await secureStorage.read(key: 'idToken');
       final requestUrl = Uri.parse(baseUrl + '/mess/all_items');
@@ -38,7 +38,8 @@ class WeekDayCarouselStudent extends StatelessWidget {
         };
         return WeekDay.fromJson(weekDataMap);
       } else {
-        throw Exception('API call failed');
+        // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+        throw Exception('API Call Failed');
       }
     } catch (e) {
       return WeekDay(meals: [], weekday: "");
@@ -48,7 +49,7 @@ class WeekDayCarouselStudent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _getWeekDayData(),
+      future: _getWeekDayData(context),
       builder: (BuildContext context, AsyncSnapshot<WeekDay> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasData) {

@@ -64,6 +64,8 @@ class _MedicalAppointmentsScreenState extends State<MedicalAppointmentsScreen> {
           .map<AppointmentModel>((json) => AppointmentModel.fromJson(json))
           .toList();
       return Future.value(appointments);
+    } else {
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
 
     return Future.value([]);

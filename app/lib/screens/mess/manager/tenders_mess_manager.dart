@@ -47,9 +47,9 @@ class _TendersMessManagerState extends State<TendersMessManager> {
         }
       }
       return _activeItems;
-    } else {
-      throw Exception('API call failed');
     }
+    // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+    throw Exception('API Call failed');
   }
 
   Future<List<MessTenderModel>> _getMessTenderArchivedItems() async {
@@ -74,9 +74,9 @@ class _TendersMessManagerState extends State<TendersMessManager> {
         }
       }
       return _archivedItems;
-    } else {
-      throw Exception('API call failed');
     }
+    // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+    throw Exception('API Call Failed');
   }
 
   Future<bool> _submitMessTenderItem({
@@ -130,7 +130,7 @@ class _TendersMessManagerState extends State<TendersMessManager> {
     if (response.statusCode == 200) {
       return;
     } else {
-      throw Exception('Failed to get');
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
   }
 
@@ -346,7 +346,8 @@ class _TendersMessManagerState extends State<TendersMessManager> {
                                                             if (data.file !=
                                                                 'null') {
                                                               await _downloadFile(
-                                                                  data.file,
+                                                                  widget.baseUrl +
+                                                                      data.file,
                                                                   data.id);
                                                             }
                                                           },

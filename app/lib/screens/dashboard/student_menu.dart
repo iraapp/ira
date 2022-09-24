@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ira/screens/dashboard/dashboard_icon.dart';
 import 'package:ira/screens/gate_pass/purpose.dart';
 import 'package:ira/screens/hostel/dashboard.dart';
 import 'package:ira/screens/medical/dashboard.dart';
@@ -9,159 +10,40 @@ import '../profile/profile.dart';
 
 studentMenu(context) {
   return [
-    Column(children: [
-      CircleAvatar(
-        backgroundColor: Colors.blue,
-        child: IconButton(
-          icon: const Icon(Icons.person),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => Profile(),
-              ),
-            );
-          },
-          color: Colors.white,
-        ),
-      ),
-      const SizedBox(height: 5.0),
-      const Text(
-        "Id Card",
-        style: TextStyle(fontSize: 12.0),
-      )
-    ]),
-    Column(children: [
-      CircleAvatar(
-        backgroundColor: Colors.blue,
-        child: IconButton(
-          icon: const Icon(Icons.food_bank),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const MessStudentScreen(),
-              ),
-            );
-          },
-          color: Colors.white,
-        ),
-      ),
-      const SizedBox(height: 5.0),
-      const Text(
-        "Mess",
-        style: TextStyle(fontSize: 12.0),
-      )
-    ]),
-    Column(children: [
-      CircleAvatar(
-        backgroundColor: Colors.blue,
-        child: IconButton(
-          icon: const Icon(Icons.admin_panel_settings_rounded),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const PurposeScreen(),
-              ),
-            );
-          },
-          color: Colors.white,
-        ),
-      ),
-      const SizedBox(height: 5.0),
-      const Text(
-        "Gate Pass",
-        style: TextStyle(fontSize: 12.0),
-      )
-    ]),
-    Column(children: [
-      CircleAvatar(
-        backgroundColor: Colors.blue,
-        child: IconButton(
-          icon: const Icon(Icons.people),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const TeamScreen(),
-              ),
-            );
-          },
-          color: Colors.white,
-        ),
-      ),
-      const SizedBox(height: 5.0),
-      const Text(
-        "Team",
-        style: TextStyle(fontSize: 12.0),
-      )
-    ]),
-    Column(children: [
-      CircleAvatar(
-        backgroundColor: Colors.blue,
-        child: IconButton(
-          icon: const Icon(Icons.person),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const HostelStudentScreen(),
-              ),
-            );
-          },
-          color: Colors.white,
-        ),
-      ),
-      const SizedBox(height: 5.0),
-      const Text(
-        "Hostel",
-        style: TextStyle(fontSize: 12.0),
-      )
-    ]),
-    Column(children: [
-      CircleAvatar(
-        backgroundColor: Colors.blue,
-        child: IconButton(
-          icon: const Icon(Icons.person),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const HostelSecretaryScreen(),
-              ),
-            );
-          },
-          color: Colors.white,
-        ),
-      ),
-      const SizedBox(height: 5.0),
-      const Text(
-        "Hostel Secretary",
-        style: TextStyle(fontSize: 12.0),
-      )
-    ]),
-    Column(children: [
-      CircleAvatar(
-        backgroundColor: Colors.blue,
-        child: IconButton(
-          icon: const Icon(Icons.medical_services),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const MedicalStudentScreen(),
-              ),
-            );
-          },
-          color: Colors.white,
-        ),
-      ),
-      const SizedBox(height: 5.0),
-      const Text(
-        "Medical",
-        style: TextStyle(fontSize: 12.0),
-      )
-    ]),
+    DashboardIcon(
+      icon: const Icon(Icons.person),
+      title: "Id Card",
+      pageRoute: Profile(),
+    ),
+    DashboardIcon(
+      icon: const Icon(Icons.food_bank),
+      title: "Mess",
+      pageRoute: const MessStudentScreen(),
+    ),
+    DashboardIcon(
+      icon: const Icon(Icons.admin_panel_settings_rounded),
+      title: "Gate Pass",
+      pageRoute: const PurposeScreen(),
+    ),
+    DashboardIcon(
+      icon: const Icon(Icons.people),
+      title: "Team",
+      pageRoute: const TeamScreen(),
+    ),
+    DashboardIcon(
+      icon: const Icon(Icons.person),
+      title: "Hostel",
+      pageRoute: const HostelStudentScreen(),
+    ),
+    DashboardIcon(
+      icon: const Icon(Icons.person),
+      title: "H. Secretary",
+      pageRoute: const HostelSecretaryScreen(),
+    ),
+    DashboardIcon(
+      icon: const Icon(Icons.medical_services),
+      title: "Medical",
+      pageRoute: const MedicalStudentScreen(),
+    ),
   ];
 }
