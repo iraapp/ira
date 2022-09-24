@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -152,11 +153,13 @@ class _TeamScreenState extends State<TeamScreen> {
                                               backgroundColor:
                                                   Colors.transparent,
                                               child: ClipOval(
-                                                child: Image.network(
+                                                child: Image(
+                                                    image:
+                                                        CachedNetworkImageProvider(
                                                   baseUrl +
                                                       '/media/images/' +
                                                       team![index].profile,
-                                                ),
+                                                )),
                                               ),
                                             ),
                                           ),

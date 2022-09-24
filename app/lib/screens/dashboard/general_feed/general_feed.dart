@@ -109,27 +109,35 @@ class _GeneralFeedState extends State<GeneralFeed> {
             ),
           ),
           Expanded(
-            child: FutureBuilder(
-              future: fetchFeed(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<List<FeedModel>> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting ||
-                    snapshot.data == null) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                return ListView.builder(
-                  itemCount: snapshot.data?.length,
-                  itemBuilder: ((BuildContext context, int index) {
-                    return Column(
-                      children: [
-                        FeedPost(data: snapshot.data![index]),
-                        const Divider(),
-                      ],
-                    );
-                  }),
-                );
+            child: RefreshIndicator(
+              displacement: 15.0,
+              color: Colors.white,
+              backgroundColor: Colors.blue,
+              onRefresh: () async {
+                setState(() {});
               },
+              child: FutureBuilder(
+                future: fetchFeed(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<FeedModel>> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting ||
+                      snapshot.data == null) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  return ListView.builder(
+                    itemCount: snapshot.data?.length,
+                    itemBuilder: ((BuildContext context, int index) {
+                      return Column(
+                        children: [
+                          FeedPost(data: snapshot.data![index]),
+                          const Divider(),
+                        ],
+                      );
+                    }),
+                  );
+                },
+              ),
             ),
           ),
           const SizedBox(
