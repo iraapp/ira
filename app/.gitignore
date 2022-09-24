@@ -46,6 +46,5 @@ app.*.map.json
 upload-keystore.jks
 
 # Firebase api keys
-lib/firebase_options.dart
 android/app/google-services.json
 ios/firebase_app_id_file.json
