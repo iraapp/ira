@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ira/screens/dashboard/student_drawer_header.dart';
-import 'package:ira/screens/gate_pass/gate_pass.dart';
 import 'package:ira/screens/gate_pass/purpose.dart';
 import 'package:ira/screens/hostel/dashboard.dart';
 import 'package:ira/screens/login/login.dart';
