@@ -59,7 +59,7 @@ AUTH_USER_MODEL = 'authentication.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'authentication.backends.GoogleAuthenticationBackend',
+        'authentication.backends.UserAuthenticationBackend',
         'authentication.backends.StaffAuthenticationBackend'
     )
 }

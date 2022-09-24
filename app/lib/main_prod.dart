@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,15 +7,21 @@ import 'package:ira/my_app.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 
+import 'firebase_options.dart';
+
 Future main() async {
+  // Load environments variables from .env file.
+  await dotenv.load(fileName: ".env.symlink");
+
   // Initialize the plugin for flutter downloader
   WidgetsFlutterBinding.ensureInitialized();
   await FlutterDownloader.initialize(
     debug: true,
     ignoreSsl: true,
   );
-  // Load environments variables from .env file.
-  await dotenv.load(fileName: ".env.symlink");
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   FlavorConfig(
     name: "PROD",
