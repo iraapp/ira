@@ -5,7 +5,6 @@ import 'package:ira/screens/gate_pass/purpose.dart';
 import 'package:ira/screens/hostel/dashboard.dart';
 import 'package:ira/screens/login/login.dart';
 import 'package:ira/screens/medical/dashboard.dart';
-import 'package:ira/screens/mess/student/menu_mess_student.dart';
 import 'package:ira/screens/mess/student/mess_student.dart';
 import 'package:ira/screens/profile/profile.dart';
 import 'package:ira/screens/team/team.dart';

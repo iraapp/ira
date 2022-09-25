@@ -1,6 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:ira/screens/mess/manager/weekday_carousel_manager.dart';
 
 class MenuMessManager extends StatefulWidget {
   const MenuMessManager({Key? key}) : super(key: key);
