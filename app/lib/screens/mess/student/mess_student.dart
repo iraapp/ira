@@ -1,14 +1,9 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_flavor/flutter_flavor.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ira/screens/mess/student/complains_mess_student.dart';
-import 'package:ira/screens/mess/factories/mess.dart';
 import 'package:ira/screens/mess/student/feedback_mess_student.dart';
 import 'package:ira/screens/mess/student/menu_mess_student.dart';
 import 'package:ira/screens/mess/student/mom_mess_student.dart';
 import 'package:ira/screens/mess/student/tender_mess_student.dart';
-import 'package:http/http.dart' as http;
 
 class MessStudentScreen extends StatefulWidget {
   const MessStudentScreen({Key? key}) : super(key: key);
@@ -18,33 +13,6 @@ class MessStudentScreen extends StatefulWidget {
 }
 
 class _MessStudentScreenState extends State<MessStudentScreen> {
-  final secureStorage = const FlutterSecureStorage();
-  String baseUrl = FlavorConfig.instance.variables['baseUrl'];
-
-  Future<Map<String, List<Mess>>> fetchMessData() async {
-    String? idToken = await secureStorage.read(key: 'idToken');
-    final response = await http.get(
-        Uri.parse(
-          baseUrl + '/mess/all_items',
-        ),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'idToken ' + idToken!
-        });
-
-    Map<String, List<Mess>> mmp = {};
-
-    if (response.statusCode == 200) {
-      List decodedData = jsonDecode(response.body) as List;
-      mmp = {
-        'data': decodedData.map<Mess>((json) => Mess.fromJson(json)).toList(),
-      };
-    }
-    // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
-
-    return Future.value(mmp);
-  }
-
   final List<String> _messList = [
     "Feedback",
     "Complaint",

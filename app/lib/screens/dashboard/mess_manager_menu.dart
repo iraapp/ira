@@ -28,7 +28,10 @@ messManagerMenu(context) {
       const SizedBox(height: 5.0),
       const Text(
         "Feedbacks",
-        style: TextStyle(fontSize: 12.0),
+        style: TextStyle(
+          fontSize: 12.0,
+          color: Colors.white,
+        ),
       )
     ]),
     Column(children: [
@@ -52,7 +55,10 @@ messManagerMenu(context) {
       const SizedBox(height: 5.0),
       const Text(
         "Complaints",
-        style: TextStyle(fontSize: 12.0),
+        style: TextStyle(
+          fontSize: 12.0,
+          color: Colors.white,
+        ),
       )
     ]),
     Column(children: [
@@ -76,7 +82,10 @@ messManagerMenu(context) {
       const SizedBox(height: 5.0),
       const Text(
         "Menu",
-        style: TextStyle(fontSize: 12.0),
+        style: TextStyle(
+          fontSize: 12.0,
+          color: Colors.white,
+        ),
       )
     ]),
     Column(children: [
@@ -100,7 +109,10 @@ messManagerMenu(context) {
       const SizedBox(height: 5.0),
       const Text(
         "Tenders",
-        style: TextStyle(fontSize: 12.0),
+        style: TextStyle(
+          fontSize: 12.0,
+          color: Colors.white,
+        ),
       )
     ]),
     Column(children: [
@@ -124,7 +136,10 @@ messManagerMenu(context) {
       const SizedBox(height: 5.0),
       const Text(
         "MOM",
-        style: TextStyle(fontSize: 12.0),
+        style: TextStyle(
+          fontSize: 12.0,
+          color: Colors.white,
+        ),
       )
     ]),
   ];

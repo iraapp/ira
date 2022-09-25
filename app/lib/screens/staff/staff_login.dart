@@ -136,14 +136,16 @@ class _StaffLoginState extends State<StaffLogin> {
                                       }));
 
                                   if (response.statusCode == 200) {
+                                    final staffRole = staffRoleChoices[
+                                        jsonDecode(response.body)['staff_user']
+                                            ['role']];
                                     await secureStorage.write(
                                       key: 'staffToken',
                                       value: jsonDecode(response.body)['token'],
                                     );
                                     await localStorage.setItem(
                                       'staffRole',
-                                      staffRoleChoices[jsonDecode(
-                                          response.body)['staff_user']['role']],
+                                      staffRole,
                                     );
                                     await localStorage.setItem(
                                         'staffName',
@@ -156,7 +158,7 @@ class _StaffLoginState extends State<StaffLogin> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => Dashboard(
-                                          role: 'guard',
+                                          role: staffRole ?? '',
                                         ),
                                       ),
                                     );

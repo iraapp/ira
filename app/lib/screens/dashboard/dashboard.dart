@@ -90,7 +90,7 @@ class _DashboardState extends State<Dashboard> {
           maxHeight: MediaQuery.of(context).size.height,
           parallaxEnabled: true,
           parallaxOffset: 1.0,
-          panel: const GeneralFeed(),
+          panel: widget.role == 'student' ? const GeneralFeed() : Container(),
           body: Container(
             // color: Colors.blue,
             width: MediaQuery.of(context).size.width,
@@ -101,14 +101,16 @@ class _DashboardState extends State<Dashboard> {
               children: [
                 Container(
                   padding: const EdgeInsets.all(20.0),
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      opacity: 0.5,
-                      fit: BoxFit.cover,
-                      image: NetworkImage(
-                          widget.baseUrl + '/media/images/release.png'),
-                    ),
-                  ),
+                  decoration: widget.role == 'student'
+                      ? BoxDecoration(
+                          image: DecorationImage(
+                            opacity: 0.5,
+                            fit: BoxFit.cover,
+                            image: NetworkImage(
+                                widget.baseUrl + '/media/images/release.png'),
+                          ),
+                        )
+                      : const BoxDecoration(),
                   child: SizedBox(
                     height: 180.0,
                     child: GridView.count(

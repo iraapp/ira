@@ -367,7 +367,7 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
       context: context,
       builder: (context) => AlertDialog(
         content: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(height: 10.0),
@@ -391,7 +391,7 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
             const SizedBox(height: 10.0),
             Image(
                 image: CachedNetworkImageProvider(widget.baseUrl + filePath),
-                fit: BoxFit.cover),
+                height: 300.0),
             const SizedBox(height: 10.0),
             Container(
                 color: const Color(0xfff5f5f5),

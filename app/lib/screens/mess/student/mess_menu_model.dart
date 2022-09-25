@@ -1,42 +1,44 @@
-// Weekday: Monday / Tuesday, etc
 class WeekDay {
   final String weekday;
-  final List<MealType> meals;
+  final List<MessMenu> menus;
 
   WeekDay({
     required this.weekday,
-    required this.meals,
+    required this.menus,
   });
 
   factory WeekDay.fromJson(Map<String, dynamic> json) {
+    List<MessMenu> menus = [];
+
+    for (var k in json['menus'].keys) {
+      menus.add(MessMenu.fromJson(json['menus'][k]));
+    }
     return WeekDay(
       weekday: json['weekday'],
-      meals: json['meals'],
+      menus: menus,
     );
   }
 }
 
 // Meal Type: Breakfast / Lunch / Snacks / Dinner
-class MealType {
+class MessMenu {
   final String id;
   final MealSlot slot;
-  final List<MealItems> items;
+  final List<MenuItem> items;
 
-  MealType({
+  MessMenu({
     required this.id,
     required this.slot,
     required this.items,
   });
 
-  factory MealType.fromJson(Map<String, dynamic> json) {
-    return MealType(
+  factory MessMenu.fromJson(Map<String, dynamic> json) {
+    return MessMenu(
       id: json['id'].toString(),
       slot: MealSlot.fromJson(json['slot']),
-      items: List<MealItems>.from(
-        json['items'].map(
-          (item) => MealItems.fromJson(item),
-        ),
-      ),
+      items: json['items']
+          .map<MenuItem>((item) => MenuItem.fromJson(item))
+          .toList(),
     );
   }
 }
@@ -66,17 +68,17 @@ class MealSlot {
 }
 
 // Meal Items: Chicken / Rice / etc.
-class MealItems {
+class MenuItem {
   final String id;
   final String name;
 
-  MealItems({
+  MenuItem({
     required this.id,
     required this.name,
   });
 
-  factory MealItems.fromJson(Map<String, dynamic> json) {
-    return MealItems(
+  factory MenuItem.fromJson(Map<String, dynamic> json) {
+    return MenuItem(
       id: json['id'].toString(),
       name: json['name'],
     );
