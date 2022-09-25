@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ira/constants/constants.dart';
 import 'package:localstorage/localstorage.dart';
 
 class StaffHeader extends StatelessWidget {
@@ -16,35 +15,17 @@ class StaffHeader extends StatelessWidget {
             return const Text('');
           }
 
-          if (localStorage.getItem('displayName') == null) {
+          if (localStorage.getItem('staffName') == null) {
             return const Text('');
           }
 
           String displayName = localStorage.getItem('staffName');
 
-          String? displayRole =
-              staffRoleDisplayNameMap[localStorage.getItem('staffRole')];
-
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                displayName,
-                style: const TextStyle(
-                  fontSize: 30.0,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(
-                height: 10.0,
-              ),
-              Text(
-                displayRole!,
-                style: const TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ],
+          return Text(
+            displayName,
+            style: const TextStyle(
+              color: Colors.white,
+            ),
           );
         });
   }

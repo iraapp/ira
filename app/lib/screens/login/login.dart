@@ -55,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 20.0,
                   ),
                   const Text(
-                    'Institute App',
+                    'IRA',
                     style: TextStyle(
                       fontSize: 35.0,
                       fontWeight: FontWeight.w600,

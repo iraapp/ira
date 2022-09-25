@@ -10,15 +10,7 @@ class MenuMessManager extends StatefulWidget {
 }
 
 class _MenuMessManagerState extends State<MenuMessManager> {
-  final List<Widget> _weekdaysCarousels = [
-    WeekDayCarouselManager(weekDay: "Monday"),
-    WeekDayCarouselManager(weekDay: "Tuesday"),
-    WeekDayCarouselManager(weekDay: "Wednesday"),
-    WeekDayCarouselManager(weekDay: "Thrusday"),
-    WeekDayCarouselManager(weekDay: "Friday"),
-    WeekDayCarouselManager(weekDay: "Saturday"),
-    WeekDayCarouselManager(weekDay: "Sunday"),
-  ];
+  final List<Widget> _weekdaysCarousels = [];
 
   @override
   Widget build(BuildContext context) {

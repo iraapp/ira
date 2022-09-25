@@ -22,7 +22,7 @@ class ComplaintModel {
   factory ComplaintModel.fromJson(Map<String, dynamic> json) {
     return ComplaintModel(
       id: json['id'].toString(),
-      user: json['user'].toString(),
+      user: json['user']['first_name'] + ' ' + json['user']['last_name'],
       body: json['body'].toString(),
       messMeal: json['mess_meal'].toString(),
       messType: json["mess_type"] != null
