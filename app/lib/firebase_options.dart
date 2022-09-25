@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAOHbHtunKKtX6cWpnKjUCVEw8dSlDNVv8',
-    appId: '1:907710643901:android:ee2a0f1ff6df49dbca41d4',
+    appId: '1:907710643901:android:087d666da56475d0ca41d4',
     messagingSenderId: '907710643901',
     projectId: 'iraapp-355206',
     storageBucket: 'iraapp-355206.appspot.com',

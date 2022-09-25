@@ -20,18 +20,15 @@ class MyApp extends StatelessWidget {
           create: (_) => AuthService(context: context),
         )
       ],
-      child: FlavorBanner(
-        location: BannerLocation.topEnd,
-        child: MaterialApp(
-          title: 'Institute App',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-              textTheme: GoogleFonts.latoTextTheme(),
-              listTileTheme: ListTileTheme.of(context).copyWith(
-                selectedColor: Colors.blue,
-              )),
-          home: const Wrapper(),
-        ),
+      child: MaterialApp(
+        title: 'Institute App',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+            textTheme: GoogleFonts.latoTextTheme(),
+            listTileTheme: ListTileTheme.of(context).copyWith(
+              selectedColor: Colors.blue,
+            )),
+        home: const Wrapper(),
       ),
     );
   }
