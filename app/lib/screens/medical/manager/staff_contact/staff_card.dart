@@ -104,6 +104,8 @@ class StaffCard extends StatelessWidget {
 
                     if (response.statusCode == 200) {
                       successCallback();
+                    } else {
+                      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
                     }
                   },
                   child: SizedBox(

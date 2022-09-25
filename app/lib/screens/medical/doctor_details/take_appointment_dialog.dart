@@ -5,7 +5,7 @@ import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
-Future<bool> _requestAppointment(int id) async {
+Future<bool> _requestAppointment(int id, BuildContext context) async {
   const secureStorage = FlutterSecureStorage();
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
   String? idToken = await secureStorage.read(key: 'idToken');
@@ -24,6 +24,8 @@ Future<bool> _requestAppointment(int id) async {
 
   if (response.statusCode == 200) {
     return Future.value(true);
+  } else {
+    // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
   }
 
   return Future.value(false);
@@ -58,7 +60,7 @@ Future takeAppointmentDialog(
               padding: const EdgeInsets.only(left: 15.0, right: 15.0),
             ),
             onPressed: () async {
-              bool result = await _requestAppointment(id);
+              bool result = await _requestAppointment(id, context);
 
               if (result) {
                 Navigator.pop(context);

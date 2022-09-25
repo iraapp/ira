@@ -357,6 +357,8 @@ Future showConfirmDialog(
                 if (response.statusCode == 200) {
                   updateView();
                   Navigator.pop(context);
+                } else {
+                  // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
                 }
               }
             },
@@ -439,6 +441,8 @@ Future showRejectionDialog(
 
                 if (response.statusCode == 200) {
                   Navigator.pop(context);
+                } else {
+                  // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
                 }
               }
             },

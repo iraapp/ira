@@ -77,6 +77,8 @@ class _DoctorDetailsManagerState extends State<DoctorDetailsManager> {
             (json) => DoctorManagerModel.fromJson(json),
           )
           .toList();
+    } else {
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
 
     return Future.value(mmp);

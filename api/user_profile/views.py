@@ -2,14 +2,14 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from authentication.models import User
-from authentication.backends import GoogleAuthenticationBackend
+from authentication.backends import UserAuthenticationBackend
 from rest_framework.decorators import authentication_classes
 
 from user_profile.models import Student
 # Create your views here.
 
 @authentication_classes([
-  GoogleAuthenticationBackend
+  UserAuthenticationBackend
 ])
 class StudentProfile(APIView):
   permission_classes = [IsAuthenticated]

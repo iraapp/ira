@@ -1,12 +1,18 @@
 from rest_framework import serializers
+from feed.models import Document
 
+from authentication.serializers import UserSerializer
+
+class DocumentSerializer(serializers.Serializer):
+    file = serializers.FileField()
+    filename = serializers.CharField()
+    extension = serializers.CharField()
 
 class PostSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
-    user = serializers.CharField(max_length=30)
+    user = UserSerializer()
     body = serializers.CharField(max_length=30)
-    image = serializers.ImageField()
-    file = serializers.FileField()
+    attachments = DocumentSerializer(many = True)
     created_at = serializers.DateTimeField()
     updated_at = serializers.DateTimeField()
 

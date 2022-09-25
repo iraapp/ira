@@ -54,6 +54,8 @@ class _StaffContactScreenState extends State<StaffContactScreen> {
       mmp['data'] = decodedData
           .map<StaffModel>((json) => StaffModel.fromJson(json))
           .toList();
+    } else {
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
 
     return Future.value(mmp);

@@ -17,18 +17,44 @@ STAFF_ROLE_IDS = {
     'medical_manager': 3,
 }
 
+USER_ROLES={
+    'student': 1,
+    'employee': 2,
+    'admin': 3,
+    'swo_office': 4,
+    'academic_office_ug': 5,
+    'academic_office_pg': 6,
+    'gymkhana': 7,
+    'cultural_board':8,
+    'technical_board':9,
+    'sports_board':10,
+    'hostel_board':11,
+    'academic_board_ug':12,
+    'academic_board_pg':13,
+    'ira_team':14,
+}
+
 # Create your models here.
 class User(AbstractBaseUser, PermissionsMixin):
 
     # These fields tie to the roles!
-    STUDENT = 1
-    EMPLOYEE = 2
-    ADMIN = 3
+
 
     ROLE_CHOICES = (
-        (ADMIN, 'Admin'),
-        (STUDENT, 'Student'),
-        (EMPLOYEE, 'Employee')
+        (USER_ROLES['admin'], 'Admin'),
+        (USER_ROLES['student'], 'Student'),
+        (USER_ROLES['employee'], 'Employee'),
+        (USER_ROLES['swo_office'], 'SWO Office'),
+        (USER_ROLES['academic_office_ug'], 'Academic Office UG'),
+        (USER_ROLES['academic_office_pg'], 'Academic Office PG'),
+        (USER_ROLES['gymkhana'], 'Gymkhana'),
+        (USER_ROLES['cultural_board'], 'Cultural Board'),
+        (USER_ROLES['technical_board'], 'Technical Board'),
+        (USER_ROLES['sports_board'], 'Sports Board'),
+        (USER_ROLES['hostel_board'], 'Hostel Board'),
+        (USER_ROLES['academic_board_ug'], 'Academic Board UG'),
+        (USER_ROLES['academic_board_pg'], 'Academic Board PG'),
+        (USER_ROLES['ira_team'], 'IRA Team'),
     )
 
     # Roles created here
@@ -59,6 +85,35 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = 'users'
 
 
+class UserToken(models.Model):
+    """
+    The staff authorization token model.
+    """
+    key = models.CharField(_("Key"), max_length=40, primary_key=True)
+    user = models.OneToOneField(
+        User, related_name='id_token',
+        on_delete=models.CASCADE, verbose_name=_("User")
+    )
+    created = models.DateTimeField(_("Created"), auto_now_add=True)
+
+    class Meta:
+        abstract = 'rest_framework.authtoken' not in settings.INSTALLED_APPS
+        verbose_name = _("User Token")
+        verbose_name_plural = _("User Tokens")
+
+    def save(self, *args, **kwargs):
+        if not self.key:
+            self.key = self.generate_key()
+        return super().save(*args, **kwargs)
+
+    @classmethod
+    def generate_key(cls):
+        return binascii.hexlify(os.urandom(20)).decode()
+
+    def __str__(self):
+        return self.key
+
+
 class Staff(models.Model):
     # These fields tie to the roles!
     STAFF_ROLE_CHOICES = (
@@ -82,6 +137,7 @@ class Staff(models.Model):
         return True
     def __str__(self):
         return self.first_name + ' ' + self.last_name
+
 
 class StaffToken(models.Model):
     """

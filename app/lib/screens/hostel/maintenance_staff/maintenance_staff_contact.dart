@@ -41,8 +41,8 @@ class MaintenanceStaffContact extends StatelessWidget {
   final secureStorage = const FlutterSecureStorage();
   final String baseUrl = FlavorConfig.instance.variables['baseUrl'];
 
-  Future<Map<String, List<MaintenanceContactModel>>>
-      fetchMaintenanceStaff() async {
+  Future<Map<String, List<MaintenanceContactModel>>> fetchMaintenanceStaff(
+      BuildContext context) async {
     String? idToken = await secureStorage.read(key: 'idToken');
     final response = await http.get(
         Uri.parse(
@@ -65,6 +65,8 @@ class MaintenanceStaffContact extends StatelessWidget {
             )
             .toList(),
       };
+    } else {
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
 
     return Future.value(mmp);
@@ -118,7 +120,7 @@ class MaintenanceStaffContact extends StatelessWidget {
                   height: 10.0,
                 ),
                 FutureBuilder<Map<String, List<MaintenanceContactModel>>>(
-                    future: fetchMaintenanceStaff(),
+                    future: fetchMaintenanceStaff(context),
                     builder: (BuildContext context,
                         AsyncSnapshot<dynamic> snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting ||

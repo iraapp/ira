@@ -38,7 +38,8 @@ class _MOMMessState extends State<MOMMess> {
           .map<MessMOMModel>((json) => MessMOMModel.fromJson(json))
           .toList();
     } else {
-      throw Exception('API call failed');
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+      throw Exception('API Call Failed');
     }
   }
 
@@ -168,7 +169,8 @@ class _MOMMessState extends State<MOMMess> {
                                                         if (data.file !=
                                                             'null') {
                                                           await _downloadFile(
-                                                              data.file,
+                                                              widget.baseUrl +
+                                                                  data.file,
                                                               data.id);
                                                         }
                                                       },

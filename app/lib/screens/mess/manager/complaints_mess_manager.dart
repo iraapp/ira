@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -34,9 +35,9 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
       return data
           .map<ComplaintModel>((json) => ComplaintModel.fromJson(json))
           .toList();
-    } else {
-      throw Exception('API call failed');
     }
+    // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+    throw Exception('API Call failed');
   }
 
   Future<void> _takeActionOnComplaint(int id) async {
@@ -55,7 +56,7 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
     if (response.statusCode == 200) {
       return;
     } else {
-      throw Exception('Failed to get');
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
   }
 
@@ -388,7 +389,9 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
               ],
             ),
             const SizedBox(height: 10.0),
-            Image.network(widget.baseUrl + filePath, fit: BoxFit.cover),
+            Image(
+                image: CachedNetworkImageProvider(widget.baseUrl + filePath),
+                fit: BoxFit.cover),
             const SizedBox(height: 10.0),
             Container(
                 color: const Color(0xfff5f5f5),
