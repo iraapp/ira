@@ -12,10 +12,8 @@ import 'package:localstorage/localstorage.dart';
 class AuthService with ChangeNotifier {
   GoogleSignInAccount? _user;
   bool isAuthenticated = false;
-  StreamController<bool> isAuthenticatedStreamController =
-      StreamController<bool>();
   final GoogleSignIn _googleSignIn =
-      GoogleSignIn(clientId: dotenv.env['GOOGLE_OAUTH_CLIENT_ID']);
+      GoogleSignIn(serverClientId: dotenv.env['GOOGLE_OAUTH_CLIENT_ID']);
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
   // ignore: prefer_function_declarations_over_variables
   VoidCallback successCallback = () {};
@@ -27,8 +25,13 @@ class AuthService with ChangeNotifier {
   BuildContext context;
 
   AuthService({required this.context}) {
-    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
+    _googleSignIn.onCurrentUserChanged
+        .listen((GoogleSignInAccount? account) async {
       if (account != null) {
+        if (account.email.split('@')[1] != 'iitjammu.ac.in') {
+          await _googleSignIn.signOut();
+        }
+
         _user = account;
         _user?.authentication.then(
           (googleKey) async {
@@ -52,10 +55,8 @@ class AuthService with ChangeNotifier {
               await localStorage.setItem('role', 'student');
 
               localStorage.setItem('displayName', _user?.displayName);
-              localStorage.setItem('entry', _user?.email.split('@')[0]);
+              localStorage.setItem('email', _user?.email);
 
-              isAuthenticatedStreamController.add(isAuthenticated);
-              notifyListeners();
               successCallback();
             } else {
               // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
@@ -63,12 +64,9 @@ class AuthService with ChangeNotifier {
           },
         ).catchError((err) {
           isAuthenticated = false;
-          isAuthenticatedStreamController.add(isAuthenticated);
         });
       } else {
         isAuthenticated = false;
-        isAuthenticatedStreamController.add(isAuthenticated);
-        notifyListeners();
       }
     });
 

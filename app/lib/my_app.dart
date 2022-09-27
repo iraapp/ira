@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ira/screens/dashboard/dashboard.dart';
+import 'package:ira/screens/dashboard/general_feed/panel_state_stream.dart';
 import 'package:ira/services/auth.service.dart';
 import 'package:ira/shared/alert_snackbar.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +19,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<AuthService>(
           create: (_) => AuthService(context: context),
-        )
+        ),
+        ChangeNotifierProvider<PanelStateStream>(
+            create: (_) => PanelStateStream())
       ],
       child: FlavorBanner(
         location: BannerLocation.topEnd,

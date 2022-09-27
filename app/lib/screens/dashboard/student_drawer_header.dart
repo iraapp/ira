@@ -26,7 +26,7 @@ class StudentDrawerHeader extends StatelessWidget {
           }
 
           String displayName = localStorage.getItem('displayName');
-          String entry = localStorage.getItem('entry');
+          String entry = localStorage.getItem('email').split('@')[0];
 
           return DrawerHeader(
             decoration: const BoxDecoration(
