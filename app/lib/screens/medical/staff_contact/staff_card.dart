@@ -39,47 +39,61 @@ class StaffCard extends StatelessWidget {
               ),
             ],
           ),
-          child:
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Row(children: [
-              Image.asset("assets/icons/staff_contact_profile.png"),
-              const SizedBox(
-                width: 15.0,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    name,
-                    style: const TextStyle(
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(children: [
+                const CircleAvatar(
+                  backgroundColor: Colors.grey,
+                  child: Icon(
+                    Icons.person,
+                    color: Colors.white,
+                    size: 30,
                   ),
-                  Text(
-                    designation,
-                    style: const TextStyle(
-                      fontSize: 12.0,
+                ),
+                const SizedBox(
+                  width: 15.0,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style: const TextStyle(
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  Text(
-                    contact,
-                    style: const TextStyle(
-                      fontSize: 12.0,
+                    Text(
+                      designation,
+                      style: const TextStyle(
+                        fontSize: 12.0,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ]),
-            IconButton(
-                onPressed: () {
-                  _makePhoneCall(contact);
-                },
-                icon: CircleAvatar(
-                  backgroundColor: Colors.green,
-                  child: Image.asset("assets/icons/call.png"),
-                )),
-          ]),
+                    Text(
+                      contact,
+                      style: const TextStyle(
+                        fontSize: 12.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ]),
+              IconButton(
+                  onPressed: () {
+                    _makePhoneCall(contact);
+                  },
+                  icon: const CircleAvatar(
+                    radius: 25,
+                    backgroundColor: Colors.green,
+                    child: Icon(
+                      Icons.call,
+                      color: Colors.white,
+                      size: 18,
+                    ),
+                  )),
+            ],
+          ),
         ),
         const SizedBox(
           height: 20.0,

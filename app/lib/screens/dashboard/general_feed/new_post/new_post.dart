@@ -152,7 +152,13 @@ class _NewPostState extends State<NewPost> {
                             return Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(files[index].name),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.7,
+                                  child: Text(
+                                    files[index].name,
+                                  ),
+                                ),
                                 IconButton(
                                   onPressed: () {
                                     setState(() {
@@ -174,7 +180,10 @@ class _NewPostState extends State<NewPost> {
                           String richText = jsonEncode(
                               _controller.document.toDelta().toJson());
 
-                          if (richText.isNotEmpty) {
+                          if (_controller.document
+                              .toPlainText()
+                              .trim()
+                              .isNotEmpty) {
                             bool response = await _submitPost(richText);
 
                             if (response) {
