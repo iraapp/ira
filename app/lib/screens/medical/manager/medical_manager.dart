@@ -28,7 +28,7 @@ class _MedicalManagerScreenState extends State<MedicalManagerScreen> {
     const StaffContactManagerScreen(),
     const DoctorDetailsManager(),
     const AppointmentsManagement(),
-    HistoryManager(),
+    const HistoryManager(),
   ];
 
   @override
