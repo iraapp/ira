@@ -58,6 +58,7 @@ dependencies:
   flutter_quill: ^6.0.5
   cached_network_image: ^3.2.1
   firebase_core: ^1.23.0
+  paginated_search_bar: ^1.1.2
 
 dev_dependencies:
   flutter_test:

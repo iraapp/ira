@@ -1,13 +1,59 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_flavor/flutter_flavor.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
+import 'package:ira/screens/medical/manager/history/history_manager_detail.dart';
+import 'package:paginated_search_bar/paginated_search_bar.dart';
 
 class HistoryManager extends StatefulWidget {
   const HistoryManager({Key? key}) : super(key: key);
-
   @override
   State<HistoryManager> createState() => _HistoryManagerState();
 }
 
 class _HistoryManagerState extends State<HistoryManager> {
+  final secureStorage = const FlutterSecureStorage();
+  String baseUrl = FlavorConfig.instance.variables['baseUrl'];
+  List<StudentModel> students = [];
+
+  final TextEditingController _searchController = TextEditingController();
+
+  Future<List<StudentModel>> _getPatientData(String email) async {
+    String? token = await secureStorage.read(key: 'staffToken');
+    final requestUrl = Uri.parse(
+      baseUrl + '/medical/search/patient?email=$email',
+    );
+
+    final Map<String, String> headers = {
+      "Content-Type": "application/x-www-form-urlencoded",
+      'Authorization': token != null ? 'Token ' + token : '',
+    };
+
+    try {
+      final response = await http.get(requestUrl, headers: headers);
+
+      final responseData = json.decode(response.body);
+      final List<StudentModel> studentsData = [];
+      responseData.forEach((student) {
+        studentsData.add(StudentModel.fromJson(student));
+      });
+
+      if (response.statusCode == 200) {
+        return studentsData;
+      } else {
+        return [];
+      }
+    } catch (e) {
+      return [];
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -46,6 +92,7 @@ class _HistoryManagerState extends State<HistoryManager> {
           ),
           SizedBox(
             height: size.height * 0.8,
+            width: double.infinity,
             child: Container(
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(
@@ -57,104 +104,67 @@ class _HistoryManagerState extends State<HistoryManager> {
                 color: Color(0xfff5f5f5),
               ),
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(30.0, 100.0, 30.0, 30.0),
-                child: Form(
-                  // key: _formKey,
-                  child: Column(
-                    children: [
-                      Container(
-                        padding:
-                            const EdgeInsets.fromLTRB(10.0, 50.0, 10.0, 50.0),
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(30.0),
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Text("Weight"),
-                                const SizedBox(
-                                  width: 10.0,
-                                ),
-                                SizedBox(
-                                  width: size.width * 0.5,
-                                  child: TextFormField(
-                                    //   controller: weightFieldController,
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please specify your weight';
-                                      }
-
-                                      return null;
-                                    },
-                                    decoration: const InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      hintText: 'kgs',
-                                      contentPadding: EdgeInsets.symmetric(
-                                          vertical: 0.0, horizontal: 10.0),
-                                    ),
+                padding: const EdgeInsets.fromLTRB(30.0, 50.0, 30.0, 30.0),
+                child: Column(
+                  children: [
+                    PaginatedSearchBar<StudentModel>(
+                      minSearchLength: 1,
+                      hintText: "Search Student",
+                      onSearch: ({
+                        required pageIndex,
+                        required pageSize,
+                        required searchQuery,
+                      }) async {
+                        return _getPatientData(searchQuery);
+                      },
+                      itemBuilder: (
+                        context, {
+                        required item,
+                        required index,
+                      }) {
+                        return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => HistoryManagerDetail(
+                                    student: item,
                                   ),
                                 ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 10.0,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Text("Height"),
-                                const SizedBox(
-                                  width: 10.0,
-                                ),
-                                SizedBox(
-                                  width: size.width * 0.5,
-                                  child: TextFormField(
-                                    // controller: heightFieldController,
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please specify your height';
-                                      }
-
-                                      return null;
-                                    },
-                                    decoration: const InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      hintText: 'centimeters',
-                                      contentPadding: EdgeInsets.symmetric(
-                                        vertical: 0.0,
-                                        horizontal: 10.0,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 10.0,
-                            ),
-                            ElevatedButton(
-                              onPressed: () {},
-                              child: const Text("Calculate"),
-                            ),
-                            const SizedBox(
-                              height: 10.0,
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
+                              );
+                            },
+                            child:
+                                Text(item.first_name + ' ' + item.last_name));
+                      },
+                    )
+                  ],
                 ),
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class StudentModel {
+  // ignore: non_constant_identifier_names
+  final String first_name;
+  // ignore: non_constant_identifier_names
+  final String last_name;
+  final String email;
+  const StudentModel(
+    this.first_name,
+    this.last_name,
+    this.email,
+  );
+
+  factory StudentModel.fromJson(Map<String, dynamic> json) {
+    return StudentModel(
+      json['first_name'],
+      json['last_name'],
+      json['email'],
     );
   }
 }
