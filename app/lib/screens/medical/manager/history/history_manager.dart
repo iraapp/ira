@@ -17,8 +17,6 @@ class _HistoryManagerState extends State<HistoryManager> {
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
   List<StudentModel> students = [];
 
-  final TextEditingController _searchController = TextEditingController();
-
   Future<List<StudentModel>> _getPatientData(String email) async {
     String? token = await secureStorage.read(key: 'staffToken');
     final requestUrl = Uri.parse(
