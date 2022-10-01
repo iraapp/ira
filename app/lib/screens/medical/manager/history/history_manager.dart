@@ -4,6 +4,7 @@ import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:ira/screens/medical/manager/history/history_manager_detail.dart';
+import 'package:ira/screens/medical/manager/history/student_model.dart';
 import 'package:paginated_search_bar/paginated_search_bar.dart';
 
 class HistoryManager extends StatefulWidget {
@@ -131,8 +132,7 @@ class _HistoryManagerState extends State<HistoryManager> {
                                 ),
                               );
                             },
-                            child:
-                                Text(item.first_name + ' ' + item.last_name));
+                            child: Text(item.firstName + ' ' + item.lastName));
                       },
                     )
                   ],
@@ -142,27 +142,6 @@ class _HistoryManagerState extends State<HistoryManager> {
           ),
         ],
       ),
-    );
-  }
-}
-
-class StudentModel {
-  // ignore: non_constant_identifier_names
-  final String first_name;
-  // ignore: non_constant_identifier_names
-  final String last_name;
-  final String email;
-  const StudentModel(
-    this.first_name,
-    this.last_name,
-    this.email,
-  );
-
-  factory StudentModel.fromJson(Map<String, dynamic> json) {
-    return StudentModel(
-      json['first_name'],
-      json['last_name'],
-      json['email'],
     );
   }
 }

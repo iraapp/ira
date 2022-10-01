@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ira/screens/medical/manager/history/doctor_model.dart';
-import 'package:ira/screens/medical/manager/history/history_manager.dart';
+import 'package:ira/screens/medical/manager/history/student_model.dart';
 import 'package:paginated_search_bar/paginated_search_bar.dart';
 import 'package:http/http.dart' as http;
 
@@ -180,9 +180,9 @@ class _HistoryManagerDetailState extends State<HistoryManagerDetail> {
                           ),
                         ),
                         Text(
-                          widget.student.first_name +
+                          widget.student.firstName +
                               " " +
-                              widget.student.last_name,
+                              widget.student.lastName,
                           style: const TextStyle(
                             fontSize: 16.0,
                           ),

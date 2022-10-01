@@ -21,7 +21,6 @@ Future main() async {
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-    name: 'ira',
   );
 
   FlavorConfig(

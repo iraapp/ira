@@ -6,8 +6,8 @@ class DoctorModel {
     this.specialization,
     this.mail,
     this.date,
-    this.start_time,
-    this.end_time,
+    this.startTime,
+    this.endTime,
     this.details,
   );
   final int id;
@@ -16,10 +16,8 @@ class DoctorModel {
   final String specialization;
   final String mail;
   final String date;
-  // ignore: non_constant_identifier_names
-  final String start_time;
-  // ignore: non_constant_identifier_names
-  final String end_time;
+  final String startTime;
+  final String endTime;
   final String details;
 
   factory DoctorModel.fromJson(Map<String, dynamic> json) {

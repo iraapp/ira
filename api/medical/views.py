@@ -370,21 +370,23 @@ class MedicalHistoryView(APIView):
         patient = request.POST.get("patient", None)
         patientinstance = User.objects.filter(email=patient).first()
         doctor = request.POST.get("doctor", None)
-        doctorinstance = Doctor.objects.filter(id=doctor).first()
+        doctorinstance = User.objects.filter(id=doctor).first()
         details = request.POST.get("details", None)
-        diagnosis = request.POST.get("diagnosis", None)
-        treatment = request.POST.get("treatment", None)
         date = request.POST.get("date", None)
         inhouse = request.POST.get("inhouse", None)
+        diagnosis = request.POST.get("diagnosis", None)
+        treatment = request.POST.get("treatment", None)
+        time = request.POST.get("time", None)
 
         instance = MedicalHistory.objects.create(
             patient=patientinstance,
+            date=date,
             doctor=doctorinstance,
             details=details,
+            inhouse=inhouse,
             diagnosis=diagnosis,
             treatment=treatment,
-            date=date,
-            inhouse=inhouse
+            time=time
         )
         instance.save()
         serinstance = MedicalHistorySerializer(instance)
@@ -395,10 +397,10 @@ class SearchPatient(APIView):
     permission_classes = (IsMedicalManager,)
 
     def get(self, request, *args, **kwargs):
-        query = request.GET.get("email")
-        patients = User.objects.filter(email__contains=query).all()
+        query = request.data["email"]
+        patients = User.objects.filter(email__contains=query).first()
         if patients:
-            return Response(UserSerializer(patients, many=True).data)
+            return Response(UserSerializer(patients).data)
         return Response(data={"msg": "No patient found"}, status=404)
 
 
@@ -406,10 +408,10 @@ class SearchDoctors(APIView):
     permission_classes = (IsMedicalManager,)
 
     def get(self, request, *args, **kwargs):
-        query = request.GET.get("name")
-        doctors = Doctor.objects.filter(name__contains=query).all()
+        query = request.data["name"]
+        doctors = Doctor.objects.filter(name__contains=query).first()
         if doctors:
-            serializer = DoctorSerializer(doctors, many=True)
+            serializer = DoctorSerializer(doctors)
             return Response(serializer.data)
         return Response(data={"msg": "No doctors found"}, status=404)
 
