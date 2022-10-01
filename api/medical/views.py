@@ -233,14 +233,13 @@ class ManagerStaffView(APIView):
         contact = request.body.get('contact')
 
         staff = Staff.objects.create(
-            name=name,
-            designation=profession,
-            phone=contact
-        )
+            name = name,
+            designation = profession,
+            phone = contact
+        );
 
-        staff.save()
-        return Response(status=200, data={'msg': 'Staff added successfully'})
-
+        staff.save();
+        return Response(status = 200, data={ 'msg': 'Staff added successfully' })
 
 class ManagerStaffDelete(APIView):
     permission_classes = [IsMedicalManager]
@@ -250,7 +249,7 @@ class ManagerStaffDelete(APIView):
 
         id = body.get('id')
 
-        staff = Staff.objects.filter(id=id).first()
+        staff = Staff.objects.filter(id = id).first()
 
         staff.delete()
 
@@ -307,14 +306,14 @@ class AppointmentView(APIView):
         return Response(AppointmentSerializer(instance).data)
 
 
+
 class AppointmentManagerView(APIView):
     permission_classes = [IsMedicalManager]
 
     def get(self, request):
-        appointments = Appointment.objects.filter(status="IN PROGRESS").all()
+        appointments = Appointment.objects.filter(status = "IN PROGRESS").all()
         serializer = AppointmentSerializer(appointments, many=True)
         return Response(serializer.data)
-
 
 class AppointmentsPending(APIView):
     permission_classes = [IsMedicalManager]
@@ -322,12 +321,10 @@ class AppointmentsPending(APIView):
     def get(self, request):
         now = datetime.datetime.now()
 
-        appointments = Appointment.objects.filter(
-            status="ACCEPTED", date__gt=now.date()).all()
+        appointments = Appointment.objects.filter(status = "ACCEPTED", date__gt=now.date()).all()
 
         serializer = AppointmentSerializer(appointments, many=True)
         return Response(serializer.data)
-
 
 class DoctorAppointmentView(APIView):
     permission_classes = (IsMedicalManager,)
@@ -355,7 +352,6 @@ class DoctorAppointmentView(APIView):
         appointment.save()
         serinstance = AppointmentSerializer(appointment)
         return Response(serinstance.data)
-
 
 class MedicalHistoryView(APIView):
     permission_classes = (IsAuthenticated,)
@@ -392,7 +388,6 @@ class MedicalHistoryView(APIView):
         serinstance = MedicalHistorySerializer(instance)
         return Response(serinstance.data)
 
-
 class SearchPatient(APIView):
     permission_classes = (IsMedicalManager,)
 
@@ -402,7 +397,6 @@ class SearchPatient(APIView):
         if patients:
             return Response(UserSerializer(patients).data)
         return Response(data={"msg": "No patient found"}, status=404)
-
 
 class SearchDoctors(APIView):
     permission_classes = (IsMedicalManager,)
@@ -414,7 +408,6 @@ class SearchDoctors(APIView):
             serializer = DoctorSerializer(doctors)
             return Response(serializer.data)
         return Response(data={"msg": "No doctors found"}, status=404)
-
 
 class AppointmentManagerConfirm(APIView):
     permission_classes = [IsMedicalManager]
@@ -428,20 +421,19 @@ class AppointmentManagerConfirm(APIView):
         start_time = body.get('start_time')
         end_time = body.get('end_time')
 
-        appointment = Appointment.objects.filter(id=id).first()
+        appointment = Appointment.objects.filter(id = id).first()
 
-        appointment.date = date
-        appointment.start_time = start_time
-        appointment.end_time = end_time
+        appointment.date = date;
+        appointment.start_time = start_time;
+        appointment.end_time = end_time;
 
-        appointment.status = "ACCEPTED"
+        appointment.status = "ACCEPTED";
 
         appointment.save()
 
-        return Response(status=200, data={
+        return Response(status = 200, data = {
             'msg': 'Appointment Confirmed'
         })
-
 
 class AppointmentManagerReject(APIView):
 
@@ -454,14 +446,14 @@ class AppointmentManagerReject(APIView):
         id = body.get('id')
         reason = body.get('reason')
 
-        appointment = Appointment.objects.filter(id=id).first()
+        appointment = Appointment.objects.filter(id = id).first()
 
         appointment.reason = reason
 
-        appointment.status = "REJECTED"
+        appointment.status = "REJECTED";
 
         appointment.save()
 
-        return Response(status=200, data={
+        return Response(status = 200, data = {
             'msg': 'Appointment Rejected successfully'
         })
