@@ -25,6 +25,15 @@ class AppDrawer extends StatefulWidget {
 }
 
 class _AppDrawerState extends State<AppDrawer> {
+  bool disableDrawerTiles = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    disableDrawerTiles = widget.role != 'student';
+  }
+
   @override
   Widget build(BuildContext context) {
     AuthService authService = Provider.of(context);
@@ -50,6 +59,7 @@ class _AppDrawerState extends State<AppDrawer> {
         ListTile(
           leading: const Icon(Icons.person),
           title: const Text("Hostel"),
+          enabled: !disableDrawerTiles,
           onTap: () {
             Navigator.push(
                 context,
@@ -61,6 +71,7 @@ class _AppDrawerState extends State<AppDrawer> {
         ListTile(
           leading: const Icon(Icons.food_bank),
           title: const Text("Mess"),
+          enabled: !disableDrawerTiles,
           onTap: () {
             Navigator.push(
                 context,
@@ -72,6 +83,7 @@ class _AppDrawerState extends State<AppDrawer> {
         ListTile(
           leading: const Icon(Icons.medical_services),
           title: const Text("Medical"),
+          enabled: !disableDrawerTiles,
           onTap: () {
             Navigator.push(
                 context,
@@ -83,6 +95,7 @@ class _AppDrawerState extends State<AppDrawer> {
         ListTile(
           leading: const Icon(Icons.person),
           title: const Text("Id Card"),
+          enabled: !disableDrawerTiles,
           onTap: () {
             Navigator.push(
                 context,
@@ -94,6 +107,7 @@ class _AppDrawerState extends State<AppDrawer> {
         ListTile(
           leading: const Icon(Icons.admin_panel_settings_rounded),
           title: const Text("Gate Pass"),
+          enabled: !disableDrawerTiles,
           onTap: () {
             Navigator.push(
                 context,
@@ -105,6 +119,7 @@ class _AppDrawerState extends State<AppDrawer> {
         ListTile(
           leading: const Icon(Icons.people),
           title: const Text("Team"),
+          enabled: !disableDrawerTiles,
           onTap: () {
             Navigator.push(
                 context,
@@ -122,7 +137,8 @@ class _AppDrawerState extends State<AppDrawer> {
               await authService.signOut();
             } else {
               await widget.secureStorage.delete(key: 'staffToken');
-              await widget.secureStorage.delete(key: 'role');
+              await widget.localStorage.deleteItem('staffRole');
+              await widget.localStorage.deleteItem('staffName');
             }
             Navigator.pushReplacement(
               context,

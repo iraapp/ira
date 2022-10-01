@@ -8,9 +8,12 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:ira/screens/dashboard/general_feed/general_feed.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+enum Menu { edit, delete }
 
 // ignore: must_be_immutable
 class FeedPost extends StatefulWidget {
@@ -24,6 +27,7 @@ class FeedPost extends StatefulWidget {
 class _FeedPostState extends State<FeedPost> {
   late final quill.QuillController _controller;
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
+  final localStorage = LocalStorage('store');
   bool showImages = false;
 
   final ReceivePort _port = ReceivePort();
@@ -90,181 +94,226 @@ class _FeedPostState extends State<FeedPost> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 0.0),
+    String email = localStorage.getItem('email');
+
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar(
-            backgroundColor: Colors.blue.shade800,
-            child: Text(
-              widget.data.author[0].toUpperCase(),
-              style: const TextStyle(
-                color: Colors.white,
+          Column(
+            children: [
+              const SizedBox(
+                height: 5.0,
               ),
-            ),
+              CircleAvatar(
+                backgroundColor: Colors.blue.shade800,
+                child: Text(
+                  widget.data.authorName[0].toUpperCase(),
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(
             width: 10.0,
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    widget.data.author,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          widget.data.authorName,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 10.0,
+                        ),
+                        const Text(
+                          "12:05",
+                          style: TextStyle(
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  const SizedBox(
-                    width: 10.0,
-                  ),
-                  const Text(
-                    "12:05",
-                    style: TextStyle(
-                      color: Colors.grey,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10.0,
-              ),
-              SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  // height: 100,
-                  child: quill.QuillEditor(
-                    controller: _controller,
-                    scrollController: ScrollController(),
-                    scrollable: true,
-                    focusNode: FocusNode(),
-                    autoFocus: true,
-                    readOnly: true,
-                    expands: false,
-                    padding: EdgeInsets.zero,
-                    onLaunchUrl: (String url) async {
-                      if (!await launchUrl(
-                        Uri.parse(url),
-                        mode: LaunchMode.externalApplication,
-                      )) throw 'Could not launch $url';
-                    },
-                  )),
-              const SizedBox(
-                height: 10.0,
-              ),
-              showImages
-                  ? SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.7,
-                      height: 250.0,
-                      child: ListView.builder(
-                          itemCount: widget.data.attachments.length,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            if (widget.data.attachments[index]['extension'] ==
-                                    '.jpg' ||
-                                widget.data.attachments[index]['extension'] ==
-                                    '.jpeg' ||
-                                widget.data.attachments[index]['extension'] ==
-                                    '.png') {
-                              return Row(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return SimpleDialog(
-                                              children: [
-                                                Image(
-                                                  image: CachedNetworkImageProvider(
-                                                      baseUrl +
-                                                          widget.data
-                                                                  .attachments[
-                                                              index]['file']),
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  fit: BoxFit.fill,
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      },
-                                      child: Image(
-                                        image: CachedNetworkImageProvider(
-                                            baseUrl +
-                                                widget.data.attachments[index]
-                                                    ['file']),
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.6,
-                                        fit: BoxFit.fill,
+                    if (widget.data.authorEmail == email)
+                      PopupMenuButton<Menu>(
+                        icon: Icon(
+                          Icons.adaptive.more,
+                          color: Colors.grey,
+                        ),
+                        // Callback that sets the selected popup menu item.
+                        onSelected: (Menu item) {
+                          setState(() {
+                            // _selectedMenu = item.name;
+                          });
+                        },
+                        itemBuilder: (BuildContext context) =>
+                            <PopupMenuEntry<Menu>>[
+                          const PopupMenuItem<Menu>(
+                            value: Menu.edit,
+                            child: Text('Edit'),
+                          ),
+                          const PopupMenuItem<Menu>(
+                            value: Menu.delete,
+                            child: Text('Delete'),
+                          ),
+                        ],
+                      ),
+                  ],
+                ),
+                // const SizedBox(
+                //   height: 10.0,
+                // ),
+                SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    // height: 100,
+                    child: quill.QuillEditor(
+                      controller: _controller,
+                      scrollController: ScrollController(),
+                      scrollable: true,
+                      focusNode: FocusNode(),
+                      autoFocus: true,
+                      readOnly: true,
+                      expands: false,
+                      showCursor: false,
+                      padding: EdgeInsets.zero,
+                      onLaunchUrl: (String url) async {
+                        if (!await launchUrl(
+                          Uri.parse(url),
+                          mode: LaunchMode.externalApplication,
+                        )) throw 'Could not launch $url';
+                      },
+                    )),
+                const SizedBox(
+                  height: 10.0,
+                ),
+                showImages
+                    ? SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        height: 250.0,
+                        child: ListView.builder(
+                            itemCount: widget.data.attachments.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              if (widget.data.attachments[index]['extension'] ==
+                                      '.jpg' ||
+                                  widget.data.attachments[index]['extension'] ==
+                                      '.jpeg' ||
+                                  widget.data.attachments[index]['extension'] ==
+                                      '.png') {
+                                return Row(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return SimpleDialog(
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                children: [
+                                                  Image(
+                                                    image: CachedNetworkImageProvider(
+                                                        baseUrl +
+                                                            widget.data
+                                                                    .attachments[
+                                                                index]['file']),
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    fit: BoxFit.fill,
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        },
+                                        child: Image(
+                                          image: CachedNetworkImageProvider(
+                                              baseUrl +
+                                                  widget.data.attachments[index]
+                                                      ['file']),
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.6,
+                                          fit: BoxFit.fill,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    width: 15.0,
-                                  ),
-                                ],
-                              );
-                            }
-                            return Container();
-                          }),
-                    )
-                  : const SizedBox(
-                      height: 0,
-                    ),
-              const SizedBox(
-                height: 10.0,
-              ),
-              SizedBox(
-                height: 40.0,
-                width: MediaQuery.of(context).size.width * 0.6,
-                child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: widget.data.attachments.length,
-                    itemBuilder: (context, index) {
-                      return Row(
-                        children: [
-                          SizedBox(
-                            width: 120.0,
-                            child: OutlinedButton(
-                              onPressed: () async {
-                                await _downloadFile(
-                                  baseUrl +
-                                      widget.data.attachments[index]['file'],
-                                  widget.data.attachments[index]['filename'],
+                                    const SizedBox(
+                                      width: 15.0,
+                                    ),
+                                  ],
                                 );
-                              },
-                              child: Text(
-                                widget.data.attachments[index]['filename'],
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                    color: Colors.white, fontSize: 12.0),
-                              ),
-                              style: OutlinedButton.styleFrom(
-                                backgroundColor: Colors.blue.shade800,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
+                              }
+                              return Container();
+                            }),
+                      )
+                    : const SizedBox(
+                        height: 0,
+                      ),
+                const SizedBox(
+                  height: 10.0,
+                ),
+                SizedBox(
+                  height: widget.data.attachments.length != 0 ? 40.0 : 0.0,
+                  width: MediaQuery.of(context).size.width * 0.6,
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: widget.data.attachments.length,
+                      itemBuilder: (context, index) {
+                        return Row(
+                          children: [
+                            SizedBox(
+                              width: 120.0,
+                              child: OutlinedButton(
+                                onPressed: () async {
+                                  await _downloadFile(
+                                    baseUrl +
+                                        widget.data.attachments[index]['file'],
+                                    widget.data.attachments[index]['filename'],
+                                  );
+                                },
+                                child: Text(
+                                  widget.data.attachments[index]['filename'],
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      color: Colors.white, fontSize: 12.0),
                                 ),
-                                padding: const EdgeInsets.only(
-                                    left: 10.0, right: 10.0),
+                                style: OutlinedButton.styleFrom(
+                                  backgroundColor: Colors.blue.shade800,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
+                                  padding: const EdgeInsets.only(
+                                      left: 10.0, right: 10.0),
+                                ),
                               ),
                             ),
-                          ),
-                          const SizedBox(
-                            width: 20.0,
-                          )
-                        ],
-                      );
-                    }),
-              ),
-            ],
+                            const SizedBox(
+                              width: 20.0,
+                            )
+                          ],
+                        );
+                      }),
+                ),
+              ],
+            ),
           )
         ],
       ),

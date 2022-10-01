@@ -6,21 +6,28 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ira/screens/dashboard/general_feed/feed_post.dart';
 import 'package:ira/screens/dashboard/general_feed/new_post/new_post.dart';
 import 'package:http/http.dart' as http;
+import 'package:ira/screens/dashboard/general_feed/panel_state_stream.dart';
+import 'package:provider/provider.dart';
 
 class FeedModel {
   String body;
-  String author;
+  String authorName;
+  String authorEmail;
   dynamic attachments;
 
   FeedModel(
-      {required this.body, required this.author, required this.attachments});
+      {required this.body,
+      required this.authorName,
+      required this.authorEmail,
+      required this.attachments});
 
   factory FeedModel.fromJson(Map<String, dynamic> json) {
     return FeedModel(
         body: json['body'].toString(),
-        author: json['user']['first_name'].toString() +
+        authorName: json['user']['first_name'].toString() +
             ' ' +
             json['user']['last_name'].toString(),
+        authorEmail: json['user']['email'],
         attachments: json['attachments']);
   }
 }
@@ -125,16 +132,8 @@ class _GeneralFeedState extends State<GeneralFeed> {
                     return const Center(child: CircularProgressIndicator());
                   }
 
-                  return ListView.builder(
-                    itemCount: snapshot.data?.length,
-                    itemBuilder: ((BuildContext context, int index) {
-                      return Column(
-                        children: [
-                          FeedPost(data: snapshot.data![index]),
-                          const Divider(),
-                        ],
-                      );
-                    }),
+                  return FeedList(
+                    feeds: snapshot.data!,
                   );
                 },
               ),
@@ -144,6 +143,53 @@ class _GeneralFeedState extends State<GeneralFeed> {
             height: 100.0,
           )
         ],
+      ),
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class FeedList extends StatefulWidget {
+  List<FeedModel> feeds;
+  FeedList({Key? key, required this.feeds}) : super(key: key);
+
+  @override
+  State<FeedList> createState() => _FeedListState();
+}
+
+class _FeedListState extends State<FeedList> {
+  bool heightState = false;
+
+  @override
+  Widget build(BuildContext context) {
+    PanelStateStream panelStateStream = Provider.of(context);
+
+    if (heightState != panelStateStream.state) {
+      setState(() {
+        heightState = panelStateStream.state;
+      });
+    }
+
+    panelStateStream.stream.listen((event) {
+      if (heightState != panelStateStream.state) {
+        setState(() {
+          heightState = panelStateStream.state;
+        });
+      }
+    });
+
+    return SizedBox(
+      height: MediaQuery.of(context).size.height - (heightState ? 0 : 350),
+      child: ListView.builder(
+        itemCount: widget.feeds.length,
+        itemBuilder: ((BuildContext context, int index) {
+          return Column(
+            children: [
+              FeedPost(data: widget.feeds[index]),
+              const Divider(),
+            ],
+          );
+        }),
       ),
     );
   }

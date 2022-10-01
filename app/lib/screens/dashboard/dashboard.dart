@@ -3,6 +3,7 @@ import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ira/screens/dashboard/app_drawer.dart';
 import 'package:ira/screens/dashboard/general_feed/general_feed.dart';
+import 'package:ira/screens/dashboard/general_feed/panel_state_stream.dart';
 import 'package:ira/screens/dashboard/guard_menu.dart';
 import 'package:ira/screens/dashboard/mess_manager_menu.dart';
 import 'package:ira/screens/dashboard/staff_header.dart';
@@ -10,6 +11,7 @@ import 'package:ira/screens/dashboard/student_menu.dart';
 import 'package:ira/screens/dashboard/student_header.dart';
 import 'package:ira/screens/login/login.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import 'medical_manager_menu.dart';
@@ -78,6 +80,8 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
+    PanelStateStream panelState = Provider.of(context);
+
     return Scaffold(
         drawer: AppDrawer(role: widget.role),
         appBar: AppBar(
@@ -90,7 +94,15 @@ class _DashboardState extends State<Dashboard> {
           maxHeight: MediaQuery.of(context).size.height,
           parallaxEnabled: true,
           parallaxOffset: 1.0,
-          panel: const GeneralFeed(),
+          onPanelOpened: () {
+            panelState.state = true;
+            panelState.heightChangeController.add(true);
+          },
+          onPanelClosed: () {
+            panelState.state = false;
+            panelState.heightChangeController.add(false);
+          },
+          panel: widget.role == 'student' ? const GeneralFeed() : Container(),
           body: Container(
             // color: Colors.blue,
             width: MediaQuery.of(context).size.width,
@@ -101,14 +113,16 @@ class _DashboardState extends State<Dashboard> {
               children: [
                 Container(
                   padding: const EdgeInsets.all(20.0),
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      opacity: 0.5,
-                      fit: BoxFit.cover,
-                      image: NetworkImage(
-                          widget.baseUrl + '/media/images/release.png'),
-                    ),
-                  ),
+                  decoration: widget.role == 'student'
+                      ? BoxDecoration(
+                          image: DecorationImage(
+                            opacity: 0.5,
+                            fit: BoxFit.cover,
+                            image: NetworkImage(
+                                widget.baseUrl + '/media/images/release.png'),
+                          ),
+                        )
+                      : const BoxDecoration(),
                   child: SizedBox(
                     height: 180.0,
                     child: GridView.count(
