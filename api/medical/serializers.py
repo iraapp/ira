@@ -39,6 +39,8 @@ class AppointmentSerializer(serializers.Serializer):
 class MedicalHistorySerializer(serializers.Serializer):
     patient = UserSerializer()
     doctor = DoctorSerializer()
+    date = serializers.DateField(format='%d %b %Y', input_formats=['%d %b %Y'])
+    inhouse = serializers.BooleanField()
     diagnosis = serializers.CharField()
     treatment = serializers.CharField()
     details = serializers.CharField()

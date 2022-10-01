@@ -60,6 +60,8 @@ class _HistoryManagerDetailState extends State<HistoryManagerDetail> {
   }
 
   Future<bool> _submitHistoryManagerDetails({
+    required String date,
+    required String inhouse,
     required int doctorId,
     required String details,
     required String diagnosis,
@@ -70,6 +72,8 @@ class _HistoryManagerDetailState extends State<HistoryManagerDetail> {
     final requestUrl = Uri.parse(baseUrl + '/medical/medicalhistory/');
 
     Map<String, dynamic> formMap = {
+      'date': date,
+      'inhouse': inhouse,
       'doctor': doctorId.toString(),
       'patient': patient,
       'details': details,
@@ -95,6 +99,23 @@ class _HistoryManagerDetailState extends State<HistoryManagerDetail> {
     return Future.value(false);
   }
 
+  final List<String> _inhouseFill = ["Inhouse", "Outhouse"];
+  String _inhouseFillValue = "Inhouse";
+  DateTime selectedDate = DateTime.now();
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -110,7 +131,7 @@ class _HistoryManagerDetailState extends State<HistoryManagerDetail> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SizedBox(
-              height: size.height * 0.05,
+              height: size.height * 0.04,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -134,7 +155,7 @@ class _HistoryManagerDetailState extends State<HistoryManagerDetail> {
             ),
             const SizedBox(height: 30),
             SizedBox(
-              height: size.height * 0.8,
+              height: size.height * 1.0,
               child: Container(
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
@@ -165,8 +186,39 @@ class _HistoryManagerDetailState extends State<HistoryManagerDetail> {
                             fontSize: 16.0,
                           ),
                         ),
+                        SizedBox(
+                          width: size.width * 0.5,
+                          child: DropdownButton<String>(
+                            style: const TextStyle(
+                              color: Colors.white,
+                            ),
+                            icon: const Icon(
+                              Icons.arrow_drop_down,
+                              color: Colors.black,
+                            ),
+                            value: _inhouseFillValue,
+                            items: _inhouseFill.map((String items) {
+                              return DropdownMenuItem(
+                                value: items,
+                                child: Text(
+                                  items,
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                _inhouseFillValue = value!;
+                              });
+                            },
+                            borderRadius: BorderRadius.circular(10.0),
+                            isExpanded: true,
+                          ),
+                        ),
                         const SizedBox(
-                          height: 30.0,
+                          height: 10.0,
                         ),
                         Container(
                           padding:
@@ -179,6 +231,38 @@ class _HistoryManagerDetailState extends State<HistoryManagerDetail> {
                           ),
                           child: Column(
                             children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text("Date"),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      await _selectDate(context);
+                                    },
+                                    child: Container(
+                                      height: 40.0,
+                                      width: size.width * 0.5,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.grey,
+                                          width: 1.0,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(5.0),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(selectedDate
+                                            .toLocal()
+                                            .toString()
+                                            .split(' ')[0]),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -330,8 +414,18 @@ class _HistoryManagerDetailState extends State<HistoryManagerDetail> {
                               ElevatedButton(
                                 onPressed: () async {
                                   if (_formKey.currentState!.validate()) {
+                                    final String inhouse =
+                                        _inhouseFillValue == "Inhouse"
+                                            ? "True"
+                                            : "False";
+
                                     final res =
                                         await _submitHistoryManagerDetails(
+                                      date: selectedDate
+                                          .toLocal()
+                                          .toString()
+                                          .split(' ')[0],
+                                      inhouse: inhouse,
                                       doctorId: selectedDoctorId,
                                       patient: widget.student.email,
                                       details: detailsFieldController.text,

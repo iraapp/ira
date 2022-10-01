@@ -69,6 +69,8 @@ class MedicalHistory(models.Model):
     patient = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    date = models.DateField(null=True)
+    inhouse = models.BooleanField(default=False)
     diagnosis = models.CharField(max_length=50, null=True)
     treatment = models.CharField(max_length=50, null=True)
     details = models.CharField(max_length=500, null=True)

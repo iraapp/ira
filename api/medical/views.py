@@ -374,6 +374,8 @@ class MedicalHistoryView(APIView):
         details = request.POST.get("details", None)
         diagnosis = request.POST.get("diagnosis", None)
         treatment = request.POST.get("treatment", None)
+        date = request.POST.get("date", None)
+        inhouse = request.POST.get("inhouse", None)
 
         instance = MedicalHistory.objects.create(
             patient=patientinstance,
@@ -381,6 +383,8 @@ class MedicalHistoryView(APIView):
             details=details,
             diagnosis=diagnosis,
             treatment=treatment,
+            date=date,
+            inhouse=inhouse
         )
         instance.save()
         serinstance = MedicalHistorySerializer(instance)
