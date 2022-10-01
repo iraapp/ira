@@ -1,15 +1,15 @@
 class DoctorModel {
-  DoctorModel(
-    this.id,
-    this.name,
-    this.phone,
-    this.specialization,
-    this.mail,
-    this.date,
-    this.startTime,
-    this.endTime,
-    this.details,
-  );
+  DoctorModel({
+    required this.id,
+    required this.name,
+    required this.phone,
+    required this.specialization,
+    required this.mail,
+    required this.date,
+    required this.startTime,
+    required this.endTime,
+    required this.details,
+  });
   final int id;
   final String name;
   final String phone;
@@ -20,17 +20,15 @@ class DoctorModel {
   final String endTime;
   final String details;
 
-  factory DoctorModel.fromJson(Map<String, dynamic> json) {
-    return DoctorModel(
-      json['id'] as int,
-      json['name'] as String,
-      json['phone'] as String,
-      json['specialization'] as String,
-      json['mail'] as String,
-      json['date'] as String,
-      json['start_time'] as String,
-      json['end_time'] as String,
-      json['details'] as String,
-    );
-  }
+  factory DoctorModel.fromJson(Map<String, dynamic> json) => DoctorModel(
+        id: json["id"],
+        name: json["name"],
+        phone: json["phone"],
+        specialization: json["specialization"],
+        mail: json["mail"],
+        date: json["date"],
+        startTime: json["start_time"],
+        endTime: json["end_time"],
+        details: json["details"],
+      );
 }
