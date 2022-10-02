@@ -9,9 +9,12 @@ import 'package:http/http.dart' as http;
 
 // ignore: must_be_immutable
 class NewPost extends StatefulWidget {
+  quill.Document? document;
   VoidCallback successCallback;
+
   NewPost({
     Key? key,
+    required this.document,
     required this.successCallback,
   }) : super(key: key);
 
@@ -20,11 +23,24 @@ class NewPost extends StatefulWidget {
 }
 
 class _NewPostState extends State<NewPost> {
-  final quill.QuillController _controller = quill.QuillController.basic();
+  late quill.QuillController _controller;
   // Create secureStorage
   final secureStorage = const FlutterSecureStorage();
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
   List<PlatformFile> files = [];
+
+  @override
+  initState() {
+    super.initState();
+    if (widget.document != null) {
+      _controller = quill.QuillController(
+        document: widget.document!,
+        selection: const TextSelection.collapsed(offset: 0),
+      );
+    } else {
+      _controller = quill.QuillController.basic();
+    }
+  }
 
   Future<bool> _submitPost(String richText) async {
     try {
@@ -92,6 +108,7 @@ class _NewPostState extends State<NewPost> {
                       height: 30.0,
                     ),
                     quill.QuillToolbar.basic(
+                      toolbarIconSize: 20,
                       controller: _controller,
                       showFontFamily: false,
                       multiRowsDisplay: false,

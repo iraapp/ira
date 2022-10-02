@@ -36,3 +36,17 @@ class GetFeedView(APIView):
         data = Post.objects.all().order_by('-created_at')
         serialized_json = PostSerializer(data, many=True)
         return Response(data=serialized_json.data)
+
+class DeleteFeedView(APIView):
+    permission_classes = [IsAuthenticated, ]
+
+    def post(self, request, *args):
+        id = request.POST.get('id', None);
+
+        post = Post.objects.filter(id = id).first()
+
+        post.delete()
+
+        return Response(status=200, data = {
+            'msg': 'Post deleted successfully'
+        })

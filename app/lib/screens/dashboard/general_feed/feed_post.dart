@@ -7,18 +7,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ira/screens/dashboard/general_feed/general_feed.dart';
+import 'package:ira/screens/dashboard/general_feed/new_post/new_post.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
 
 enum Menu { edit, delete }
 
 // ignore: must_be_immutable
 class FeedPost extends StatefulWidget {
   FeedModel data;
-  FeedPost({Key? key, required this.data}) : super(key: key);
+  VoidCallback updateView;
+  FeedPost({
+    Key? key,
+    required this.data,
+    required this.updateView,
+  }) : super(key: key);
 
   @override
   State<FeedPost> createState() => _FeedPostState();
@@ -29,6 +37,7 @@ class _FeedPostState extends State<FeedPost> {
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
   final localStorage = LocalStorage('store');
   bool showImages = false;
+  final secureStorage = const FlutterSecureStorage();
 
   final ReceivePort _port = ReceivePort();
 
@@ -153,10 +162,32 @@ class _FeedPostState extends State<FeedPost> {
                           color: Colors.grey,
                         ),
                         // Callback that sets the selected popup menu item.
-                        onSelected: (Menu item) {
-                          setState(() {
-                            // _selectedMenu = item.name;
-                          });
+                        onSelected: (Menu item) async {
+                          if (item == Menu.edit) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => NewPost(
+                                          successCallback: () {
+                                            setState(() {});
+                                          },
+                                          document: quill.Document.fromJson(
+                                            jsonDecode(
+                                              widget.data.body,
+                                            ),
+                                          ),
+                                        )));
+                          } else if (item == Menu.delete) {
+                            String? idToken =
+                                await secureStorage.read(key: 'idToken');
+                            _showDeletionConfirmationDialog(
+                              context,
+                              idToken: idToken,
+                              baseUrl: baseUrl,
+                              updateView: widget.updateView,
+                              id: widget.data.id,
+                            );
+                          }
                         },
                         itemBuilder: (BuildContext context) =>
                             <PopupMenuEntry<Menu>>[
@@ -319,4 +350,54 @@ class _FeedPostState extends State<FeedPost> {
       ),
     );
   }
+}
+
+Future<void> _showDeletionConfirmationDialog(
+  BuildContext context, {
+  String? idToken,
+  required int id,
+  required String baseUrl,
+  required VoidCallback updateView,
+}) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // user must tap button!
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Confirm Delete'),
+        content: const Text('Are you sure you want to delete this post?'),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            onPressed: () async {
+              // print(widget.data.id);
+              Map<String, dynamic> body = {
+                'id': id.toString(),
+              };
+
+              final response =
+                  await http.post(Uri.parse(baseUrl + '/feed/delete/'),
+                      headers: <String, String>{
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': 'idToken ' + idToken!,
+                      },
+                      encoding: Encoding.getByName('utf-8'),
+                      body: body);
+
+              if (response.statusCode == 200) {
+                Navigator.pop(context);
+                updateView();
+              }
+            },
+            child: const Text('Delete'),
+          ),
+        ],
+      );
+    },
+  );
 }

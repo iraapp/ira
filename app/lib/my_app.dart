@@ -56,6 +56,7 @@ class _WrapperState extends State<Wrapper> {
   @override
   void initState() {
     super.initState();
+
     subscription = Connectivity()
         .onConnectivityChanged
         .listen((ConnectivityResult result) {
