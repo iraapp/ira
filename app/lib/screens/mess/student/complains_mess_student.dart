@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:http_parser/http_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:ira/screens/mess/student/mess_types_model.dart';
 
 class ComplaintsMess extends StatefulWidget {
   ComplaintsMess({Key? key}) : super(key: key);
@@ -17,16 +20,17 @@ class ComplaintsMess extends StatefulWidget {
 class _ComplaintsMessState extends State<ComplaintsMess> {
   final List<String> _messFill = ["Fill as Anonymous", "Use your credentials"];
   String _messFillValue = "Fill as Anonymous";
-  final List<String> _mess = ["1B Mess", "120 Mess", "Girls Mess"];
-  String _messValue = "1B Mess";
+  final Set<String> messTypes = {"Choose Mess"};
+  String _messValue = "Choose Mess";
   final List<String> _meals = [
+    "Choose Meal",
     "Breakfast",
     "Lunch",
     "Snacks",
     "Dinner",
     "General"
   ];
-  String _mealsValue = "Breakfast";
+  String _mealsValue = "Choose Meal";
   String? _description;
   String _imagePath = "";
 
@@ -60,8 +64,38 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
     }
   }
 
+  Future<void> _getMessTypes() async {
+    String? idToken = await widget.secureStorage.read(key: 'idToken');
+
+    final requestUrl = Uri.parse(widget.baseUrl + '/mess/get/mess');
+    final response = await http.get(
+      requestUrl,
+      headers: <String, String>{
+        "Content-Type": "application/x-www-form-urlencoded",
+        'Authorization': 'idToken ' + idToken!
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      for (var item in data) {
+        messTypes.add(item['name']);
+      }
+      setState(() {});
+    } else {
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+      throw Exception('API Call Failed');
+    }
+  }
+
   final ImagePicker _picker = ImagePicker();
   bool _imageUploaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _getMessTypes();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -165,7 +199,7 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
                                     fontSize: 16.0,
                                   )),
                               SizedBox(
-                                width: 100,
+                                width: 150,
                                 child: DropdownButton<String>(
                                   style: const TextStyle(
                                     color: Colors.white,
@@ -175,7 +209,7 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
                                     color: Colors.black,
                                   ),
                                   value: _messValue,
-                                  items: _mess.map((String items) {
+                                  items: messTypes.map((String items) {
                                     return DropdownMenuItem(
                                       value: items,
                                       child: Text(
@@ -209,7 +243,7 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
                                     fontSize: 16.0,
                                   )),
                               SizedBox(
-                                width: 100,
+                                width: 150,
                                 child: DropdownButton<String>(
                                   style: const TextStyle(
                                     color: Colors.white,

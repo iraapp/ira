@@ -48,144 +48,178 @@ class _StaffLoginState extends State<StaffLogin> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: autoLogin(),
-      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting ||
-            snapshot.data == null) {
-          return const Scaffold(
-              body: Center(child: CircularProgressIndicator()));
-        } else if (snapshot.data == 'invalid') {
-          return AppScaffold(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Center(
-                  child: Container(
-                    margin: const EdgeInsets.only(top: 50.0),
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: const [
-                        BoxShadow(
-                            color: Colors.grey,
-                            blurRadius: 5.0,
-                            offset: Offset(
-                              0,
-                              5,
-                            ))
-                      ],
+        future: autoLogin(),
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting ||
+              snapshot.data == null) {
+            return const Scaffold(
+                body: Center(child: CircularProgressIndicator()));
+          } else if (snapshot.data == 'invalid') {
+            return AppScaffold(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 40.0),
+                  Center(
+                    child: Image.asset(
+                      'assets/images/iit-jammu-logo-white.png',
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          children: [
-                            const SizedBox(height: 10.0),
-                            TextFormField(
-                              controller: usernameFieldController,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Username field cannot be empty';
-                                }
+                  ),
+                  Expanded(
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 50.0),
+                      width: MediaQuery.of(context).size.width,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(30.0),
+                            topRight: Radius.circular(30.0)),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 40.0, vertical: 20.0),
+                        child: Form(
+                          key: _formKey,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                const SizedBox(
+                                  height: 20.0,
+                                ),
+                                const Text(
+                                  'Welcome to the',
+                                  style: TextStyle(fontSize: 22),
+                                ),
+                                const Text(
+                                  'IRA',
+                                  style: TextStyle(
+                                    fontSize: 35.0,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 40.0,
+                                ),
+                                TextFormField(
+                                  controller: usernameFieldController,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Username field cannot be empty';
+                                    }
 
-                                return null;
-                              },
-                              decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintText: 'Username'),
-                            ),
-                            const SizedBox(
-                              height: 30.0,
-                            ),
-                            TextFormField(
-                              controller: passwordFieldController,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Password field cannot be empty';
-                                }
-
-                                return null;
-                              },
-                              decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintText: 'Password'),
-                              obscureText: true,
-                              enableSuggestions: false,
-                              autocorrect: false,
-                            ),
-                            const SizedBox(
-                              height: 30.0,
-                            ),
-                            ElevatedButton(
-                              onPressed: () async {
-                                if (_formKey.currentState!.validate()) {
-                                  final response = await http.post(
-                                      Uri.parse(
-                                        baseUrl + '/auth/staff-token',
+                                    return null;
+                                  },
+                                  decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0),
                                       ),
-                                      headers: <String, String>{
-                                        'Content-Type':
-                                            'application/json; charset=UTF-8',
-                                      },
-                                      body: jsonEncode(<String, String>{
-                                        'username':
-                                            usernameFieldController.text,
-                                        'password': passwordFieldController.text
-                                      }));
+                                      hintText: 'Username'),
+                                ),
+                                const SizedBox(
+                                  height: 10.0,
+                                ),
+                                TextFormField(
+                                  controller: passwordFieldController,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Password field cannot be empty';
+                                    }
 
-                                  if (response.statusCode == 200) {
-                                    final staffRole = staffRoleChoices[
-                                        jsonDecode(response.body)['staff_user']
-                                            ['role']];
-                                    await secureStorage.write(
-                                      key: 'staffToken',
-                                      value: jsonDecode(response.body)['token'],
-                                    );
-                                    await localStorage.setItem(
-                                      'staffRole',
-                                      staffRole,
-                                    );
-                                    await localStorage.setItem(
-                                        'staffName',
-                                        jsonDecode(response.body)['staff_user']
-                                                ['first_name'] +
-                                            ' ' +
-                                            jsonDecode(response.body)[
-                                                'staff_user']['last_name']);
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => Dashboard(
-                                          role: staffRole ?? '',
-                                        ),
+                                    return null;
+                                  },
+                                  decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0),
                                       ),
-                                    );
-                                  } else {
-                                    // ScaffoldMessenger.of(context)
-                                    //     .showSnackBar(alertSnackbar);
-                                  }
-                                }
-                              },
-                              child: const Text('Log in'),
-                            )
-                          ],
+                                      hintText: 'Password'),
+                                  obscureText: true,
+                                  enableSuggestions: false,
+                                  autocorrect: false,
+                                ),
+                                const SizedBox(
+                                  height: 30.0,
+                                ),
+                                SizedBox(
+                                  height: 50.0,
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    style: ButtonStyle(
+                                        shape: MaterialStateProperty.all<
+                                                RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ))),
+                                    onPressed: () async {
+                                      if (_formKey.currentState!.validate()) {
+                                        final response = await http.post(
+                                            Uri.parse(
+                                              baseUrl + '/auth/staff-token',
+                                            ),
+                                            headers: <String, String>{
+                                              'Content-Type':
+                                                  'application/json; charset=UTF-8',
+                                            },
+                                            body: jsonEncode(<String, String>{
+                                              'username':
+                                                  usernameFieldController.text,
+                                              'password':
+                                                  passwordFieldController.text
+                                            }));
+
+                                        if (response.statusCode == 200) {
+                                          final staffRole = staffRoleChoices[
+                                              jsonDecode(response.body)[
+                                                  'staff_user']['role']];
+                                          await secureStorage.write(
+                                            key: 'staffToken',
+                                            value: jsonDecode(
+                                                response.body)['token'],
+                                          );
+                                          await localStorage.setItem(
+                                            'staffRole',
+                                            staffRole,
+                                          );
+                                          await localStorage.setItem(
+                                              'staffName',
+                                              jsonDecode(response.body)[
+                                                          'staff_user']
+                                                      ['first_name'] +
+                                                  ' ' +
+                                                  jsonDecode(response.body)[
+                                                          'staff_user']
+                                                      ['last_name']);
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => Dashboard(
+                                                role: staffRole ?? '',
+                                              ),
+                                            ),
+                                          );
+                                        } else {
+                                          // ScaffoldMessenger.of(context)
+                                          //     .showSnackBar(alertSnackbar);
+                                        }
+                                      }
+                                    },
+                                    child: const Text('Log in'),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(
-                  height: 30.0,
-                ),
-              ],
-            ),
-          );
-        } else {
-          return Dashboard(role: 'guard');
-        }
-      },
-    );
+                ],
+              ),
+            );
+          } else {
+            return Dashboard(role: 'guard');
+          }
+        });
   }
 }

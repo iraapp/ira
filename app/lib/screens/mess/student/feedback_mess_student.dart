@@ -16,16 +16,17 @@ class FeedbackMess extends StatefulWidget {
 class _FeedbackMessState extends State<FeedbackMess> {
   final List<String> _messFill = ["Fill as Anonymous", "Use your credentials"];
   String _messFillValue = "Fill as Anonymous";
-  final List<String> _messTypes = ["1B Mess", "120 Mess", "Girls Mess"];
-  String _messValue = "1B Mess";
-  final List<String> _messMeals = [
+  final Set<String> messTypes = {"Choose Mess"};
+  String _messValue = "Choose Mess";
+  final List<String> _meals = [
+    "Choose Meal",
     "Breakfast",
     "Lunch",
     "Snacks",
     "Dinner",
     "General"
   ];
-  String _mealsValue = "Breakfast";
+  String _mealsValue = "Choose Meal";
 
   String? _description;
 
@@ -55,6 +56,36 @@ class _FeedbackMessState extends State<FeedbackMess> {
 
     // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     return Future.value(false);
+  }
+
+  Future<void> _getMessTypes() async {
+    String? idToken = await widget.secureStorage.read(key: 'idToken');
+
+    final requestUrl = Uri.parse(widget.baseUrl + '/mess/get/mess');
+    final response = await http.get(
+      requestUrl,
+      headers: <String, String>{
+        "Content-Type": "application/x-www-form-urlencoded",
+        'Authorization': 'idToken ' + idToken!
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      for (var item in data) {
+        messTypes.add(item['name']);
+      }
+      setState(() {});
+    } else {
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+      throw Exception('API Call Failed');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getMessTypes();
   }
 
   @override
@@ -159,7 +190,7 @@ class _FeedbackMessState extends State<FeedbackMess> {
                                     fontSize: 16.0,
                                   )),
                               SizedBox(
-                                width: 100,
+                                width: 150,
                                 child: DropdownButton<String>(
                                   style: const TextStyle(
                                     color: Colors.white,
@@ -169,7 +200,7 @@ class _FeedbackMessState extends State<FeedbackMess> {
                                     color: Colors.black,
                                   ),
                                   value: _messValue,
-                                  items: _messTypes.map((String items) {
+                                  items: messTypes.map((String items) {
                                     return DropdownMenuItem(
                                       value: items,
                                       child: Text(
@@ -203,7 +234,7 @@ class _FeedbackMessState extends State<FeedbackMess> {
                                     fontSize: 16.0,
                                   )),
                               SizedBox(
-                                width: 100,
+                                width: 150,
                                 child: DropdownButton<String>(
                                   style: const TextStyle(
                                     color: Colors.white,
@@ -213,7 +244,7 @@ class _FeedbackMessState extends State<FeedbackMess> {
                                     color: Colors.black,
                                   ),
                                   value: _mealsValue,
-                                  items: _messMeals.map((String items) {
+                                  items: _meals.map((String items) {
                                     return DropdownMenuItem(
                                       value: items,
                                       child: Text(
