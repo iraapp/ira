@@ -1,4 +1,3 @@
-from pathlib import Path
 from django.contrib.auth.backends import BaseBackend
 from .models import StaffToken, UserToken
 from rest_framework import authentication

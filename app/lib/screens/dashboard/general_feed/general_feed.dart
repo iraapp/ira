@@ -10,25 +10,33 @@ import 'package:ira/screens/dashboard/general_feed/panel_state_stream.dart';
 import 'package:provider/provider.dart';
 
 class FeedModel {
+  int id;
   String body;
   String authorName;
   String authorEmail;
+  String createdAt;
   dynamic attachments;
 
-  FeedModel(
-      {required this.body,
-      required this.authorName,
-      required this.authorEmail,
-      required this.attachments});
+  FeedModel({
+    required this.id,
+    required this.body,
+    required this.authorName,
+    required this.authorEmail,
+    required this.attachments,
+    required this.createdAt,
+  });
 
   factory FeedModel.fromJson(Map<String, dynamic> json) {
     return FeedModel(
-        body: json['body'].toString(),
-        authorName: json['user']['first_name'].toString() +
-            ' ' +
-            json['user']['last_name'].toString(),
-        authorEmail: json['user']['email'],
-        attachments: json['attachments']);
+      id: json['id'],
+      body: json['body'].toString(),
+      createdAt: json['created_at'],
+      authorName: json['user']['first_name'].toString() +
+          ' ' +
+          json['user']['last_name'].toString(),
+      authorEmail: json['user']['email'],
+      attachments: json['attachments'],
+    );
   }
 }
 
@@ -98,6 +106,7 @@ class _GeneralFeedState extends State<GeneralFeed> {
                                   successCallback: () {
                                     setState(() {});
                                   },
+                                  document: null,
                                 )));
                   },
                   child: const Text(
@@ -133,8 +142,10 @@ class _GeneralFeedState extends State<GeneralFeed> {
                   }
 
                   return FeedList(
-                    feeds: snapshot.data!,
-                  );
+                      feeds: snapshot.data!,
+                      refreshFeed: () {
+                        setState(() {});
+                      });
                 },
               ),
             ),
@@ -151,7 +162,12 @@ class _GeneralFeedState extends State<GeneralFeed> {
 // ignore: must_be_immutable
 class FeedList extends StatefulWidget {
   List<FeedModel> feeds;
-  FeedList({Key? key, required this.feeds}) : super(key: key);
+  VoidCallback refreshFeed;
+  FeedList({
+    Key? key,
+    required this.feeds,
+    required this.refreshFeed,
+  }) : super(key: key);
 
   @override
   State<FeedList> createState() => _FeedListState();
@@ -185,7 +201,12 @@ class _FeedListState extends State<FeedList> {
         itemBuilder: ((BuildContext context, int index) {
           return Column(
             children: [
-              FeedPost(data: widget.feeds[index]),
+              FeedPost(
+                data: widget.feeds[index],
+                updateView: () {
+                  widget.refreshFeed();
+                },
+              ),
               const Divider(),
             ],
           );

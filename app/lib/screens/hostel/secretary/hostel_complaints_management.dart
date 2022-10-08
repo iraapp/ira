@@ -161,6 +161,7 @@ class _ComplaintHostelSecretaryState extends State<ComplaintHostelSecretary> {
                                           data.complaintType +
                                           " | " +
                                           data.createdAt,
+                                      file: data.file,
                                     );
                                   },
                                   child: Padding(
@@ -353,6 +354,7 @@ class _ComplaintHostelSecretaryState extends State<ComplaintHostelSecretary> {
     required String subtitle,
     required String content,
     required String defaultActionText,
+    required String file,
     required bool status,
   }) {
     return showDialog(
@@ -394,6 +396,13 @@ class _ComplaintHostelSecretaryState extends State<ComplaintHostelSecretary> {
               children: [
                 const Text("Details", style: TextStyle(fontSize: 14.0)),
               ],
+            ),
+            const SizedBox(
+              height: 10.0,
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.4,
+              child: Image.network(widget.baseUrl + file),
             ),
             const SizedBox(height: 20.0),
             SizedBox(

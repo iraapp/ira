@@ -33,6 +33,8 @@ DEBUG = env('DEBUG_MODE') == 'True'
 
 ALLOWED_HOSTS = ["*"]
 
+FEED_NOTIFICATION_CHANNEL = 'feed'
+
 # Application definition
 
 INSTALLED_APPS = [
