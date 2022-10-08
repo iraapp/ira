@@ -14,6 +14,7 @@ class FeedModel {
   String body;
   String authorName;
   String authorEmail;
+  String createdAt;
   dynamic attachments;
 
   FeedModel({
@@ -22,17 +23,20 @@ class FeedModel {
     required this.authorName,
     required this.authorEmail,
     required this.attachments,
+    required this.createdAt,
   });
 
   factory FeedModel.fromJson(Map<String, dynamic> json) {
     return FeedModel(
-        id: json['id'],
-        body: json['body'].toString(),
-        authorName: json['user']['first_name'].toString() +
-            ' ' +
-            json['user']['last_name'].toString(),
-        authorEmail: json['user']['email'],
-        attachments: json['attachments']);
+      id: json['id'],
+      body: json['body'].toString(),
+      createdAt: json['created_at'],
+      authorName: json['user']['first_name'].toString() +
+          ' ' +
+          json['user']['last_name'].toString(),
+      authorEmail: json['user']['email'],
+      attachments: json['attachments'],
+    );
   }
 }
 

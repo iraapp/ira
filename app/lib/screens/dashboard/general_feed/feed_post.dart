@@ -133,75 +133,78 @@ class _FeedPostState extends State<FeedPost> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          widget.data.authorName,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
+                SizedBox(
+                  height: 40,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            widget.data.authorName,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        const SizedBox(
-                          width: 10.0,
-                        ),
-                        const Text(
-                          "12:05",
-                          style: TextStyle(
-                            color: Colors.grey,
+                          const SizedBox(
+                            width: 10.0,
                           ),
-                        ),
-                      ],
-                    ),
-                    if (widget.data.authorEmail == email)
-                      PopupMenuButton<Menu>(
-                        icon: Icon(
-                          Icons.adaptive.more,
-                          color: Colors.grey,
-                        ),
-                        // Callback that sets the selected popup menu item.
-                        onSelected: (Menu item) async {
-                          if (item == Menu.edit) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => NewPost(
-                                          successCallback: () {
-                                            setState(() {});
-                                          },
-                                          document: quill.Document.fromJson(
-                                            jsonDecode(
-                                              widget.data.body,
-                                            ),
-                                          ),
-                                        )));
-                          } else if (item == Menu.delete) {
-                            String? idToken =
-                                await secureStorage.read(key: 'idToken');
-                            _showDeletionConfirmationDialog(
-                              context,
-                              idToken: idToken,
-                              baseUrl: baseUrl,
-                              updateView: widget.updateView,
-                              id: widget.data.id,
-                            );
-                          }
-                        },
-                        itemBuilder: (BuildContext context) =>
-                            <PopupMenuEntry<Menu>>[
-                          const PopupMenuItem<Menu>(
-                            value: Menu.edit,
-                            child: Text('Edit'),
-                          ),
-                          const PopupMenuItem<Menu>(
-                            value: Menu.delete,
-                            child: Text('Delete'),
+                          Text(
+                            formatTime(widget.data.createdAt),
+                            style: const TextStyle(
+                              color: Colors.grey,
+                            ),
                           ),
                         ],
                       ),
-                  ],
+                      if (widget.data.authorEmail == email)
+                        PopupMenuButton<Menu>(
+                          icon: Icon(
+                            Icons.adaptive.more,
+                            color: Colors.grey,
+                          ),
+                          // Callback that sets the selected popup menu item.
+                          onSelected: (Menu item) async {
+                            if (item == Menu.edit) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => NewPost(
+                                            successCallback: () {
+                                              setState(() {});
+                                            },
+                                            document: quill.Document.fromJson(
+                                              jsonDecode(
+                                                widget.data.body,
+                                              ),
+                                            ),
+                                          )));
+                            } else if (item == Menu.delete) {
+                              String? idToken =
+                                  await secureStorage.read(key: 'idToken');
+                              _showDeletionConfirmationDialog(
+                                context,
+                                idToken: idToken,
+                                baseUrl: baseUrl,
+                                updateView: widget.updateView,
+                                id: widget.data.id,
+                              );
+                            }
+                          },
+                          itemBuilder: (BuildContext context) =>
+                              <PopupMenuEntry<Menu>>[
+                            const PopupMenuItem<Menu>(
+                              value: Menu.edit,
+                              child: Text('Edit'),
+                            ),
+                            const PopupMenuItem<Menu>(
+                              value: Menu.delete,
+                              child: Text('Delete'),
+                            ),
+                          ],
+                        ),
+                    ],
+                  ),
                 ),
                 // const SizedBox(
                 //   height: 10.0,
@@ -349,6 +352,26 @@ class _FeedPostState extends State<FeedPost> {
         ],
       ),
     );
+  }
+
+  String formatTime(String input) {
+    DateTime createdAt = DateTime.parse(input);
+
+    if (createdAt.day == DateTime.now().day) {
+      return createdAt.hour.toString() +
+          ":" +
+          (createdAt.second.toString().length == 1
+              ? "0" + createdAt.second.toString()
+              : createdAt.second.toString());
+    }
+
+    return createdAt.day.toString() +
+        ":" +
+        createdAt.month.toString() +
+        " " +
+        createdAt.hour.toString() +
+        ":" +
+        createdAt.second.toString();
   }
 }
 

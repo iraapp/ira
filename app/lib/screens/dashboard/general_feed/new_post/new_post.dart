@@ -42,7 +42,7 @@ class _NewPostState extends State<NewPost> {
     }
   }
 
-  Future<bool> _submitPost(String richText) async {
+  Future<bool> _submitPost(quill.Document richDocument) async {
     try {
       String? idToken = await secureStorage.read(key: 'idToken');
       final requestUrl = Uri.parse(baseUrl + '/feed/create/');
@@ -50,13 +50,18 @@ class _NewPostState extends State<NewPost> {
       var request = http.MultipartRequest('POST', requestUrl);
       final headers = {'Authorization': 'idToken ' + idToken!};
       request.headers.addAll(headers);
-      request.fields['body'] = richText;
+      request.fields['body'] =
+          jsonEncode(_controller.document.toDelta().toJson());
+      final plainText = _controller.document.toPlainText();
+      request.fields['notification'] = plainText.length > 250
+          ? plainText.substring(0, 249) + '...'
+          : plainText;
+
       for (var file in files) {
         request.files
             .add(await http.MultipartFile.fromPath(file.name, file.path!));
       }
       final response = await request.send();
-
       if (response.statusCode == 200) {
         return true;
       } else {
@@ -81,6 +86,26 @@ class _NewPostState extends State<NewPost> {
         ),
         backgroundColor: Colors.blue,
         elevation: 0.0,
+        actions: [
+          TextButton(
+            onPressed: () async {
+              if (_controller.document.toPlainText().trim().isNotEmpty) {
+                bool response = await _submitPost(_controller.document);
+
+                if (response) {
+                  Navigator.pop(context);
+                  widget.successCallback();
+                }
+              }
+            },
+            child: const Text(
+              "Submit",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: ConstrainedBox(
@@ -139,7 +164,9 @@ class _NewPostState extends State<NewPost> {
                           borderRadius:
                               const BorderRadius.all(Radius.circular(5))),
                       child: quill.QuillEditor.basic(
-                          controller: _controller, readOnly: false),
+                        controller: _controller,
+                        readOnly: false,
+                      ),
                     ),
                     const SizedBox(
                       height: 20,
@@ -191,27 +218,6 @@ class _NewPostState extends State<NewPost> {
                             );
                           }),
                     ),
-                    Center(
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          String richText = jsonEncode(
-                              _controller.document.toDelta().toJson());
-
-                          if (_controller.document
-                              .toPlainText()
-                              .trim()
-                              .isNotEmpty) {
-                            bool response = await _submitPost(richText);
-
-                            if (response) {
-                              Navigator.pop(context);
-                              widget.successCallback();
-                            }
-                          }
-                        },
-                        child: const Text("Submit"),
-                      ),
-                    )
                   ]),
             ),
           ),

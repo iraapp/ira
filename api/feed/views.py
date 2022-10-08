@@ -1,17 +1,19 @@
-from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from feed.models import Document, Post
 from feed.serializers import PostSerializer
 from rest_framework.permissions import IsAuthenticated
-
+from .firebase import send_notification
+from institute_app import settings
 
 class CreatePostView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         body = request.POST.get("body")
         user = request.user
+        notification = request.POST.get("notification")
+
         instance = Post.objects.create(
             user=user,
             body=body,
@@ -24,6 +26,8 @@ class CreatePostView(APIView):
                 instance.attachments.add(file_instance)
 
         instance.save()
+
+        send_notification(user.first_name + " " + user.last_name + " posted a new message", notification, settings.FEED_NOTIFICATION_CHANNEL)
 
         return Response(data={
             "msg": "Post created successfully."

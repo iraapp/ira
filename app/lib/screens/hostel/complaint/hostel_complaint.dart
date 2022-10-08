@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:ira/screens/mess/student/complains_mess_student.dart';
 
 // ignore: must_be_immutable
@@ -50,6 +51,7 @@ class _HostelComplaintState extends State<HostelComplaint> {
 
   String _description = "";
   late Future<Map<String, List<String>>> future;
+  String _imagePath = "";
 
   @override
   void initState() {
@@ -86,26 +88,23 @@ class _HostelComplaintState extends State<HostelComplaint> {
     return Future.value(false);
   }
 
-  Future<dynamic> _submitHostelComplaint(
-      String hostel, String complaintType, String description) async {
+  Future<dynamic> _submitHostelComplaint(String hostel, String complaintType,
+      String description, String filePath) async {
     String? idToken = await widget.secureStorage.read(key: 'idToken');
 
-    Map<String, dynamic> formMap = {
-      'hostel': hostel,
-      'complaint_type': complaintType,
-      'feedback': description
-    };
-
     final requestUrl = Uri.parse(widget.baseUrl + '/hostel/complaint');
-    final response = await http.post(
-      requestUrl,
-      headers: <String, String>{
-        "Content-Type": "application/x-www-form-urlencoded",
-        'Authorization': 'idToken ' + idToken!
-      },
-      encoding: Encoding.getByName('utf-8'),
-      body: formMap,
-    );
+
+    var request = http.MultipartRequest('POST', requestUrl);
+
+    final headers = {'Authorization': 'idToken ' + idToken!};
+
+    request.headers.addAll(headers);
+    request.fields['hostel'] = hostel;
+    request.fields['complaint_type'] = complaintType;
+    request.fields['feedback'] = description;
+    request.files.add(await http.MultipartFile.fromPath('file', filePath));
+
+    final response = await request.send();
 
     if (response.statusCode == 200) {
       return Future.value(true);
@@ -114,6 +113,9 @@ class _HostelComplaintState extends State<HostelComplaint> {
     }
     return Future.value(false);
   }
+
+  final ImagePicker _picker = ImagePicker();
+  bool _imageUploaded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -328,6 +330,46 @@ class _HostelComplaintState extends State<HostelComplaint> {
                             const SizedBox(
                               height: 10.0,
                             ),
+                            if (!widget.feedback)
+                              Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    ElevatedButton(
+                                        onPressed: () async {
+                                          final XFile? image =
+                                              await _picker.pickImage(
+                                                  source: ImageSource.gallery);
+                                          if (image != null) {
+                                            setState(() {
+                                              _imagePath = image.path;
+                                              _imageUploaded = true;
+                                            });
+                                          } else {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(const SnackBar(
+                                                    content: Text(
+                                                        'Please select an image file')));
+                                          }
+                                        },
+                                        child: const Text("Upload Image"),
+                                        style: ButtonStyle(
+                                          shape: MaterialStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(0.0)),
+                                          ),
+                                          backgroundColor:
+                                              MaterialStateProperty.all<Color?>(
+                                                  Colors.blue),
+                                        )),
+                                    const SizedBox(width: 10),
+                                    !_imageUploaded
+                                        ? Checkbox(
+                                            value: false, onChanged: (value) {})
+                                        : Checkbox(
+                                            value: true, onChanged: (value) {}),
+                                  ]),
                             Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 40.0, vertical: 20.0),
@@ -343,9 +385,11 @@ class _HostelComplaintState extends State<HostelComplaint> {
                                             if (widget.feedback == false) {
                                               res =
                                                   await _submitHostelComplaint(
-                                                      _hostelValue,
-                                                      _complaintTypeValue,
-                                                      _description);
+                                                _hostelValue,
+                                                _complaintTypeValue,
+                                                _description,
+                                                _imagePath,
+                                              );
                                             } else {
                                               res = await _submitHostelFeedback(
                                                 _hostelValue,

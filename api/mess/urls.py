@@ -59,5 +59,5 @@ urlpatterns = [
     path('menu/item_update', views.MenuItemUpdateView.as_view(),
          name='Menu item update'),
     path('menu/item_add', views.MessMenuItemAdd.as_view(), name="Menu item add"),
-    path('get/mess', views.MessNameView.as_view(), name="Get mess name"),
+    path('all', views.MessNameView.as_view(), name="Get mess name"),
 ]

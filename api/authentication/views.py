@@ -43,10 +43,13 @@ class ObtainIdTokenView(APIView):
 
         try:
             email = decoded_token.get("email")
+            first_name = decoded_token.get("given_name")
+            last_name = decoded_token.get("family_name")
+
         except Exception:
             raise exceptions.AuthenticationFailed('No such user exists')
 
-        user, _ = User.objects.get_or_create(email=email, role=1)
+        user, _ = User.objects.get_or_create(email=email, role=1, first_name = first_name, last_name = last_name)
 
         token, _ = UserToken.objects.get_or_create(user=user)
 

@@ -21,6 +21,7 @@ class HostelComplaintSerializer(serializers.Serializer):
     created_at = serializers.DateTimeField(format='%d %b %Y', input_formats='%d %b %y')
     user = UserSerializer()
     body = serializers.CharField()
+    file = serializers.FileField()
     hostel = HostelSerializer()
     status = serializers.BooleanField()
     complaint_type = ComplaintTypeSerializer()
