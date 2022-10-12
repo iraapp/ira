@@ -1,50 +1,55 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ira/firebase_options.dart';
 import 'package:ira/screens/dashboard/dashboard.dart';
 import 'package:ira/screens/dashboard/general_feed/panel_state_stream.dart';
 import 'package:ira/services/auth.service.dart';
 import 'package:ira/shared/alert_snackbar.dart';
 import 'package:provider/provider.dart';
 
-class MyApp extends StatelessWidget {
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {}
+
+void initAppWithFirebase() async {
+  // Intialize firebase and firebase cloud messaging.
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  await messaging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  await FirebaseMessaging.instance.subscribeToTopic('feed');
+
+  runApp(const MyApp());
+}
+
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<AuthService>(
-          create: (_) => AuthService(context: context),
-        ),
-        ChangeNotifierProvider<PanelStateStream>(
-            create: (_) => PanelStateStream())
-      ],
-      child: MaterialApp(
-        title: 'Institute App',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-            textTheme: GoogleFonts.latoTextTheme(),
-            listTileTheme: ListTileTheme.of(context).copyWith(
-              selectedColor: Colors.blue,
-            )),
-        home: const Wrapper(),
-      ),
-    );
-  }
+  State<MyApp> createState() => _MyAppState();
 }
 
-class Wrapper extends StatefulWidget {
-  const Wrapper({Key? key}) : super(key: key);
-
-  @override
-  State<Wrapper> createState() => _WrapperState();
-}
-
-class _WrapperState extends State<Wrapper> {
+class _MyAppState extends State<MyApp> {
   late StreamSubscription<ConnectivityResult> subscription;
   // ignore: avoid_init_to_null
   ConnectivityResult? previousState = null;
@@ -53,6 +58,14 @@ class _WrapperState extends State<Wrapper> {
   @override
   void initState() {
     super.initState();
+
+    // Register licenses for google fonts.
+    LicenseRegistry.addLicense(() async* {
+      final license = await rootBundle.loadString('google_fonts/OFL.txt');
+      yield LicenseEntryWithLineBreaks(['google_fonts'], license);
+    });
+
+    // Initialize connectivity status.
     subscription = Connectivity()
         .onConnectivityChanged
         .listen((ConnectivityResult result) {
@@ -92,6 +105,26 @@ class _WrapperState extends State<Wrapper> {
 
   @override
   Widget build(BuildContext context) {
-    return Dashboard(role: 'student');
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AuthService>(
+          create: (_) => AuthService(context: context),
+        ),
+        ChangeNotifierProvider<PanelStateStream>(
+            create: (_) => PanelStateStream())
+      ],
+      child: MaterialApp(
+        title: 'iRA',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+            textTheme: GoogleFonts.latoTextTheme(),
+            listTileTheme: ListTileTheme.of(context).copyWith(
+              selectedColor: Colors.blue,
+            )),
+        home: Dashboard(
+          role: 'student',
+        ),
+      ),
+    );
   }
 }

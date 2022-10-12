@@ -5,6 +5,7 @@ class HostelComplaintModel {
   final String hostel;
   final String createdAt;
   final bool status;
+  final String file;
   final String complaintType;
 
   HostelComplaintModel({
@@ -14,6 +15,7 @@ class HostelComplaintModel {
     required this.body,
     required this.hostel,
     required this.status,
+    required this.file,
     required this.complaintType,
   });
 
@@ -26,6 +28,7 @@ class HostelComplaintModel {
       hostel: json['hostel']['name'],
       status: json['status'],
       complaintType: json['complaint_type']['name'],
+      file: json['file'],
     );
   }
 }

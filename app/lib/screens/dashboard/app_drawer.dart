@@ -11,6 +11,7 @@ import 'package:ira/screens/team/team.dart';
 import 'package:ira/services/auth.service.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // ignore: must_be_immutable
 class AppDrawer extends StatefulWidget {
@@ -26,6 +27,12 @@ class AppDrawer extends StatefulWidget {
 
 class _AppDrawerState extends State<AppDrawer> {
   bool disableDrawerTiles = false;
+
+  Future<void> _launchUrl(String _url) async {
+    if (!await launchUrl(Uri.parse(_url))) {
+      throw 'Could not launch $_url';
+    }
+  }
 
   @override
   void initState() {
@@ -126,6 +133,15 @@ class _AppDrawerState extends State<AppDrawer> {
                 MaterialPageRoute(
                   builder: (context) => const TeamScreen(),
                 ));
+          },
+        ),
+        ListTile(
+          leading: const Icon(Icons.people),
+          title: const Text("Feedback"),
+          enabled: !disableDrawerTiles,
+          onTap: () {
+            _launchUrl(
+                'mailto:ira.app@iitjammu.ac.in?subject=IRA App Feedback');
           },
         ),
         ListTile(
