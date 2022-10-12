@@ -33,6 +33,7 @@ class HostelComplaint(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     body = models.TextField(editable = True, null = False, blank = True)
     hostel = models.ForeignKey(Hostel, on_delete=models.CASCADE, null = True)
+    file = models.FileField(upload_to='complaints/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now = True)
     status = models.BooleanField(default = False)
     complaint_type = models.ForeignKey(ComplaintType, on_delete=models.CASCADE, null = True)
