@@ -141,7 +141,9 @@ class AppointmentCard extends StatelessWidget {
                             ),
                             child: Center(
                               child: Text(
-                                status == "ACCEPTED" ? dateTime : reason,
+                                status == "ACCEPTED"
+                                    ? startTime + ' - ' + endTime
+                                    : reason,
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 12.0,

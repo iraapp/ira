@@ -58,13 +58,13 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCX8xrDDUzF_Qjpf44ZJ2qJ5gvPXabS3ac',
-    appId: '1:907710643901:ios:80d94c072b3a3ecfca41d4',
-    messagingSenderId: '907710643901',
-    projectId: 'iraapp-355206',
-    storageBucket: 'iraapp-355206.appspot.com',
-    androidClientId: '907710643901-b0jjpvll0ob48jo5ul9sf7e5l30019ac.apps.googleusercontent.com',
-    iosClientId: '907710643901-9s8q9mphvglr24hj1vogr95vdfh61c58.apps.googleusercontent.com',
+    apiKey: 'AIzaSyDAAlboxdfK3EEiyBDnuzkfuuJ3WxcmUj8',
+    appId: '1:76799423059:ios:6d566a1beade5ec40ecca6',
+    messagingSenderId: '76799423059',
+    projectId: 'ira-app-c1428',
+    storageBucket: 'ira-app-c1428.appspot.com',
+    androidClientId: '76799423059-269uc17mm313rme6vkkgkt27n4fuhsha.apps.googleusercontent.com',
+    iosClientId: '76799423059-2goq4dqnr2k67vbaonjibctv5bivv79a.apps.googleusercontent.com',
     iosBundleId: 'com.example.instituteApp',
   );
 }
