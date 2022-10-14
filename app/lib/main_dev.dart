@@ -19,8 +19,7 @@ Future main() async {
     ignoreSsl: true,
   );
 
-  await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform, name: 'ira');
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   FlavorConfig(
     name: "DEV",
