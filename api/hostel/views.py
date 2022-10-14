@@ -70,6 +70,7 @@ class HostelComplaintView(APIView):
         body = request.POST.get('feedback')
         hostel = request.POST.get('hostel')
         complaint_type = request.POST.get('complaint_type')
+        file = request.FILES.get("file")
 
         hostel = Hostel.objects.filter(name=hostel).first()
         complaint_type = ComplaintType.objects.filter(name = complaint_type).first()
@@ -78,7 +79,8 @@ class HostelComplaintView(APIView):
             user = user,
             body = body,
             hostel = hostel,
-            complaint_type = complaint_type
+            complaint_type = complaint_type,
+            file=file
         )
 
         return Response(data={'msg': 'success'}, status=200)

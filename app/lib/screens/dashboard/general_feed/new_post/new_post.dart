@@ -9,9 +9,12 @@ import 'package:http/http.dart' as http;
 
 // ignore: must_be_immutable
 class NewPost extends StatefulWidget {
+  quill.Document? document;
   VoidCallback successCallback;
+
   NewPost({
     Key? key,
+    required this.document,
     required this.successCallback,
   }) : super(key: key);
 
@@ -20,13 +23,26 @@ class NewPost extends StatefulWidget {
 }
 
 class _NewPostState extends State<NewPost> {
-  final quill.QuillController _controller = quill.QuillController.basic();
+  late quill.QuillController _controller;
   // Create secureStorage
   final secureStorage = const FlutterSecureStorage();
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
   List<PlatformFile> files = [];
 
-  Future<bool> _submitPost(String richText) async {
+  @override
+  initState() {
+    super.initState();
+    if (widget.document != null) {
+      _controller = quill.QuillController(
+        document: widget.document!,
+        selection: const TextSelection.collapsed(offset: 0),
+      );
+    } else {
+      _controller = quill.QuillController.basic();
+    }
+  }
+
+  Future<bool> _submitPost(quill.Document richDocument) async {
     try {
       String? idToken = await secureStorage.read(key: 'idToken');
       final requestUrl = Uri.parse(baseUrl + '/feed/create/');
@@ -34,13 +50,18 @@ class _NewPostState extends State<NewPost> {
       var request = http.MultipartRequest('POST', requestUrl);
       final headers = {'Authorization': 'idToken ' + idToken!};
       request.headers.addAll(headers);
-      request.fields['body'] = richText;
+      request.fields['body'] =
+          jsonEncode(_controller.document.toDelta().toJson());
+      final plainText = _controller.document.toPlainText();
+      request.fields['notification'] = plainText.length > 250
+          ? plainText.substring(0, 249) + '...'
+          : plainText;
+
       for (var file in files) {
         request.files
             .add(await http.MultipartFile.fromPath(file.name, file.path!));
       }
       final response = await request.send();
-
       if (response.statusCode == 200) {
         return true;
       } else {
@@ -65,6 +86,26 @@ class _NewPostState extends State<NewPost> {
         ),
         backgroundColor: Colors.blue,
         elevation: 0.0,
+        actions: [
+          TextButton(
+            onPressed: () async {
+              if (_controller.document.toPlainText().trim().isNotEmpty) {
+                bool response = await _submitPost(_controller.document);
+
+                if (response) {
+                  Navigator.pop(context);
+                  widget.successCallback();
+                }
+              }
+            },
+            child: const Text(
+              "Submit",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: ConstrainedBox(
@@ -92,6 +133,7 @@ class _NewPostState extends State<NewPost> {
                       height: 30.0,
                     ),
                     quill.QuillToolbar.basic(
+                      toolbarIconSize: 20,
                       controller: _controller,
                       showFontFamily: false,
                       multiRowsDisplay: false,
@@ -122,7 +164,9 @@ class _NewPostState extends State<NewPost> {
                           borderRadius:
                               const BorderRadius.all(Radius.circular(5))),
                       child: quill.QuillEditor.basic(
-                          controller: _controller, readOnly: false),
+                        controller: _controller,
+                        readOnly: false,
+                      ),
                     ),
                     const SizedBox(
                       height: 20,
@@ -174,27 +218,6 @@ class _NewPostState extends State<NewPost> {
                             );
                           }),
                     ),
-                    Center(
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          String richText = jsonEncode(
-                              _controller.document.toDelta().toJson());
-
-                          if (_controller.document
-                              .toPlainText()
-                              .trim()
-                              .isNotEmpty) {
-                            bool response = await _submitPost(richText);
-
-                            if (response) {
-                              Navigator.pop(context);
-                              widget.successCallback();
-                            }
-                          }
-                        },
-                        child: const Text("Submit"),
-                      ),
-                    )
                   ]),
             ),
           ),
