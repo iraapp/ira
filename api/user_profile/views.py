@@ -1,3 +1,4 @@
+import json
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -15,7 +16,6 @@ class StudentProfile(APIView):
   permission_classes = [IsAuthenticated]
 
   def get(self, request):
-
     profile = Student.objects.filter(user=request.user).first()
 
     return Response(status=200, data={
@@ -31,3 +31,22 @@ class StudentProfile(APIView):
       'blood_group': profile.blood_group
     })
 
+  def post(self, request):
+    user = request.user
+    body = json.loads(request.body.decode('utf-8'))
+    phone_number = body.get('mobile')
+    emergency_no = body.get('emergency')
+    branch = body.get('discipline')
+    programme = body.get('programme')
+
+    Student.objects.create(
+      user = user,
+      name = user.first_name + ' ' + user.last_name,
+      entry_no = user.email.split('@')[0].upper(),
+      programme = programme,
+      branch = branch,
+      phone_number = phone_number,
+      emergency_no = emergency_no
+    )
+
+    return Response(status = 200, data = { 'msg': 'success' })

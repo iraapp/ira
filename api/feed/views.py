@@ -54,3 +54,28 @@ class DeleteFeedView(APIView):
         return Response(status=200, data = {
             'msg': 'Post deleted successfully'
         })
+
+
+class UpdateFeedView(APIView):
+    permission_classes = [IsAuthenticated, ]
+
+    def post(request):
+        post_id = request.POST.get("post_id")
+        body = request.POST.get("body")
+        user = request.user
+
+        post = Post.objects.filter(id = post_id).first()
+
+        if post.user == request.user:
+            post.body = body
+
+            return Response(status = 200, data = "Post updated")
+
+            # if request.FILES:
+            #     for filename in request.FILES:
+            #         file_instance = Document.objects.create(file = request.FILES[filename])
+            #         file_instance.save()
+            #         post.attachments.clear()
+            #         post.attachments.add(file_instance)
+
+        return Response(status=401, data="Unauthorized")

@@ -173,6 +173,7 @@ class _FeedPostState extends State<FeedPost> {
                                             successCallback: () {
                                               setState(() {});
                                             },
+                                            edit: true,
                                             document: quill.Document.fromJson(
                                               jsonDecode(
                                                 widget.data.body,

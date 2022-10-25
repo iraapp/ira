@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:ira/screens/dashboard/dashboard.dart';
+import 'package:ira/screens/login/welcome/welcome.dart';
 import 'package:ira/screens/staff/staff_login.dart';
 import 'package:ira/services/auth.service.dart';
 import 'package:ira/shared/app_scaffold.dart';
@@ -19,110 +20,112 @@ class _LoginScreenState extends State<LoginScreen> {
     AuthService authService = Provider.of(context);
 
     return AppScaffold(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(height: 50.0),
-          Center(
-            child: Image.asset(
-              'assets/images/iit-jammu-logo-white.png',
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(top: 50.0),
-            width: MediaQuery.of(context).size.width * 0.8,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: const [
-                  BoxShadow(
-                      color: Colors.grey,
-                      blurRadius: 5.0,
-                      offset: Offset(
-                        0,
-                        5,
-                      ))
-                ]),
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  const Text(
-                    'Welcome to the',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  const Text(
-                    'IRA',
-                    style: TextStyle(
-                      fontSize: 35.0,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 80.0,
-                  ),
-                  const Text(
-                    'Login using your gmail',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  IconButton(
-                    iconSize: 50.0,
-                    icon: SvgPicture.asset(
-                      'assets/svgs/login_with_google.svg',
-                    ),
-                    onPressed: () async {
-                      authService.successCallback = () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Dashboard(
-                              role: 'student',
-                            ),
-                          ),
-                        );
-                        authService.successCallback = () {};
-                      };
-                      await authService.signIn();
-                    },
-                  ),
-                  const SizedBox(
-                    height: 30.0,
-                  )
-                ],
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height - 50,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 50.0),
+            Center(
+              child: Image.asset(
+                'assets/images/iit-jammu-logo-white.png',
               ),
             ),
-          ),
-          const SizedBox(
-            height: 15.0,
-          ),
-          Center(
-            child: TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const StaffLogin(),
+            Expanded(
+              child: Container(
+                margin: const EdgeInsets.only(top: 50.0),
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    children: [
+                      const Text(
+                        'Welcome to the',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      const SizedBox(
+                        height: 20.0,
+                      ),
+                      const Text(
+                        'IRA',
+                        style: TextStyle(
+                          fontSize: 35.0,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 80.0,
+                      ),
+                      const Text(
+                        'Login using your gmail',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20.0,
+                      ),
+                      IconButton(
+                        iconSize: 50.0,
+                        icon: SvgPicture.asset(
+                          'assets/svgs/login_with_google.svg',
+                        ),
+                        onPressed: () async {
+                          authService.successCallback = (bool askForDetails) {
+                            if (askForDetails) {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => WelcomeScreen(),
+                                ),
+                              );
+                            } else {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Dashboard(
+                                    role: 'student',
+                                  ),
+                                ),
+                              );
+                            }
+                          };
+                          await authService.signIn();
+                        },
+                      ),
+                      const SizedBox(
+                        height: 15.0,
+                      ),
+                      Center(
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const StaffLogin(),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'Continue as a Staff',
+                            style: TextStyle(
+                              fontSize: 15.0,
+                              color: Color(0xff4486cc),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                );
-              },
-              child: const Text(
-                'Continue as a Staff',
-                style: TextStyle(
-                  fontSize: 15.0,
-                  color: Color(0xff4486cc),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
