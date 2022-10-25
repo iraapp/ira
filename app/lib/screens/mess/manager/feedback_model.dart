@@ -20,7 +20,7 @@ class FeedbackModel {
   factory FeedbackModel.fromJson(Map<String, dynamic> json) {
     return FeedbackModel(
       id: json['id'].toString(),
-      user: json['user'].toString(),
+      user: json['user']['first_name'] + ' ' + json['user']['last_name'],
       body: json['body'].toString(),
       messType: json["mess_type"] != null
           ? json["mess_type"]["name"].toString()

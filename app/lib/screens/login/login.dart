@@ -22,102 +22,96 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(height: 50.0),
+          const SizedBox(height: 40.0),
           Center(
             child: Image.asset(
               'assets/images/iit-jammu-logo-white.png',
             ),
           ),
-          Container(
-            margin: const EdgeInsets.only(top: 50.0),
-            width: MediaQuery.of(context).size.width * 0.8,
-            decoration: BoxDecoration(
+          Expanded(
+            child: Container(
+              margin: const EdgeInsets.only(top: 50.0),
+              width: MediaQuery.of(context).size.width,
+              decoration: const BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: const [
-                  BoxShadow(
-                      color: Colors.grey,
-                      blurRadius: 5.0,
-                      offset: Offset(
-                        0,
-                        5,
-                      ))
-                ]),
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  const Text(
-                    'Welcome to the',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  const Text(
-                    'IRA',
-                    style: TextStyle(
-                      fontSize: 35.0,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 80.0,
-                  ),
-                  const Text(
-                    'Login using your gmail',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  IconButton(
-                    iconSize: 50.0,
-                    icon: SvgPicture.asset(
-                      'assets/svgs/login_with_google.svg',
-                    ),
-                    onPressed: () async {
-                      authService.successCallback = () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Dashboard(
-                              role: 'student',
-                            ),
-                          ),
-                        );
-                        authService.successCallback = () {};
-                      };
-                      await authService.signIn();
-                    },
-                  ),
-                  const SizedBox(
-                    height: 30.0,
-                  )
-                ],
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30.0),
+                    topRight: Radius.circular(30.0)),
               ),
-            ),
-          ),
-          const SizedBox(
-            height: 15.0,
-          ),
-          Center(
-            child: TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const StaffLogin(),
-                  ),
-                );
-              },
-              child: const Text(
-                'Continue as a Staff',
-                style: TextStyle(
-                  fontSize: 15.0,
-                  color: Color(0xff4486cc),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    const SizedBox(
+                      height: 40.0,
+                    ),
+                    const Text(
+                      'Welcome to the',
+                      style: TextStyle(fontSize: 22),
+                    ),
+                    const Text(
+                      'IRA',
+                      style: TextStyle(
+                        fontSize: 35.0,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 40.0,
+                    ),
+                    const Text(
+                      'Login using your Gmail id',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    IconButton(
+                      iconSize: 60.0,
+                      icon: SvgPicture.asset(
+                        'assets/svgs/google_sign_in.svg',
+                      ),
+                      onPressed: () async {
+                        authService.successCallback = () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Dashboard(
+                                role: 'student',
+                              ),
+                            ),
+                          );
+                          authService.successCallback = () {};
+                        };
+                        await authService.signIn();
+                      },
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    Center(
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const StaffLogin(),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          'Continue as a Staff',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
