@@ -134,6 +134,33 @@ class _TendersMessManagerState extends State<TendersMessManager> {
     }
   }
 
+  final Set<String> messTypes = {"Choose Mess"};
+  String _messValue = "Choose Mess";
+
+  Future<void> _getMessTypes() async {
+    final String? token = await widget.secureStorage.read(key: 'staffToken');
+
+    final requestUrl = Uri.parse(widget.baseUrl + '/mess/get/mess');
+    final response = await http.get(
+      requestUrl,
+      headers: <String, String>{
+        "Content-Type": "application/x-www-form-urlencoded",
+        'Authorization': token != null ? 'Token ' + token : '',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      for (var item in data) {
+        messTypes.add(item['name']);
+      }
+      setState(() {});
+    } else {
+      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+      throw Exception('API Call Failed');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -406,6 +433,7 @@ class _TendersMessManagerState extends State<TendersMessManager> {
   @override
   void initState() {
     super.initState();
+    _getMessTypes();
 
     IsolateNameServer.registerPortWithName(
         _port.sendPort, 'downloader_send_port');
@@ -506,24 +534,48 @@ class _TendersMessManagerState extends State<TendersMessManager> {
                   ),
                 ]),
                 const SizedBox(height: 10),
-                Row(children: [
-                  const Text(
-                    "Mess Name",
-                    style: TextStyle(fontSize: 16.0),
-                  ),
-                  const SizedBox(width: 10),
-                  Flexible(
-                    child: SizedBox(
-                      height: 40.0,
-                      child: TextField(
-                        controller: _descriptionTextCtr,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                        ),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Mess Name",
+                        style: TextStyle(fontSize: 16.0),
                       ),
-                    ),
-                  )
-                ]),
+                      const SizedBox(width: 10),
+                      Flexible(
+                        child: SizedBox(
+                          width: 150.0,
+                          child: DropdownButton<String>(
+                            style: const TextStyle(
+                              color: Colors.white,
+                            ),
+                            icon: const Icon(
+                              Icons.arrow_drop_down,
+                              color: Colors.black,
+                            ),
+                            value: _messValue,
+                            items: messTypes.map((String items) {
+                              return DropdownMenuItem(
+                                value: items,
+                                child: Text(
+                                  items,
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              setSte(() {
+                                _messValue = value!;
+                              });
+                            },
+                            borderRadius: BorderRadius.circular(10.0),
+                            isExpanded: true,
+                          ),
+                        ),
+                      )
+                    ]),
                 const SizedBox(height: 10),
                 Row(children: [
                   const Text(

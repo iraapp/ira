@@ -16,22 +16,26 @@ class FeedbackMessManager extends StatefulWidget {
 
 class _FeedbackMessManagerState extends State<FeedbackMessManager> {
   Future<List<FeedbackModel>> _getMessFeedbackItems() async {
-    final String? token = await widget.secureStorage.read(key: 'staffToken');
-    final requestUrl = Uri.parse(widget.baseUrl + '/mess/feedback');
-    final response = await http.get(
-      requestUrl,
-      headers: <String, String>{
-        "Content-Type": "application/x-www-form-urlencoded",
-        'Authorization': token != null ? 'Token ' + token : '',
-      },
-    );
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return data
-          .map<FeedbackModel>((json) => FeedbackModel.fromJson(json))
-          .toList();
-    } else {
-      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+    try {
+      final String? token = await widget.secureStorage.read(key: 'staffToken');
+      final requestUrl = Uri.parse(widget.baseUrl + '/mess/feedback');
+      final response = await http.get(
+        requestUrl,
+        headers: <String, String>{
+          "Content-Type": "application/x-www-form-urlencoded",
+          'Authorization': token != null ? 'Token ' + token : '',
+        },
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return data
+            .map<FeedbackModel>((json) => FeedbackModel.fromJson(json))
+            .toList();
+      } else {
+        // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+        throw Exception('API Call Failed');
+      }
+    } catch (e) {
       throw Exception('API Call Failed');
     }
   }
