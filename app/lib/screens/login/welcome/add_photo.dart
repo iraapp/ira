@@ -1,15 +1,34 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_flavor/flutter_flavor.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ira/screens/dashboard/dashboard.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:http/http.dart' as http;
 
 import '../../../util/helpers.dart';
 
+// ignore: must_be_immutable
 class AddPhotoScreen extends StatefulWidget {
   final localStorage = LocalStorage('store');
-  AddPhotoScreen({Key? key}) : super(key: key);
+  final secureStorage = const FlutterSecureStorage();
+  String baseUrl = FlavorConfig.instance.variables['baseUrl'];
+
+  String mobile;
+  String emergency;
+  String discipline;
+  String programme;
+
+  AddPhotoScreen({
+    Key? key,
+    required this.mobile,
+    required this.emergency,
+    required this.discipline,
+    required this.programme,
+  }) : super(key: key);
 
   @override
   State<AddPhotoScreen> createState() => _AddPhotoScreenState();
@@ -20,6 +39,34 @@ class _AddPhotoScreenState extends State<AddPhotoScreen> {
 
   String _imagePath = "";
   bool _imageUploaded = false;
+
+  Future<bool> _postStudentData() async {
+    try {
+      String? idToken = await widget.secureStorage.read(key: 'idToken');
+
+      final requestUrl = Uri.parse(widget.baseUrl + '/user_profile/student');
+
+      var request = http.MultipartRequest('POST', requestUrl);
+      final headers = {'Authorization': 'idToken ' + idToken!};
+      request.headers.addAll(headers);
+      request.fields['mobile'] = widget.mobile;
+      request.fields['emergency'] = widget.emergency;
+      request.fields['discipline'] = widget.discipline;
+      request.fields['programme'] = widget.programme;
+
+      request.files
+          .add(await http.MultipartFile.fromPath('profile', _imagePath));
+
+      final response = await request.send();
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        throw Exception('API Call Failed');
+      }
+    } catch (e) {
+      return false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,14 +164,23 @@ class _AddPhotoScreenState extends State<AddPhotoScreen> {
                           ),
                           Center(
                             child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => Dashboard(
-                                        role: 'student',
-                                      ),
-                                    ));
+                              onPressed: () async {
+                                if (_imagePath.isNotEmpty) {
+                                  if (await _postStudentData()) {
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => Dashboard(
+                                            role: 'student',
+                                          ),
+                                        ));
+                                  }
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              "Please upload a profile image")));
+                                }
                               },
                               child: const Text("Continue"),
                             ),

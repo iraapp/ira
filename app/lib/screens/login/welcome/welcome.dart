@@ -1,11 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ira/screens/login/welcome/add_photo.dart';
 import 'package:localstorage/localstorage.dart';
-import 'package:http/http.dart' as http;
 
 import '../../../util/helpers.dart';
 
@@ -185,34 +182,19 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             Center(
                               child: ElevatedButton(
                                 onPressed: () async {
-                                  if (_formKey.currentState!.validate()) {}
-                                  String? idToken =
-                                      await secureStorage.read(key: 'idToken');
-                                  final response = await http.post(
-                                      Uri.parse(
-                                        baseUrl + '/user_profile/student',
-                                      ),
-                                      headers: <String, String>{
-                                        'Content-Type':
-                                            'application/json; charset=UTF-8',
-                                        'Authorization': 'idToken ' + idToken!
-                                      },
-                                      body: jsonEncode(<String, String>{
-                                        'mobile': mobileFieldController.text,
-                                        'emergency':
-                                            emergencyFieldController.text,
-                                        'discipline':
-                                            disciplineFieldController.text,
-                                        'programme':
-                                            programmeFieldController.text,
-                                      }));
-
-                                  if (response.statusCode == 200) {
+                                  if (_formKey.currentState!.validate()) {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) =>
-                                              AddPhotoScreen(),
+                                          builder: (context) => AddPhotoScreen(
+                                            mobile: mobileFieldController.text,
+                                            emergency:
+                                                emergencyFieldController.text,
+                                            discipline:
+                                                disciplineFieldController.text,
+                                            programme:
+                                                programmeFieldController.text,
+                                          ),
                                         ));
                                   }
                                 },

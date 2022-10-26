@@ -14,3 +14,4 @@ class Student(models.Model):
   valid_upto = models.DateField(null = True, blank = True)
   emergency_no = models.CharField(max_length=20, default='')
   blood_group = models.CharField(max_length=3, default='', null = True, blank = True)
+  profile_image = models.ImageField(upload_to='profile_images/')
