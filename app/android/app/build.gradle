@@ -44,7 +44,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "app.theira.institute_app"
+        applicationId "com.example.institute_app"
         minSdkVersion 23
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
@@ -53,10 +53,10 @@ android {
 
     signingConfigs {
         debug {
-            storeFile file('key.jks')
-            storePassword 'instituteapp'
-            keyAlias 'androiddebugkey'
-            keyPassword 'instituteapp'
+            storeFile file('upload-keystore.jks')
+            storePassword 'password'
+            keyAlias 'uploadkeystore'
+            keyPassword 'password'
         }
     }
 
