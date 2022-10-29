@@ -23,6 +23,39 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   final secureStorage = const FlutterSecureStorage();
   final String baseUrl = FlavorConfig.instance.variables['baseUrl'];
 
+  String discipline = "Bioscience and Bioengineering";
+  String programme = "B Tech";
+
+  List<DropdownMenuItem<String>> disciplines = const [
+    DropdownMenuItem(
+        child: Text("Bioscience and Bioengineering"),
+        value: "Bioscience and Bioengineering"),
+    DropdownMenuItem(
+        child: Text("Computer Science Engineering"),
+        value: "Computer Science Engineering"),
+    DropdownMenuItem(
+        child: Text("Chemical Engineering"), value: "Chemical Engineering"),
+    DropdownMenuItem(
+        child: Text("Civil Engineering"), value: "Civil Engineering"),
+    DropdownMenuItem(
+        child: Text("Electrical Engineering"), value: "Electrical Engineering"),
+    DropdownMenuItem(
+        child: Text("Humanities and Social Sciences"),
+        value: "Humanities and Social Sciences"),
+    DropdownMenuItem(child: Text("Mathematics"), value: "Mathematics"),
+    DropdownMenuItem(
+        child: Text("Materials Engineering"), value: "Materials Engineering"),
+    DropdownMenuItem(
+        child: Text("Mechanical Engineering"), value: "Mechanical Engineering"),
+    DropdownMenuItem(child: Text("Physics"), value: "Physics"),
+  ];
+
+  List<DropdownMenuItem<String>> programmes = const [
+    DropdownMenuItem(child: Text("B Tech"), value: "B Tech"),
+    DropdownMenuItem(child: Text("M Tech"), value: "M Tech"),
+    DropdownMenuItem(child: Text("Ph. D"), value: "Ph. D"),
+  ];
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -133,23 +166,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             const SizedBox(
                               height: 5,
                             ),
-                            TextFormField(
-                              controller: disciplineFieldController,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please specify your discipline';
-                                }
-
-                                return null;
+                            DropdownButton(
+                              value: discipline,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  discipline = newValue!;
+                                });
                               },
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                hintText: "Discipline",
-                                contentPadding: EdgeInsets.symmetric(
-                                  vertical: 0.0,
-                                  horizontal: 10.0,
-                                ),
-                              ),
+                              items: disciplines,
                             ),
                             const SizedBox(
                               height: 10.0,
@@ -158,23 +182,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             const SizedBox(
                               height: 5,
                             ),
-                            TextFormField(
-                              controller: programmeFieldController,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please specify your programme';
-                                }
-
-                                return null;
+                            DropdownButton(
+                              value: programme,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  programme = newValue!;
+                                });
                               },
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                hintText: "Programme",
-                                contentPadding: EdgeInsets.symmetric(
-                                  vertical: 0.0,
-                                  horizontal: 10.0,
-                                ),
-                              ),
+                              items: programmes,
                             ),
                             const SizedBox(
                               height: 20,
