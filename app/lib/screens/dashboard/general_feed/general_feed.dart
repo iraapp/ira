@@ -106,6 +106,7 @@ class _GeneralFeedState extends State<GeneralFeed> {
                                   successCallback: () {
                                     setState(() {});
                                   },
+                                  edit: false,
                                   document: null,
                                 )));
                   },

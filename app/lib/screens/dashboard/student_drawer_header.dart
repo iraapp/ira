@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:localstorage/localstorage.dart';
 
-String capitalize(String str) {
-  return '${str[0].toUpperCase()}${str.substring(1).toLowerCase()}';
-}
+import '../../util/helpers.dart';
 
 class StudentDrawerHeader extends StatelessWidget {
   StudentDrawerHeader({Key? key}) : super(key: key);
@@ -51,9 +49,7 @@ class StudentDrawerHeader extends StatelessWidget {
                   height: 10,
                 ),
                 Text(
-                  capitalize(displayName.split(' ')[0]) +
-                      ' ' +
-                      capitalize(displayName.split(' ')[1]),
+                  formatDisplayName(displayName),
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,

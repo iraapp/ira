@@ -1,6 +1,7 @@
 import json
 import os
 from pathlib import Path
+from user_profile.models import Student
 from authentication.models import Staff, StaffToken, User, UserToken
 from authentication.serializers import StaffSerializer
 from rest_framework.response import Response
@@ -27,7 +28,6 @@ class ObtainIdTokenView(APIView):
     permission_classes = []
 
     def post(self, request, *args, **kwargs):
-        print('here')
         credentials = json.loads(request.body.decode('utf-8'))
         idToken = credentials.get('idToken')
 
@@ -43,8 +43,8 @@ class ObtainIdTokenView(APIView):
 
         try:
             email = decoded_token.get("email")
-            first_name = decoded_token.get("given_name")
-            last_name = decoded_token.get("family_name")
+            first_name = decoded_token.get("given_name").capitalize()
+            last_name = decoded_token.get("family_name").capitalize()
 
         except Exception:
             raise exceptions.AuthenticationFailed('No such user exists')
@@ -53,7 +53,12 @@ class ObtainIdTokenView(APIView):
 
         token, _ = UserToken.objects.get_or_create(user=user)
 
-        return Response(status = 200, data={'idToken': token.key})
+        askForDetails = True
+
+        if Student.objects.filter(user = user):
+            askForDetails = False
+
+        return Response(status = 200, data = {'idToken': token.key, 'askForDetails': askForDetails})
 
 
 class CoursePageViewStudent(APIView):
