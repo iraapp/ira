@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ira/screens/gate_pass/purpose.dart';
-import 'package:ira/shared/app_scaffold.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:http/http.dart' as http;
 
@@ -38,7 +37,7 @@ class GatePassScreen extends StatelessWidget {
     if (response.statusCode == 200) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const PurposeScreen()),
+        MaterialPageRoute(builder: (context) => PurposeScreen()),
       );
     } else {
       // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
@@ -47,107 +46,149 @@ class GatePassScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Center(
-            child: Container(
-              margin: const EdgeInsets.only(top: 50.0),
-              width: MediaQuery.of(context).size.width * 0.8,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: const [
-                  BoxShadow(
-                      color: Colors.grey,
-                      blurRadius: 5.0,
-                      offset: Offset(
-                        0,
-                        5,
-                      ))
-                ],
+    final size = MediaQuery.of(context).size;
+
+    return Scaffold(
+      backgroundColor: Colors.blue,
+      appBar: AppBar(
+        title: const Text(
+          "Gate Pass",
+          style: TextStyle(
+            fontSize: 20,
+          ),
+        ),
+        backgroundColor: Colors.blue,
+        elevation: 0.0,
+      ),
+      body: ConstrainedBox(
+        constraints: BoxConstraints.tightFor(
+          height: size.height -
+              (MediaQuery.of(context).padding.top + kToolbarHeight),
+        ),
+        child: Container(
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(40.0),
+              bottomRight: Radius.circular(0.0),
+              topLeft: Radius.circular(40.0),
+              bottomLeft: Radius.circular(0.0),
+            ),
+            color: Color(0xfff5f5f5),
+          ),
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 20,
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'QR Code',
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                          ),
+              Container(
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(20.0),
+                    bottomRight: Radius.circular(20.0),
+                    topLeft: Radius.circular(20.0),
+                    bottomLeft: Radius.circular(20.0),
+                  ),
+                  color: Colors.white,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Purpose for gate pass : ',
+                        style: TextStyle(
+                          fontSize: 16.0,
                         ),
-                        status == 'false'
-                            ? IconButton(
-                                onPressed: () => destroyQr(context),
-                                color: Colors.black,
-                                icon: const Icon(Icons.delete),
-                              )
-                            : Container()
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 30.0,
-                    ),
-                    QrImage(
-                      data: hash,
-                      version: 3,
-                    ),
-                    const SizedBox(
-                      height: 30.0,
-                    ),
-                    SizedBox(
-                      width: 130.0,
-                      height: 35.0,
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: status == 'false' ? Colors.green : Colors.red,
-                          borderRadius: BorderRadius.circular(10),
+                      ),
+                      Text(
+                        purpose,
+                        style: const TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
                         ),
-                        child: Center(
-                          child: Text(
-                            status == 'false'
-                                ? 'Inside Campus'
-                                : 'Outside Campus',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 15.0,
-                            ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 20.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Opacity(
+                      opacity: 0.0,
+                      child: IconButton(
+                        onPressed: () => destroyQr(context),
+                        color: Colors.black,
+                        icon: const Icon(Icons.delete),
+                      )),
+                  SizedBox(
+                    width: 130.0,
+                    height: 35.0,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: status == 'false' ? Colors.green : Colors.red,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Center(
+                        child: Text(
+                          status == 'false'
+                              ? 'Inside Campus'
+                              : 'Outside Campus',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 15.0,
                           ),
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          'Purpose for gate pass : ',
-                        ),
-                        Text(
-                          purpose,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
+                  ),
+                  status == 'false'
+                      ? IconButton(
+                          onPressed: () => destroyQr(context),
+                          color: Colors.black,
+                          icon: const Icon(Icons.delete),
                         )
+                      : Container()
+                ],
+              ),
+              const SizedBox(
+                height: 10.0,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Container(
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(20.0),
+                      bottomRight: Radius.circular(20.0),
+                      topLeft: Radius.circular(20.0),
+                      bottomLeft: Radius.circular(20.0),
+                    ),
+                    color: Colors.white,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        QrImage(
+                          data: hash,
+                          version: 3,
+                        ),
                       ],
-                    )
-                  ],
+                    ),
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
-          const SizedBox(
-            height: 30.0,
-          ),
-        ],
+        ),
       ),
     );
   }

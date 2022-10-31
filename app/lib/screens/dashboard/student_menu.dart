@@ -23,7 +23,7 @@ studentMenu(context) {
     DashboardIcon(
       icon: const Icon(Icons.admin_panel_settings_rounded),
       title: "Gate Pass",
-      pageRoute: const PurposeScreen(),
+      pageRoute: PurposeScreen(),
     ),
     DashboardIcon(
       icon: const Icon(Icons.people),

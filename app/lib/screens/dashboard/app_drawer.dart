@@ -119,7 +119,7 @@ class _AppDrawerState extends State<AppDrawer> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const PurposeScreen(),
+                  builder: (context) => PurposeScreen(),
                 ));
           },
         ),
