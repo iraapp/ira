@@ -15,7 +15,7 @@ class AuthService with ChangeNotifier {
       GoogleSignIn(serverClientId: dotenv.env['GOOGLE_OAUTH_CLIENT_ID']);
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
   // ignore: prefer_function_declarations_over_variables
-  VoidCallback successCallback = () {};
+  var successCallback = (bool askForDetails) {};
 
   // Create secureStorage
   final secureStorage = const FlutterSecureStorage();
@@ -56,7 +56,9 @@ class AuthService with ChangeNotifier {
               localStorage.setItem('displayName', _user?.displayName);
               localStorage.setItem('email', _user?.email);
 
-              successCallback();
+              bool askForDetails = jsonDecode(response.body)['askForDetails'];
+
+              successCallback(askForDetails);
             } else {
               // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
             }

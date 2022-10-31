@@ -2,14 +2,16 @@ from authentication.models import USER_ROLES
 from authentication.models import STAFF_ROLE_IDS
 from rest_framework.permissions import BasePermission
 
+
 class IsGuard(BasePermission):
     """
     Allows access only to only guards.
     """
 
-    def has_permission(self, request):
+    def has_permission(self, request, _):
         return bool(request.user and
-        request.user.role == STAFF_ROLE_IDS['guard'])
+                    request.user.role == STAFF_ROLE_IDS['guard'])
+
 
 class IsMessManager(BasePermission):
     """
@@ -17,8 +19,8 @@ class IsMessManager(BasePermission):
     """
 
     def has_permission(self, request, _):
-      return bool(request.user and
-      request.user.role == STAFF_ROLE_IDS['mess_manager'])
+        return bool(request.user and
+                    request.user.role == STAFF_ROLE_IDS['mess_manager'])
 
 
 class IsMedicalManager(BasePermission):
@@ -27,8 +29,9 @@ class IsMedicalManager(BasePermission):
     """
 
     def has_permission(self, request, _):
-      return bool(request.user and
-      request.user.role == STAFF_ROLE_IDS['medical_manager'])
+        return bool(request.user and
+                    request.user.role == STAFF_ROLE_IDS['medical_manager'])
+
 
 class IsSwoOffice(BasePermission):
     """
@@ -36,8 +39,9 @@ class IsSwoOffice(BasePermission):
     """
 
     def has_permission(self, request, _):
-      return bool(request.user and
-      request.user.role == USER_ROLES['swo_office'])
+        return bool(request.user and
+                    request.user.role == USER_ROLES['swo_office'])
+
 
 class IsAcademicOfficeUG(BasePermission):
     """
@@ -45,8 +49,9 @@ class IsAcademicOfficeUG(BasePermission):
     """
 
     def has_permission(self, request, _):
-      return bool(request.user and
-      request.user.role == USER_ROLES['academic_office_ug'])
+        return bool(request.user and
+                    request.user.role == USER_ROLES['academic_office_ug'])
+
 
 class IsAcademicOfficePG(BasePermission):
     """
@@ -54,8 +59,9 @@ class IsAcademicOfficePG(BasePermission):
     """
 
     def has_permission(self, request, _):
-      return bool(request.user and
-      request.user.role == USER_ROLES['academic_office_pg'])
+        return bool(request.user and
+                    request.user.role == USER_ROLES['academic_office_pg'])
+
 
 class IsGymkhana(BasePermission):
     """
@@ -63,8 +69,9 @@ class IsGymkhana(BasePermission):
     """
 
     def has_permission(self, request, _):
-      return bool(request.user and
-      request.user.role == USER_ROLES['gymkhana'])
+        return bool(request.user and
+                    request.user.role == USER_ROLES['gymkhana'])
+
 
 class IsCulturalBoard(BasePermission):
     """
@@ -72,8 +79,9 @@ class IsCulturalBoard(BasePermission):
     """
 
     def has_permission(self, request, _):
-      return bool(request.user and
-      request.user.role == USER_ROLES['cultural_board'])
+        return bool(request.user and
+                    request.user.role == USER_ROLES['cultural_board'])
+
 
 class IsTechnicalBoard(BasePermission):
     """
@@ -81,17 +89,19 @@ class IsTechnicalBoard(BasePermission):
     """
 
     def has_permission(self, request, _):
-      return bool(request.user and
-      request.user.role == USER_ROLES['technical_board'])
-    
+        return bool(request.user and
+                    request.user.role == USER_ROLES['technical_board'])
+
+
 class IsSportsBoard(BasePermission):
     """
     Allows access only to only sports board.
     """
 
     def has_permission(self, request, _):
-      return bool(request.user and
-      request.user.role == USER_ROLES['sports_board'])
+        return bool(request.user and
+                    request.user.role == USER_ROLES['sports_board'])
+
 
 class IsHostelBoard(BasePermission):
     """
@@ -99,8 +109,9 @@ class IsHostelBoard(BasePermission):
     """
 
     def has_permission(self, request, _):
-      return bool(request.user and
-      request.user.role == USER_ROLES['hostel_board'])
+        return bool(request.user and
+                    request.user.role == USER_ROLES['hostel_board'])
+
 
 class IsAcademicBoardUG(BasePermission):
     """
@@ -108,8 +119,9 @@ class IsAcademicBoardUG(BasePermission):
     """
 
     def has_permission(self, request, _):
-      return bool(request.user and
-      request.user.role == USER_ROLES['academic_board_ug'])
+        return bool(request.user and
+                    request.user.role == USER_ROLES['academic_board_ug'])
+
 
 class IsAcademicBoardPG(BasePermission):
     """
@@ -117,8 +129,9 @@ class IsAcademicBoardPG(BasePermission):
     """
 
     def has_permission(self, request, _):
-      return bool(request.user and
-      request.user.role == USER_ROLES['academic_board_pg'])
+        return bool(request.user and
+                    request.user.role == USER_ROLES['academic_board_pg'])
+
 
 class IsIraTeam(BasePermission):
     """
@@ -126,5 +139,5 @@ class IsIraTeam(BasePermission):
     """
 
     def has_permission(self, request, _):
-      return bool(request.user and
-      request.user.role == USER_ROLES['ira_team'])
+        return bool(request.user and
+                    request.user.role == USER_ROLES['ira_team'])
