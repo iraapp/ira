@@ -24,7 +24,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Take environment variables from .env file
 environ.Env.read_env(os.path.join(BASE_DIR.parent, '.env'))
 
-
 class ObtainIdTokenView(APIView):
     permission_classes = []
 
@@ -50,28 +49,26 @@ class ObtainIdTokenView(APIView):
         except Exception:
             raise exceptions.AuthenticationFailed('No such user exists')
 
-        user, _ = User.objects.get_or_create(
-            email=email, role=1, first_name=first_name, last_name=last_name)
+        user, _ = User.objects.get_or_create(email=email, role=1, first_name = first_name, last_name = last_name)
 
         token, _ = UserToken.objects.get_or_create(user=user)
 
         askForDetails = True
 
-        if Student.objects.filter(user=user):
+        if Student.objects.filter(user = user):
             askForDetails = False
 
-        return Response(status=200, data={'idToken': token.key, 'askForDetails': askForDetails})
+        return Response(status = 200, data = {'idToken': token.key, 'askForDetails': askForDetails})
 
 
 class CoursePageViewStudent(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        return Response(status=200, data="Authenticated")
+        return Response(status = 200, data = "Authenticated")
 
     def post(self, request, *args, **kwargs):
-        return Response(status=200, data="Authenticated")
-
+        return Response(status = 200, data="Authenticated")
 
 @authentication_classes([])
 class RegisterStaffView(APIView):
@@ -84,12 +81,12 @@ class RegisterStaffView(APIView):
 
         if username and first_name and last_name and raw_password:
             staff = Staff.objects.create(
-                username=username, first_name=first_name, last_name=last_name,
+                username=username, first_name= first_name, last_name=last_name,
                 password=make_password(raw_password))
-            return Response(status=200, data=StaffSerializer(staff).data)
+            return Response(status=200, data = StaffSerializer(staff).data)
 
         else:
-            return Response(status=400)
+            return Response(status = 400)
 
 
 @authentication_classes([])

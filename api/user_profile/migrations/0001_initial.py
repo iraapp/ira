@@ -17,8 +17,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Student',
             fields=[
-                ('id', models.BigAutoField(auto_created=True,
-                 primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(default='', max_length=30)),
                 ('entry_no', models.CharField(max_length=30)),
                 ('programme', models.CharField(max_length=30)),
@@ -28,11 +27,9 @@ class Migration(migrations.Migration):
                 ('date_of_birth', models.DateField(blank=True, null=True)),
                 ('valid_upto', models.DateField(blank=True, null=True)),
                 ('emergency_no', models.CharField(default='', max_length=20)),
-                ('blood_group', models.CharField(
-                    blank=True, default='', max_length=3, null=True)),
+                ('blood_group', models.CharField(blank=True, default='', max_length=3, null=True)),
                 ('profile_image', models.ImageField(upload_to='profile_images/')),
-                ('user', models.ForeignKey(
-                    on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
     ]

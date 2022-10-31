@@ -10,33 +10,32 @@ from rest_framework.decorators import authentication_classes
 from user_profile.models import Student
 # Create your views here.
 
-
 class StudentProfile(APIView):
-    permission_classes = [IsAuthenticated]
+  permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-        profile = Student.objects.filter(user=request.user).first()
+  def get(self, request):
+    profile = Student.objects.filter(user=request.user).first()
 
-        return Response(status=200, data=StudentSerializer(profile).data)
+    return Response(status=200, data = StudentSerializer(profile).data)
 
-    def post(self, request):
-        user = request.user
-        phone_number = request.POST.get('mobile')
-        emergency_no = request.POST.get('emergency')
-        branch = request.POST.get('discipline')
-        programme = request.POST.get('programme')
+  def post(self, request):
+    user = request.user
+    phone_number = request.POST.get('mobile')
+    emergency_no = request.POST.get('emergency')
+    branch = request.POST.get('discipline')
+    programme = request.POST.get('programme')
 
-        request.FILES.get('profile')
+    request.FILES.get('profile')
 
-        Student.objects.create(
-            user=user,
-            name=user.first_name + ' ' + user.last_name,
-            entry_no=user.email.split('@')[0].upper(),
-            programme=programme,
-            branch=branch,
-            phone_number=phone_number,
-            emergency_no=emergency_no,
-            profile_image=request.FILES.get('profile')
-        )
+    Student.objects.create(
+      user = user,
+      name = user.first_name + ' ' + user.last_name,
+      entry_no = user.email.split('@')[0].upper(),
+      programme = programme,
+      branch = branch,
+      phone_number = phone_number,
+      emergency_no = emergency_no,
+      profile_image = request.FILES.get('profile')
+    )
 
-        return Response(status=200, data={'msg': 'success'})
+    return Response(status = 200, data = { 'msg': 'success' })
