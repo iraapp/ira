@@ -17,7 +17,10 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      return web;
+      throw UnsupportedError(
+        'DefaultFirebaseOptions have not been configured for web - '
+        'you can reconfigure this by running the FlutterFire CLI again.',
+      );
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -46,31 +49,24 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBm_vaLPSshmxXu8Eq3N43BECbhsYKO6SU',
-    appId: '1:1053484742850:web:fa16d00f42cbfb8565a35b',
-    messagingSenderId: '1053484742850',
-    projectId: 'ira-test-project-355414',
-    authDomain: 'ira-test-project-355414.firebaseapp.com',
-    storageBucket: 'ira-test-project-355414.appspot.com',
-  );
-
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBCvCa5j7za8hiwupk4oxPc0iZNoQk5VAM',
-    appId: '1:1053484742850:android:0cac645611f73e3c65a35b',
-    messagingSenderId: '1053484742850',
-    projectId: 'ira-test-project-355414',
-    storageBucket: 'ira-test-project-355414.appspot.com',
+    apiKey: 'AIzaSyC4UZXAdcLq7qXDSHGPo1dlyoAcWa12c38',
+    appId: '1:76799423059:android:82135dce4b7b966c0ecca6',
+    messagingSenderId: '76799423059',
+    projectId: 'ira-app-c1428',
+    storageBucket: 'ira-app-c1428.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBfzF9PVFnRyi4CCIbp5hb085BEwklneF0',
-    appId: '1:1053484742850:ios:af30ed751c95915865a35b',
-    messagingSenderId: '1053484742850',
-    projectId: 'ira-test-project-355414',
-    storageBucket: 'ira-test-project-355414.appspot.com',
-    androidClientId: '1053484742850-akcbtpdm0ao1bg1h6vfp3mrg7p457914.apps.googleusercontent.com',
-    iosClientId: '1053484742850-m5e527ug5sjov4vh7k4kl5p9sbn9jf7p.apps.googleusercontent.com',
+    apiKey: 'AIzaSyDAAlboxdfK3EEiyBDnuzkfuuJ3WxcmUj8',
+    appId: '1:76799423059:ios:6d566a1beade5ec40ecca6',
+    messagingSenderId: '76799423059',
+    projectId: 'ira-app-c1428',
+    storageBucket: 'ira-app-c1428.appspot.com',
+    androidClientId:
+        '76799423059-269uc17mm313rme6vkkgkt27n4fuhsha.apps.googleusercontent.com',
+    iosClientId:
+        '76799423059-2goq4dqnr2k67vbaonjibctv5bivv79a.apps.googleusercontent.com',
     iosBundleId: 'com.example.instituteApp',
   );
 }
