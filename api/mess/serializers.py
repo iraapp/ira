@@ -30,7 +30,7 @@ class MessSerializer(serializers.Serializer):
 
 class MessFeedbackSerializer(serializers.Serializer):
     id = serializers.IntegerField()
-    user = serializers.StringRelatedField()
+    user = UserSerializer()
     body = serializers.CharField(max_length=500)
     mess_meal = serializers.CharField(max_length=50)
     mess_type = MessSerializer()

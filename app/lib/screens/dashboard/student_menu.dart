@@ -6,15 +6,14 @@ import 'package:ira/screens/medical/dashboard.dart';
 import 'package:ira/screens/mess/student/mess_student.dart';
 import 'package:ira/screens/team/team.dart';
 import '../hostel/secretary/hostel_secretary_screen.dart';
-import '../profile/profile.dart';
 
 studentMenu(context) {
   return [
-    DashboardIcon(
-      icon: const Icon(Icons.person),
-      title: "Id Card",
-      pageRoute: Profile(),
-    ),
+    // DashboardIcon(
+    //   icon: const Icon(Icons.person),
+    //   title: "Id Card",
+    //   pageRoute: Profile(),
+    // ),
     DashboardIcon(
       icon: const Icon(Icons.food_bank),
       title: "Mess",
