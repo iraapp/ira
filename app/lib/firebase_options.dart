@@ -63,8 +63,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '76799423059',
     projectId: 'ira-app-c1428',
     storageBucket: 'ira-app-c1428.appspot.com',
-    androidClientId: '76799423059-269uc17mm313rme6vkkgkt27n4fuhsha.apps.googleusercontent.com',
-    iosClientId: '76799423059-2goq4dqnr2k67vbaonjibctv5bivv79a.apps.googleusercontent.com',
+    androidClientId:
+        '76799423059-269uc17mm313rme6vkkgkt27n4fuhsha.apps.googleusercontent.com',
+    iosClientId:
+        '76799423059-2goq4dqnr2k67vbaonjibctv5bivv79a.apps.googleusercontent.com',
     iosBundleId: 'com.example.instituteApp',
   );
 }
