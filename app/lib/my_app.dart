@@ -18,7 +18,7 @@ import 'package:provider/provider.dart';
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {}
 
 void initAppWithFirebase() async {
-  // Intialize firebase and firebase cloud messaging.
+  //Intialize firebase and firebase cloud messaging.
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

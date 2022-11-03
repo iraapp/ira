@@ -98,7 +98,11 @@ class _MessMenuState extends State<MessMenu> {
                           return const Center(
                               child: CircularProgressIndicator());
                         }
-
+                        if (_weekdaysCarousels.isEmpty) {
+                          return const Center(
+                            child: Text("No data available"),
+                          );
+                        }
                         return CarouselSlider(
                           options: CarouselOptions(
                               height: MediaQuery.of(context).size.height * 0.7),
