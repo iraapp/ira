@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 from user_profile.models import Student
 from authentication.models import Staff, StaffToken, User, UserToken
-from authentication.serializers import StaffSerializer
+from authentication.serializers import StaffSerializer, UserSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
@@ -49,7 +49,7 @@ class ObtainIdTokenView(APIView):
         except Exception:
             raise exceptions.AuthenticationFailed('No such user exists')
 
-        user, _ = User.objects.get_or_create(email=email, role=1, first_name = first_name, last_name = last_name)
+        user, _ = User.objects.get_or_create(email=email, first_name = first_name, last_name = last_name)
 
         token, _ = UserToken.objects.get_or_create(user=user)
 
@@ -58,7 +58,7 @@ class ObtainIdTokenView(APIView):
         if Student.objects.filter(user = user):
             askForDetails = False
 
-        return Response(status = 200, data = {'idToken': token.key, 'askForDetails': askForDetails})
+        return Response(status = 200, data = {'idToken': token.key, 'askForDetails': askForDetails, 'user': UserSerializer(user).data})
 
 
 class CoursePageViewStudent(APIView):

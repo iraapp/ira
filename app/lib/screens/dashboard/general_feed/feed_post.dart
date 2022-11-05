@@ -179,6 +179,7 @@ class _FeedPostState extends State<FeedPost> {
                                                 widget.data.body,
                                               ),
                                             ),
+                                            postId: widget.data.id,
                                           )));
                             } else if (item == Menu.delete) {
                               String? idToken =

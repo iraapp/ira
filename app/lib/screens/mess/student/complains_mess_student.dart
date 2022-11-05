@@ -66,7 +66,7 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
   Future<void> _getMessTypes() async {
     String? idToken = await widget.secureStorage.read(key: 'idToken');
 
-    final requestUrl = Uri.parse(widget.baseUrl + '/mess/get/mess');
+    final requestUrl = Uri.parse(widget.baseUrl + '/mess/list/');
     final response = await http.get(
       requestUrl,
       headers: <String, String>{
@@ -78,7 +78,7 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       for (var item in data) {
-        messTypes.add(item['name']);
+        messTypes.add(item);
       }
       setState(() {});
     } else {

@@ -5,6 +5,7 @@ import 'package:ira/screens/login/welcome/welcome.dart';
 import 'package:ira/screens/staff/staff_login.dart';
 import 'package:ira/services/auth.service.dart';
 import 'package:ira/shared/app_scaffold.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -15,6 +16,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final localStorage = LocalStorage('store');
+
   @override
   Widget build(BuildContext context) {
     AuthService authService = Provider.of(context);
@@ -74,7 +77,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       'assets/svgs/google_sign_in.svg',
                     ),
                     onPressed: () async {
-                      authService.successCallback = (bool askForDetails) {
+                      authService.successCallback =
+                          (bool askForDetails, String role) {
                         if (askForDetails) {
                           Navigator.pushReplacement(
                             context,
@@ -87,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => Dashboard(
-                                role: 'student',
+                                role: role,
                               ),
                             ),
                           );

@@ -81,8 +81,11 @@ class _TeamScreenState extends State<TeamScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
-      child: Column(
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+      ),
+      body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Center(
@@ -97,130 +100,123 @@ class _TeamScreenState extends State<TeamScreen> {
 
                   List<Member>? team = snapshot.data!['team'];
 
-                  return Container(
-                    margin: const EdgeInsets.only(top: 50.0),
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: const [
-                        BoxShadow(
-                            color: Colors.grey,
-                            blurRadius: 5.0,
-                            offset: Offset(
-                              0,
-                              5,
-                            ))
-                      ],
-                    ),
-                    child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Column(
-                          children: [
-                            const Text(
-                              'Our Team',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
+                  return Expanded(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                      ),
+                      child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            children: [
+                              const Text(
+                                'Our Team',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
                               ),
-                            ),
-                            const SizedBox(
-                              height: 20.0,
-                            ),
-                            SizedBox(
-                              height: 450,
-                              child: ListView.builder(
-                                padding: EdgeInsets.zero,
-                                scrollDirection: Axis.vertical,
-                                shrinkWrap: true,
-                                itemCount: team?.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return Column(
-                                    children: [
-                                      const Divider(),
-                                      const SizedBox(
-                                        height: 10.0,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          CircleAvatar(
-                                            radius: 50,
-                                            backgroundColor: Colors.black,
-                                            child: CircleAvatar(
-                                              radius: 48,
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              child: ClipOval(
-                                                child: Image(
-                                                    image:
-                                                        CachedNetworkImageProvider(
-                                                  baseUrl +
-                                                      '/media/images/' +
-                                                      team![index].profile,
-                                                )),
+                              const SizedBox(
+                                height: 20.0,
+                              ),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height - 200,
+                                child: ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  scrollDirection: Axis.vertical,
+                                  shrinkWrap: true,
+                                  itemCount: team?.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return Column(
+                                      children: [
+                                        const Divider(),
+                                        const SizedBox(
+                                          height: 10.0,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            CircleAvatar(
+                                              radius: 50,
+                                              backgroundColor: Colors.black,
+                                              child: CircleAvatar(
+                                                radius: 48,
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                child: ClipOval(
+                                                  child: Image(
+                                                      image:
+                                                          CachedNetworkImageProvider(
+                                                    baseUrl +
+                                                        '/media/images/' +
+                                                        team![index].profile,
+                                                  )),
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          Column(
-                                            children: [
-                                              Text(
-                                                team[index].name,
-                                                style: const TextStyle(
-                                                  fontSize: 16.0,
-                                                  fontWeight: FontWeight.bold,
+                                            Column(
+                                              children: [
+                                                Text(
+                                                  team[index].name,
+                                                  style: const TextStyle(
+                                                    fontSize: 16.0,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                 ),
-                                              ),
-                                              Text(
-                                                team[index].designation,
-                                                style: const TextStyle(
-                                                  fontSize: 16.0,
+                                                Text(
+                                                  team[index].designation,
+                                                  style: const TextStyle(
+                                                    fontSize: 16.0,
+                                                  ),
                                                 ),
-                                              ),
-                                              Row(
-                                                children: [
-                                                  IconButton(
-                                                    onPressed: () => openUrl(
-                                                        team[index].linkedIn),
-                                                    icon: CircleAvatar(
-                                                      radius: 22,
-                                                      backgroundColor:
-                                                          Colors.blue,
-                                                      child: CircleAvatar(
-                                                        radius: 20,
-                                                        child: SvgPicture.asset(
-                                                            "assets/svgs/LinkedIn_icon_circle.svg"),
+                                                Row(
+                                                  children: [
+                                                    IconButton(
+                                                      onPressed: () => openUrl(
+                                                          team[index].linkedIn),
+                                                      icon: CircleAvatar(
+                                                        radius: 22,
+                                                        backgroundColor:
+                                                            Colors.blue,
+                                                        child: CircleAvatar(
+                                                          radius: 20,
+                                                          child: SvgPicture.asset(
+                                                              "assets/svgs/LinkedIn_icon_circle.svg"),
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
-                                                  IconButton(
-                                                    onPressed: () => openUrl(
-                                                        team[index].github),
-                                                    icon: CircleAvatar(
-                                                      radius: 20,
-                                                      backgroundColor:
-                                                          Colors.white,
-                                                      child: Image.asset(
-                                                          "assets/images/github_icon.png"),
+                                                    IconButton(
+                                                      onPressed: () => openUrl(
+                                                          team[index].github),
+                                                      icon: CircleAvatar(
+                                                        radius: 20,
+                                                        backgroundColor:
+                                                            Colors.white,
+                                                        child: Image.asset(
+                                                            "assets/images/github_icon.png"),
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
-                                              )
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                        height: 10.0,
-                                      ),
-                                    ],
-                                  );
-                                },
+                                                  ],
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 10.0,
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
                               ),
-                            ),
-                          ],
-                        )),
+                            ],
+                          )),
+                    ),
                   );
                 }),
           ),

@@ -7,6 +7,7 @@ import 'package:ira/screens/dashboard/general_feed/feed_post.dart';
 import 'package:ira/screens/dashboard/general_feed/new_post/new_post.dart';
 import 'package:http/http.dart' as http;
 import 'package:ira/screens/dashboard/general_feed/panel_state_stream.dart';
+import 'package:ira/util/helpers.dart';
 import 'package:provider/provider.dart';
 
 class FeedModel {
@@ -41,7 +42,8 @@ class FeedModel {
 }
 
 class GeneralFeed extends StatefulWidget {
-  const GeneralFeed({Key? key}) : super(key: key);
+  String role;
+  GeneralFeed({Key? key, required this.role}) : super(key: key);
 
   @override
   State<GeneralFeed> createState() => _GeneralFeedState();
@@ -97,31 +99,37 @@ class _GeneralFeedState extends State<GeneralFeed> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                OutlinedButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => NewPost(
-                                  successCallback: () {
-                                    setState(() {});
-                                  },
-                                  edit: false,
-                                  document: null,
-                                )));
-                  },
-                  child: const Text(
-                    '+ Add',
-                    style: TextStyle(color: Colors.white, fontSize: 12.0),
-                  ),
-                  style: OutlinedButton.styleFrom(
-                    backgroundColor: Colors.blue.shade800,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    padding: const EdgeInsets.only(left: 30.0, right: 30.0),
-                  ),
-                )
+                canPostOnGeneralFeed(widget.role)
+                    ? OutlinedButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => NewPost(
+                                        successCallback: () {
+                                          setState(() {});
+                                        },
+                                        edit: false,
+                                        document: null,
+                                        postId: -1,
+                                      )));
+                        },
+                        child: const Text(
+                          '+ Add',
+                          style: TextStyle(color: Colors.white, fontSize: 12.0),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          backgroundColor: Colors.blue.shade800,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                          padding:
+                              const EdgeInsets.only(left: 30.0, right: 30.0),
+                        ),
+                      )
+                    : const SizedBox(
+                        height: 40,
+                      ),
               ],
             ),
           ),

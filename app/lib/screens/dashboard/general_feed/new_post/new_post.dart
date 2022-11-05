@@ -11,14 +11,16 @@ import 'package:http/http.dart' as http;
 class NewPost extends StatefulWidget {
   quill.Document? document;
   bool edit = false;
+  int postId;
   VoidCallback successCallback;
 
-  NewPost({
-    Key? key,
-    required this.document,
-    required this.successCallback,
-    required this.edit,
-  }) : super(key: key);
+  NewPost(
+      {Key? key,
+      required this.document,
+      required this.successCallback,
+      required this.edit,
+      required this.postId})
+      : super(key: key);
 
   @override
   State<NewPost> createState() => _NewPostState();
@@ -48,15 +50,19 @@ class _NewPostState extends State<NewPost> {
     try {
       String? idToken = await secureStorage.read(key: 'idToken');
 
-      if (widget.edit) {
-        
-      }
+      var requestUrl = Uri.parse(baseUrl + '/feed/create/');
 
-      final requestUrl = Uri.parse(baseUrl + '/feed/create/');
+      if (widget.edit) {
+        requestUrl = Uri.parse(baseUrl + '/feed/update/');
+      }
 
       var request = http.MultipartRequest('POST', requestUrl);
       final headers = {'Authorization': 'idToken ' + idToken!};
       request.headers.addAll(headers);
+      print(widget.postId);
+      if (widget.edit) {
+        request.fields['post_id'] = widget.postId.toString();
+      }
       request.fields['body'] =
           jsonEncode(_controller.document.toDelta().toJson());
       final plainText = _controller.document.toPlainText();

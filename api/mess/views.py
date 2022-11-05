@@ -1,9 +1,16 @@
 from mess.serializers import *
 from mess.models import *
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from authentication.permissions import IsMessManager
+
+class MessListAPI(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        messList = Mess.objects.all()
+
+        return Response(status = 200, data = MessSerializer(messList, many = True).data)
 
 
 class MessMenuAPI(APIView):

@@ -61,7 +61,7 @@ class _FeedbackMessState extends State<FeedbackMess> {
   Future<void> _getMessTypes() async {
     String? idToken = await widget.secureStorage.read(key: 'idToken');
 
-    final requestUrl = Uri.parse(widget.baseUrl + '/mess/get/mess');
+    final requestUrl = Uri.parse(widget.baseUrl + '/mess/list/');
     final response = await http.get(
       requestUrl,
       headers: <String, String>{
