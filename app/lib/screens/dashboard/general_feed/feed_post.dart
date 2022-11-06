@@ -103,7 +103,7 @@ class _FeedPostState extends State<FeedPost> {
 
   @override
   Widget build(BuildContext context) {
-    String email = localStorage.getItem('email');
+    String? email = localStorage.getItem('email');
 
     return Container(
       padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
