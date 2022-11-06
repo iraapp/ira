@@ -8,6 +8,7 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:intl/intl.dart';
 import 'package:ira/screens/dashboard/general_feed/general_feed.dart';
 import 'package:ira/screens/dashboard/general_feed/new_post/new_post.dart';
 import 'package:localstorage/localstorage.dart';
@@ -103,7 +104,7 @@ class _FeedPostState extends State<FeedPost> {
 
   @override
   Widget build(BuildContext context) {
-    String email = localStorage.getItem('email');
+    String? email = localStorage.getItem('email');
 
     return Container(
       padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
@@ -179,6 +180,7 @@ class _FeedPostState extends State<FeedPost> {
                                                 widget.data.body,
                                               ),
                                             ),
+                                            postId: widget.data.id,
                                           )));
                             } else if (item == Menu.delete) {
                               String? idToken =
@@ -218,7 +220,7 @@ class _FeedPostState extends State<FeedPost> {
                       scrollController: ScrollController(),
                       scrollable: true,
                       focusNode: FocusNode(),
-                      autoFocus: true,
+                      autoFocus: false,
                       readOnly: true,
                       expands: false,
                       showCursor: false,
@@ -366,10 +368,7 @@ class _FeedPostState extends State<FeedPost> {
               : createdAt.second.toString());
     }
 
-    return createdAt.day.toString() +
-        ":" +
-        createdAt.month.toString() +
-        " " +
+    return DateFormat("dd MMM ").format(createdAt) +
         createdAt.hour.toString() +
         ":" +
         createdAt.second.toString();

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:ira/shared/app_scaffold.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
@@ -81,8 +80,11 @@ class _TeamScreenState extends State<TeamScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
-      child: Column(
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+      ),
+      body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Center(
@@ -98,23 +100,13 @@ class _TeamScreenState extends State<TeamScreen> {
                   List<Member>? team = snapshot.data!['team'];
 
                   return Container(
-                    margin: const EdgeInsets.only(top: 50.0),
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    decoration: BoxDecoration(
+                    width: MediaQuery.of(context).size.width,
+                    decoration: const BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: const [
-                        BoxShadow(
-                            color: Colors.grey,
-                            blurRadius: 5.0,
-                            offset: Offset(
-                              0,
-                              5,
-                            ))
-                      ],
                     ),
                     child: Padding(
-                        padding: const EdgeInsets.all(20.0),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 20.0, horizontal: 0.0),
                         child: Column(
                           children: [
                             const Text(
@@ -128,7 +120,7 @@ class _TeamScreenState extends State<TeamScreen> {
                               height: 20.0,
                             ),
                             SizedBox(
-                              height: 450,
+                              height: MediaQuery.of(context).size.height - 200,
                               child: ListView.builder(
                                 padding: EdgeInsets.zero,
                                 scrollDirection: Axis.vertical,
@@ -223,9 +215,6 @@ class _TeamScreenState extends State<TeamScreen> {
                         )),
                   );
                 }),
-          ),
-          const SizedBox(
-            height: 30.0,
           ),
         ],
       ),

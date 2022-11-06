@@ -60,4 +60,5 @@ urlpatterns = [
          name='Menu item update'),
     path('menu/item_add', views.MessMenuItemAdd.as_view(), name="Menu item add"),
     path('all', views.MessNameView.as_view(), name="Get mess name"),
+    path('list/', views.MessListAPI.as_view(), name="Mess List"),
 ]

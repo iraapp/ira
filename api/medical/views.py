@@ -366,7 +366,7 @@ class MedicalHistoryView(APIView):
         patient = request.POST.get("patient", None)
         patientinstance = User.objects.filter(email=patient).first()
         doctor = request.POST.get("doctor", None)
-        doctorinstance = User.objects.filter(id=doctor).first()
+        doctorinstance = Doctor.objects.filter(id=doctor).first()
         details = request.POST.get("details", None)
         date = request.POST.get("date", None)
         inhouse = request.POST.get("inhouse", None)
@@ -392,20 +392,25 @@ class SearchPatient(APIView):
     permission_classes = (IsMedicalManager,)
 
     def get(self, request, *args, **kwargs):
-        query = request.data["email"]
-        patients = User.objects.filter(email__contains=query).first()
+        query = request.GET.get('email')
+
+        if not query:
+            return Response(status = 400)
+
+        patients = User.objects.filter(email__contains=query)
+
         if patients:
-            return Response(UserSerializer(patients).data)
+            return Response(data=UserSerializer(patients, many=True).data)
         return Response(data={"msg": "No patient found"}, status=404)
 
 class SearchDoctors(APIView):
     permission_classes = (IsMedicalManager,)
 
     def get(self, request, *args, **kwargs):
-        query = request.data["name"]
-        doctors = Doctor.objects.filter(name__contains=query).first()
+        query = request.GET.get("name")
+        doctors = Doctor.objects.filter(name__contains=query)
         if doctors:
-            serializer = DoctorSerializer(doctors)
+            serializer = DoctorSerializer(doctors, many = True)
             return Response(serializer.data)
         return Response(data={"msg": "No doctors found"}, status=404)
 

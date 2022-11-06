@@ -9,6 +9,7 @@ import 'package:ira/screens/mess/student/mess_student.dart';
 import 'package:ira/screens/profile/profile.dart';
 import 'package:ira/screens/team/team.dart';
 import 'package:ira/services/auth.service.dart';
+import 'package:ira/util/helpers.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -38,7 +39,7 @@ class _AppDrawerState extends State<AppDrawer> {
   void initState() {
     super.initState();
 
-    disableDrawerTiles = widget.role != 'student';
+    disableDrawerTiles = !isUserStudent(widget.role);
   }
 
   @override
@@ -99,18 +100,18 @@ class _AppDrawerState extends State<AppDrawer> {
                 ));
           },
         ),
-        ListTile(
-          leading: const Icon(Icons.person),
-          title: const Text("Id Card"),
-          enabled: !disableDrawerTiles,
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Profile(),
-                ));
-          },
-        ),
+        // ListTile(
+        //   leading: const Icon(Icons.person),
+        //   title: const Text("Id Card"),
+        //   enabled: !disableDrawerTiles,
+        //   onTap: () {
+        //     Navigator.push(
+        //         context,
+        //         MaterialPageRoute(
+        //           builder: (context) => Profile(),
+        //         ));
+        //   },
+        // ),
         ListTile(
           leading: const Icon(Icons.admin_panel_settings_rounded),
           title: const Text("Gate Pass"),
@@ -149,7 +150,7 @@ class _AppDrawerState extends State<AppDrawer> {
           leading: const Icon(Icons.exit_to_app),
           title: const Text('Sign out'),
           onTap: () async {
-            if (widget.role == 'student') {
+            if (isRoleWithGoogleAuth(widget.role)) {
               await authService.signOut();
             } else {
               await widget.secureStorage.delete(key: 'staffToken');

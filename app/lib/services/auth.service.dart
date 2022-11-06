@@ -6,6 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:ira/constants/constants.dart';
 import 'package:localstorage/localstorage.dart';
 
 class AuthService with ChangeNotifier {
@@ -15,7 +16,7 @@ class AuthService with ChangeNotifier {
       GoogleSignIn(serverClientId: dotenv.env['GOOGLE_OAUTH_CLIENT_ID']);
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
   // ignore: prefer_function_declarations_over_variables
-  var successCallback = (bool askForDetails) {};
+  var successCallback = (bool askForDetails, String role) {};
 
   // Create secureStorage
   final secureStorage = const FlutterSecureStorage();
@@ -51,14 +52,17 @@ class AuthService with ChangeNotifier {
                 key: 'idToken',
                 value: jsonDecode(response.body)['idToken'],
               );
-              await localStorage.setItem('role', 'student');
+              String role =
+                  userRoles[jsonDecode(response.body)['user']['role']] ??
+                      'student';
+              await localStorage.setItem('role', role);
 
               localStorage.setItem('displayName', _user?.displayName);
               localStorage.setItem('email', _user?.email);
 
               bool askForDetails = jsonDecode(response.body)['askForDetails'];
 
-              successCallback(askForDetails);
+              successCallback(askForDetails, role);
             } else {
               // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
             }

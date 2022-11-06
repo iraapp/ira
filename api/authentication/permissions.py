@@ -128,3 +128,11 @@ class IsIraTeam(BasePermission):
     def has_permission(self, request, _):
       return bool(request.user and
       request.user.role == USER_ROLES['ira_team'])
+
+class IsHostelSecretary(BasePermission):
+  """
+  Allows access only to hostel secretary
+  """
+
+  def has_permission(self, request, _):
+      return request.user and request.user.role == USER_ROLES['hostel_secretary']

@@ -170,7 +170,9 @@ class _AddPhotoScreenState extends State<AddPhotoScreen> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => Dashboard(
-                                            role: 'student',
+                                            role: widget.localStorage
+                                                    .getItem('role') ??
+                                                'student',
                                           ),
                                         ));
                                   }

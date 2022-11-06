@@ -479,188 +479,180 @@ class _TendersMessManagerState extends State<TendersMessManager> {
     return showDialog(
       context: context,
       builder: (context) => StatefulBuilder(builder: (context, setSte) {
-        return Expanded(
-          child: AlertDialog(
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(children: [
-                  const Text(
-                    "Tender Title",
-                    style: TextStyle(fontSize: 16.0),
-                  ),
-                  const SizedBox(width: 10),
-                  Flexible(
-                    child: SizedBox(
-                      height: 40.0,
-                      child: TextField(
-                        controller: _titleTextCtr,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                    ),
-                  )
-                ]),
-                const SizedBox(height: 10),
-                Row(children: [
-                  const Text(
-                    "Date             ",
-                    style: TextStyle(fontSize: 16.0),
-                  ),
-                  const SizedBox(width: 10),
-                  GestureDetector(
-                    onTap: () {
-                      _selectDate(context);
-                    },
-                    child: Container(
-                      height: 40.0,
-                      width: 200.0,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey,
-                          width: 1.0,
-                        ),
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                            selectedDate.toLocal().toString().split(' ')[0]),
+        return AlertDialog(
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(children: [
+                const Text(
+                  "Tender Title",
+                  style: TextStyle(fontSize: 16.0),
+                ),
+                const SizedBox(width: 10),
+                Flexible(
+                  child: SizedBox(
+                    height: 40.0,
+                    child: TextField(
+                      controller: _titleTextCtr,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
                       ),
                     ),
                   ),
-                ]),
-                const SizedBox(height: 10),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "Mess Name",
-                        style: TextStyle(fontSize: 16.0),
+                )
+              ]),
+              const SizedBox(height: 10),
+              Row(children: [
+                const Text(
+                  "Date             ",
+                  style: TextStyle(fontSize: 16.0),
+                ),
+                const SizedBox(width: 10),
+                GestureDetector(
+                  onTap: () {
+                    _selectDate(context);
+                  },
+                  child: Container(
+                    height: 40.0,
+                    width: 200.0,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                        width: 1.0,
                       ),
-                      const SizedBox(width: 10),
-                      Flexible(
-                        child: SizedBox(
-                          width: 150.0,
-                          child: DropdownButton<String>(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child:
+                          Text(selectedDate.toLocal().toString().split(' ')[0]),
+                    ),
+                  ),
+                ),
+              ]),
+              const SizedBox(height: 10),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                const Text(
+                  "Mess Name",
+                  style: TextStyle(fontSize: 16.0),
+                ),
+                const SizedBox(width: 10),
+                Flexible(
+                  child: SizedBox(
+                    width: 150.0,
+                    child: DropdownButton<String>(
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ),
+                      icon: const Icon(
+                        Icons.arrow_drop_down,
+                        color: Colors.black,
+                      ),
+                      value: _messValue,
+                      items: messTypes.map((String items) {
+                        return DropdownMenuItem(
+                          value: items,
+                          child: Text(
+                            items,
                             style: const TextStyle(
-                              color: Colors.white,
-                            ),
-                            icon: const Icon(
-                              Icons.arrow_drop_down,
                               color: Colors.black,
                             ),
-                            value: _messValue,
-                            items: messTypes.map((String items) {
-                              return DropdownMenuItem(
-                                value: items,
-                                child: Text(
-                                  items,
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              setSte(() {
-                                _messValue = value!;
-                              });
-                            },
-                            borderRadius: BorderRadius.circular(10.0),
-                            isExpanded: true,
                           ),
-                        ),
-                      )
-                    ]),
-                const SizedBox(height: 10),
-                Row(children: [
-                  const Text(
-                    "Upload PDF",
-                    style: TextStyle(fontSize: 16.0),
-                  ),
-                  const SizedBox(width: 20),
-                  ElevatedButton(
-                      onPressed: () async {
-                        final file = await FilePicker.platform.pickFiles(
-                          type: FileType.custom,
-                          allowMultiple: false,
-                          allowedExtensions: ['pdf'],
                         );
-                        if (file != null) {
-                          setSte(() {
-                            _pdfUploaded = true;
-                            final _pdfFile = file.files.first;
-                            _pdfFilePath = _pdfFile.path!;
-                          });
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text('Please select a file')));
-                        }
+                      }).toList(),
+                      onChanged: (value) {
+                        setSte(() {
+                          _messValue = value!;
+                        });
                       },
-                      child: const Text("Upload"),
-                      style: ButtonStyle(
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0)),
-                        ),
-                        backgroundColor:
-                            MaterialStateProperty.all<Color?>(Colors.blue),
-                      )),
-                  const SizedBox(width: 10),
-                  !_pdfUploaded
-                      ? Checkbox(value: false, onChanged: (value) {})
-                      : Checkbox(value: true, onChanged: (value) {}),
-                ]),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: 100.0,
-                  child: ElevatedButton(
-                      onPressed: !_pdfUploaded
-                          ? null
-                          : () async {
-                              // call the api to add the tender
-                              final title = _titleTextCtr.text;
-                              final description = _descriptionTextCtr.text;
-                              final date = selectedDate
-                                  .toLocal()
-                                  .toString()
-                                  .split(' ')[0];
-                              final pdf = _pdfFilePath;
-                              final bool res = await _submitMessTenderItem(
-                                  title: title,
-                                  description: description,
-                                  date: date,
-                                  filePath: pdf,
-                                  contractor: "nill");
-                              if (res) {
-                                setState(() {});
-                                _titleTextCtr.clear();
-                                _descriptionTextCtr.clear();
-                                Navigator.pop(context);
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Error')));
-                              }
-                            },
-                      child: const Text("Add"),
-                      style: ButtonStyle(
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0)),
-                        ),
-                        backgroundColor:
-                            MaterialStateProperty.all<Color?>(Colors.blue),
-                      )),
+                      borderRadius: BorderRadius.circular(10.0),
+                      isExpanded: true,
+                    ),
+                  ),
                 )
-              ],
-            ),
+              ]),
+              const SizedBox(height: 10),
+              Row(children: [
+                const Text(
+                  "Upload PDF",
+                  style: TextStyle(fontSize: 16.0),
+                ),
+                const SizedBox(width: 20),
+                ElevatedButton(
+                    onPressed: () async {
+                      final file = await FilePicker.platform.pickFiles(
+                        type: FileType.custom,
+                        allowMultiple: false,
+                        allowedExtensions: ['pdf'],
+                      );
+                      if (file != null) {
+                        setSte(() {
+                          _pdfUploaded = true;
+                          final _pdfFile = file.files.first;
+                          _pdfFilePath = _pdfFile.path!;
+                        });
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Please select a file')));
+                      }
+                    },
+                    child: const Text("Upload"),
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0)),
+                      ),
+                      backgroundColor:
+                          MaterialStateProperty.all<Color?>(Colors.blue),
+                    )),
+                const SizedBox(width: 10),
+                !_pdfUploaded
+                    ? Checkbox(value: false, onChanged: (value) {})
+                    : Checkbox(value: true, onChanged: (value) {}),
+              ]),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: 100.0,
+                child: ElevatedButton(
+                    onPressed: !_pdfUploaded
+                        ? null
+                        : () async {
+                            // call the api to add the tender
+                            final title = _titleTextCtr.text;
+                            final description = _descriptionTextCtr.text;
+                            final date =
+                                selectedDate.toLocal().toString().split(' ')[0];
+                            final pdf = _pdfFilePath;
+                            final bool res = await _submitMessTenderItem(
+                                title: title,
+                                description: description,
+                                date: date,
+                                filePath: pdf,
+                                contractor: "nill");
+                            if (res) {
+                              setState(() {});
+                              _titleTextCtr.clear();
+                              _descriptionTextCtr.clear();
+                              Navigator.pop(context);
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Error')));
+                            }
+                          },
+                    child: const Text("Add"),
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0)),
+                      ),
+                      backgroundColor:
+                          MaterialStateProperty.all<Color?>(Colors.blue),
+                    )),
+              )
+            ],
           ),
         );
       }),

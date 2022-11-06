@@ -10,4 +10,5 @@ class UserSerializer(serializers.Serializer):
     first_name = serializers.CharField(max_length=30)
     last_name = serializers.CharField(max_length=50)
     email = serializers.EmailField()
+    role = serializers.IntegerField()
 
