@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:ira/shared/app_scaffold.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
@@ -100,128 +99,122 @@ class _TeamScreenState extends State<TeamScreen> {
 
                   List<Member>? team = snapshot.data!['team'];
 
-                  return Expanded(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                      ),
-                      child: Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Column(
-                            children: [
-                              const Text(
-                                'Our Team',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                ),
+                  return Container(
+                    width: MediaQuery.of(context).size.width,
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                    ),
+                    child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 20.0, horizontal: 0.0),
+                        child: Column(
+                          children: [
+                            const Text(
+                              'Our Team',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
                               ),
-                              const SizedBox(
-                                height: 20.0,
-                              ),
-                              SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height - 200,
-                                child: ListView.builder(
-                                  padding: EdgeInsets.zero,
-                                  scrollDirection: Axis.vertical,
-                                  shrinkWrap: true,
-                                  itemCount: team?.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return Column(
-                                      children: [
-                                        const Divider(),
-                                        const SizedBox(
-                                          height: 10.0,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            CircleAvatar(
-                                              radius: 50,
-                                              backgroundColor: Colors.black,
-                                              child: CircleAvatar(
-                                                radius: 48,
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                                child: ClipOval(
-                                                  child: Image(
-                                                      image:
-                                                          CachedNetworkImageProvider(
-                                                    baseUrl +
-                                                        '/media/images/' +
-                                                        team![index].profile,
-                                                  )),
-                                                ),
+                            ),
+                            const SizedBox(
+                              height: 20.0,
+                            ),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height - 200,
+                              child: ListView.builder(
+                                padding: EdgeInsets.zero,
+                                scrollDirection: Axis.vertical,
+                                shrinkWrap: true,
+                                itemCount: team?.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Column(
+                                    children: [
+                                      const Divider(),
+                                      const SizedBox(
+                                        height: 10.0,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          CircleAvatar(
+                                            radius: 50,
+                                            backgroundColor: Colors.black,
+                                            child: CircleAvatar(
+                                              radius: 48,
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              child: ClipOval(
+                                                child: Image(
+                                                    image:
+                                                        CachedNetworkImageProvider(
+                                                  baseUrl +
+                                                      '/media/images/' +
+                                                      team![index].profile,
+                                                )),
                                               ),
                                             ),
-                                            Column(
-                                              children: [
-                                                Text(
-                                                  team[index].name,
-                                                  style: const TextStyle(
-                                                    fontSize: 16.0,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
+                                          ),
+                                          Column(
+                                            children: [
+                                              Text(
+                                                team[index].name,
+                                                style: const TextStyle(
+                                                  fontSize: 16.0,
+                                                  fontWeight: FontWeight.bold,
                                                 ),
-                                                Text(
-                                                  team[index].designation,
-                                                  style: const TextStyle(
-                                                    fontSize: 16.0,
-                                                  ),
+                                              ),
+                                              Text(
+                                                team[index].designation,
+                                                style: const TextStyle(
+                                                  fontSize: 16.0,
                                                 ),
-                                                Row(
-                                                  children: [
-                                                    IconButton(
-                                                      onPressed: () => openUrl(
-                                                          team[index].linkedIn),
-                                                      icon: CircleAvatar(
-                                                        radius: 22,
-                                                        backgroundColor:
-                                                            Colors.blue,
-                                                        child: CircleAvatar(
-                                                          radius: 20,
-                                                          child: SvgPicture.asset(
-                                                              "assets/svgs/LinkedIn_icon_circle.svg"),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    IconButton(
-                                                      onPressed: () => openUrl(
-                                                          team[index].github),
-                                                      icon: CircleAvatar(
+                                              ),
+                                              Row(
+                                                children: [
+                                                  IconButton(
+                                                    onPressed: () => openUrl(
+                                                        team[index].linkedIn),
+                                                    icon: CircleAvatar(
+                                                      radius: 22,
+                                                      backgroundColor:
+                                                          Colors.blue,
+                                                      child: CircleAvatar(
                                                         radius: 20,
-                                                        backgroundColor:
-                                                            Colors.white,
-                                                        child: Image.asset(
-                                                            "assets/images/github_icon.png"),
+                                                        child: SvgPicture.asset(
+                                                            "assets/svgs/LinkedIn_icon_circle.svg"),
                                                       ),
                                                     ),
-                                                  ],
-                                                )
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 10.0,
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                ),
+                                                  ),
+                                                  IconButton(
+                                                    onPressed: () => openUrl(
+                                                        team[index].github),
+                                                    icon: CircleAvatar(
+                                                      radius: 20,
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      child: Image.asset(
+                                                          "assets/images/github_icon.png"),
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 10.0,
+                                      ),
+                                    ],
+                                  );
+                                },
                               ),
-                            ],
-                          )),
-                    ),
+                            ),
+                          ],
+                        )),
                   );
                 }),
-          ),
-          const SizedBox(
-            height: 30.0,
           ),
         ],
       ),

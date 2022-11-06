@@ -41,6 +41,7 @@ class FeedModel {
   }
 }
 
+// ignore: must_be_immutable
 class GeneralFeed extends StatefulWidget {
   String role;
   GeneralFeed({Key? key, required this.role}) : super(key: key);
