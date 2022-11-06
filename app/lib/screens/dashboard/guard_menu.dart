@@ -7,7 +7,7 @@ guardMenu(context) {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         CircleAvatar(
-          backgroundColor: Colors.blue,
+          backgroundColor: Colors.blue[800],
           child: IconButton(
             icon: const Icon(Icons.admin_panel_settings_rounded),
             onPressed: () {
@@ -24,7 +24,10 @@ guardMenu(context) {
         const SizedBox(height: 5.0),
         const Text(
           "Scan QR",
-          style: TextStyle(fontSize: 12.0),
+          style: TextStyle(
+            fontSize: 12.0,
+            color: Colors.white,
+          ),
         ),
       ],
     ),

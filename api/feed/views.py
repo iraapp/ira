@@ -54,3 +54,21 @@ class DeleteFeedView(APIView):
         return Response(status=200, data = {
             'msg': 'Post deleted successfully'
         })
+
+
+class UpdateFeedView(APIView):
+    permission_classes = [IsAuthenticated, ]
+
+    def post(self, request):
+        post_id = request.POST.get("post_id")
+        body = request.POST.get("body")
+
+        post = Post.objects.filter(id = post_id).first()
+
+        if post.user == request.user:
+            post.body = body
+            post.save()
+
+            return Response(status = 200, data = "Post updated")
+
+        return Response(status=401, data="Unauthorized")

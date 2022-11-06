@@ -6,7 +6,7 @@ medicalManagerMenu(context) {
   return [
     Column(children: [
       CircleAvatar(
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.blue[800],
         child: IconButton(
           icon: const Icon(Icons.food_bank),
           onPressed: () {
@@ -23,7 +23,10 @@ medicalManagerMenu(context) {
       const SizedBox(height: 5.0),
       const Text(
         "Medical",
-        style: TextStyle(fontSize: 12.0),
+        style: TextStyle(
+          fontSize: 12.0,
+          color: Colors.white,
+        ),
       )
     ]),
   ];

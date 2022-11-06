@@ -10,13 +10,17 @@ import 'package:http/http.dart' as http;
 // ignore: must_be_immutable
 class NewPost extends StatefulWidget {
   quill.Document? document;
+  bool edit = false;
+  int postId;
   VoidCallback successCallback;
 
-  NewPost({
-    Key? key,
-    required this.document,
-    required this.successCallback,
-  }) : super(key: key);
+  NewPost(
+      {Key? key,
+      required this.document,
+      required this.successCallback,
+      required this.edit,
+      required this.postId})
+      : super(key: key);
 
   @override
   State<NewPost> createState() => _NewPostState();
@@ -45,11 +49,20 @@ class _NewPostState extends State<NewPost> {
   Future<bool> _submitPost(quill.Document richDocument) async {
     try {
       String? idToken = await secureStorage.read(key: 'idToken');
-      final requestUrl = Uri.parse(baseUrl + '/feed/create/');
+
+      var requestUrl = Uri.parse(baseUrl + '/feed/create/');
+
+      if (widget.edit) {
+        requestUrl = Uri.parse(baseUrl + '/feed/update/');
+      }
 
       var request = http.MultipartRequest('POST', requestUrl);
       final headers = {'Authorization': 'idToken ' + idToken!};
       request.headers.addAll(headers);
+      print(widget.postId);
+      if (widget.edit) {
+        request.fields['post_id'] = widget.postId.toString();
+      }
       request.fields['body'] =
           jsonEncode(_controller.document.toDelta().toJson());
       final plainText = _controller.document.toPlainText();

@@ -13,12 +13,13 @@ import 'package:ira/screens/dashboard/dashboard.dart';
 import 'package:ira/screens/dashboard/general_feed/panel_state_stream.dart';
 import 'package:ira/services/auth.service.dart';
 import 'package:ira/shared/alert_snackbar.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:provider/provider.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {}
 
 void initAppWithFirebase() async {
-  // Intialize firebase and firebase cloud messaging.
+  //Intialize firebase and firebase cloud messaging.
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -54,6 +55,7 @@ class _MyAppState extends State<MyApp> {
   // ignore: avoid_init_to_null
   ConnectivityResult? previousState = null;
   bool firstConnection = true;
+  final localStorage = LocalStorage('store');
 
   @override
   void initState() {
@@ -122,7 +124,7 @@ class _MyAppState extends State<MyApp> {
               selectedColor: Colors.blue,
             )),
         home: Dashboard(
-          role: 'student',
+          role: localStorage.getItem('role') ?? 'student',
         ),
       ),
     );
