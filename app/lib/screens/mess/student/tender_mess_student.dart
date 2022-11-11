@@ -249,11 +249,6 @@ class _TenderMessState extends State<TenderMess> {
                                                               data.id);
                                                         }
                                                       },
-                                                      // child: SizedBox(
-                                                      //   height: 38.0,
-                                                      //   child: Image.asset(
-                                                      //       "assets/icons/download_cloud.png"),
-                                                      // ),
                                                       child: const CircleAvatar(
                                                         backgroundColor:
                                                             Colors.blue,
