@@ -32,6 +32,7 @@ USER_ROLES={
     'academic_board_ug':12,
     'academic_board_pg':13,
     'ira_team':14,
+    'hostel_secretary': 15,
 }
 
 # Create your models here.
@@ -55,6 +56,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         (USER_ROLES['academic_board_ug'], 'Academic Board UG'),
         (USER_ROLES['academic_board_pg'], 'Academic Board PG'),
         (USER_ROLES['ira_team'], 'IRA Team'),
+        (USER_ROLES['hostel_secretary'], 'Hostel Secretary')
     )
 
     # Roles created here
@@ -64,7 +66,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=50, blank=True)
     role = models.PositiveSmallIntegerField(
-        choices=ROLE_CHOICES, blank=True, null=True, default=3)
+        choices=ROLE_CHOICES, blank=True, null=True, default=1)
     date_joined = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=True)

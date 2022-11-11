@@ -20,9 +20,8 @@ class _HistoryManagerState extends State<HistoryManager> {
 
   Future<List<StudentModel>> _getPatientData(String email) async {
     String? token = await secureStorage.read(key: 'staffToken');
-    final requestUrl = Uri.parse(
-      baseUrl + '/medical/search/patient?email=$email',
-    );
+    final requestUrl =
+        Uri.parse(baseUrl + '/medical/search/patient?email=$email');
 
     final Map<String, String> headers = {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -33,7 +32,7 @@ class _HistoryManagerState extends State<HistoryManager> {
       final response = await http.get(requestUrl, headers: headers);
 
       final responseData = json.decode(response.body);
-      final List<StudentModel> studentsData = [];
+      List<StudentModel> studentsData = [];
       responseData.forEach((student) {
         studentsData.add(StudentModel.fromJson(student));
       });

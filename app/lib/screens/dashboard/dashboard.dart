@@ -10,6 +10,7 @@ import 'package:ira/screens/dashboard/staff_header.dart';
 import 'package:ira/screens/dashboard/student_menu.dart';
 import 'package:ira/screens/dashboard/student_header.dart';
 import 'package:ira/screens/login/login.dart';
+import 'package:ira/util/helpers.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -23,17 +24,33 @@ class Dashboard extends StatefulWidget {
   final localStorage = LocalStorage('store');
   final baseUrl = FlavorConfig.instance.variables['baseUrl'];
 
-  final roleHeaderMap = {
-    'student': StudentHeader(),
-    'guard': StaffHeader(),
-    'mess_manager': StaffHeader(),
-    'medical_manager': StaffHeader(),
-  };
+  roleHeaderMap(role) {
+    if (rolesThatCanBeAssignedToStudent.contains(role)) {
+      return StudentHeader();
+    }
+
+    switch (role) {
+      case 'guard':
+        return StaffHeader();
+      case 'mess_manager':
+        return StaffHeader();
+      case 'medical_manager':
+        return StaffHeader();
+    }
+
+    return Container();
+  }
 
   roleBasedMenu(context) {
+    if (role == 'hostel_secretary') {
+      return studentMenu(context, true);
+    }
+
+    if (rolesThatCanBeAssignedToStudent.contains(role)) {
+      return studentMenu(context, false);
+    }
+
     switch (role) {
-      case 'student':
-        return studentMenu(context);
       case 'guard':
         return guardMenu(context);
       case 'mess_manager':
@@ -69,12 +86,10 @@ class _DashboardState extends State<Dashboard> {
         });
       }
 
-      if (widget.role == 'student') {
+      if (isRoleWithGoogleAuth(widget.role)) {
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => const LoginScreen()));
       }
-    } else {
-      widget.role = 'student';
     }
   }
 
@@ -87,7 +102,7 @@ class _DashboardState extends State<Dashboard> {
         appBar: AppBar(
           backgroundColor: Colors.blue,
           elevation: 0,
-          title: widget.roleHeaderMap[widget.role],
+          title: widget.roleHeaderMap(widget.role),
         ),
         body: SlidingUpPanel(
           minHeight: MediaQuery.of(context).size.height - 280,
@@ -102,7 +117,9 @@ class _DashboardState extends State<Dashboard> {
             panelState.state = false;
             panelState.heightChangeController.add(false);
           },
-          panel: widget.role == 'student' ? const GeneralFeed() : Container(),
+          panel: canShowGeneralFeed(widget.role)
+              ? GeneralFeed(role: widget.role)
+              : Container(),
           body: Container(
             // color: Colors.blue,
             width: MediaQuery.of(context).size.width,
@@ -113,7 +130,7 @@ class _DashboardState extends State<Dashboard> {
               children: [
                 Container(
                   padding: const EdgeInsets.all(20.0),
-                  decoration: widget.role == 'student'
+                  decoration: isUserStudent(widget.role)
                       ? BoxDecoration(
                           image: DecorationImage(
                             opacity: 0.5,

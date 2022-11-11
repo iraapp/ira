@@ -19,18 +19,17 @@ class ComplaintsMess extends StatefulWidget {
 class _ComplaintsMessState extends State<ComplaintsMess> {
   final List<String> _messFill = ["Fill as Anonymous", "Use your credentials"];
   String _messFillValue = "Fill as Anonymous";
-  final Set<String> messTypes = {"Choose Mess"};
-  String _messValue = "Choose Mess";
+  final List<String> messTypes = [];
+  String _messValue = "";
   final List<String> _meals = [
-    "Choose Meal",
     "Breakfast",
     "Lunch",
     "Snacks",
     "Dinner",
     "General"
   ];
-  String _mealsValue = "Choose Meal";
-  String? _description;
+  String _mealsValue = "Breakfast";
+  String _description = "";
   String _imagePath = "";
 
   Future<bool> _submitMessComplaint(String description, String messType,
@@ -66,7 +65,7 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
   Future<void> _getMessTypes() async {
     String? idToken = await widget.secureStorage.read(key: 'idToken');
 
-    final requestUrl = Uri.parse(widget.baseUrl + '/mess/get/mess');
+    final requestUrl = Uri.parse(widget.baseUrl + '/mess/list/');
     final response = await http.get(
       requestUrl,
       headers: <String, String>{
@@ -80,7 +79,9 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
       for (var item in data) {
         messTypes.add(item['name']);
       }
-      setState(() {});
+      setState(() {
+        _messValue = messTypes.isNotEmpty ? messTypes[0] : '';
+      });
     } else {
       // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
       throw Exception('API Call Failed');
@@ -99,6 +100,7 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: Colors.blue,
       appBar: AppBar(

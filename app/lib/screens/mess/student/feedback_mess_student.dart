@@ -16,17 +16,16 @@ class FeedbackMess extends StatefulWidget {
 class _FeedbackMessState extends State<FeedbackMess> {
   final List<String> _messFill = ["Fill as Anonymous", "Use your credentials"];
   String _messFillValue = "Fill as Anonymous";
-  final Set<String> messTypes = {"Choose Mess"};
-  String _messValue = "Choose Mess";
+  final List<String> messTypes = [];
+  String _messValue = "";
   final List<String> _meals = [
-    "Choose Meal",
     "Breakfast",
     "Lunch",
     "Snacks",
     "Dinner",
     "General"
   ];
-  String _mealsValue = "Choose Meal";
+  String _mealsValue = "Breakfast";
 
   String? _description;
 
@@ -61,7 +60,7 @@ class _FeedbackMessState extends State<FeedbackMess> {
   Future<void> _getMessTypes() async {
     String? idToken = await widget.secureStorage.read(key: 'idToken');
 
-    final requestUrl = Uri.parse(widget.baseUrl + '/mess/get/mess');
+    final requestUrl = Uri.parse(widget.baseUrl + '/mess/list/');
     final response = await http.get(
       requestUrl,
       headers: <String, String>{
@@ -75,7 +74,9 @@ class _FeedbackMessState extends State<FeedbackMess> {
       for (var item in data) {
         messTypes.add(item['name']);
       }
-      setState(() {});
+      setState(() {
+        _messValue = messTypes.isNotEmpty ? messTypes[0] : '';
+      });
     } else {
       // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
       throw Exception('API Call Failed');
@@ -200,11 +201,11 @@ class _FeedbackMessState extends State<FeedbackMess> {
                                     color: Colors.black,
                                   ),
                                   value: _messValue,
-                                  items: messTypes.map((String items) {
+                                  items: messTypes.map((String item) {
                                     return DropdownMenuItem(
-                                      value: items,
+                                      value: item,
                                       child: Text(
-                                        items,
+                                        item,
                                         style: const TextStyle(
                                           color: Colors.black,
                                         ),
