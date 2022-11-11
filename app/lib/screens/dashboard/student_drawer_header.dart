@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:localstorage/localstorage.dart';
 
 import '../../util/helpers.dart';
@@ -8,6 +9,11 @@ class StudentDrawerHeader extends StatelessWidget {
   StudentDrawerHeader({Key? key}) : super(key: key);
   final localStorage = LocalStorage('store');
   final baseUrl = FlavorConfig.instance.variables['baseUrl'];
+  final secureStorage = const FlutterSecureStorage();
+
+  Future<String?> getIdToken() async {
+    return await secureStorage.read(key: 'idToken');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +30,8 @@ class StudentDrawerHeader extends StatelessWidget {
           }
 
           String displayName = localStorage.getItem('displayName');
-          String entry = localStorage.getItem('email').split('@')[0];
+          String email = localStorage.getItem('email');
+          String entry = email.split('@')[0];
 
           return DrawerHeader(
             decoration: const BoxDecoration(
@@ -36,13 +43,19 @@ class StudentDrawerHeader extends StatelessWidget {
                 CircleAvatar(
                   radius: 42,
                   backgroundColor: Colors.blue.shade800,
-                  child: const CircleAvatar(
-                    radius: 38,
-                    child: ClipOval(
-                        child: Icon(
-                      Icons.person,
-                      size: 60,
-                    )),
+                  child: FutureBuilder<String?>(
+                    future: getIdToken(),
+                    builder: (context, snapshot) {
+                      return CircleAvatar(
+                        radius: 38,
+                        backgroundImage: NetworkImage(
+                          baseUrl + '/user_profile/image',
+                          headers: {
+                            'Authorization': 'idToken ' + snapshot.data!,
+                          },
+                        ),
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(

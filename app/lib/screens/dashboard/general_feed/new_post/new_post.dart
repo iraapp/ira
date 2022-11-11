@@ -129,13 +129,7 @@ class _NewPostState extends State<NewPost> {
           child: Container(
             width: double.infinity,
             decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(40.0),
-                bottomRight: Radius.circular(0.0),
-                topLeft: Radius.circular(40.0),
-                bottomLeft: Radius.circular(0.0),
-              ),
-              color: Color(0xfff5f5f5),
+              color: Colors.white,
             ),
             child: Padding(
               padding: const EdgeInsets.all(20),

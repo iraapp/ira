@@ -68,13 +68,7 @@ class GatePassScreen extends StatelessWidget {
         child: Container(
           width: double.infinity,
           decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topRight: Radius.circular(40.0),
-              bottomRight: Radius.circular(0.0),
-              topLeft: Radius.circular(40.0),
-              bottomLeft: Radius.circular(0.0),
-            ),
-            color: Color(0xfff5f5f5),
+            color: Colors.white,
           ),
           child: Column(
             children: [
@@ -83,12 +77,7 @@ class GatePassScreen extends StatelessWidget {
               ),
               Container(
                 decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(20.0),
-                    bottomRight: Radius.circular(20.0),
-                    topLeft: Radius.circular(20.0),
-                    bottomLeft: Radius.circular(20.0),
-                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
                   color: Colors.white,
                 ),
                 child: Padding(
@@ -100,13 +89,13 @@ class GatePassScreen extends StatelessWidget {
                       const Text(
                         'Purpose for gate pass : ',
                         style: TextStyle(
-                          fontSize: 16.0,
+                          fontSize: 16,
                         ),
                       ),
                       Text(
                         purpose,
                         style: const TextStyle(
-                          fontSize: 18.0,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       )
@@ -164,12 +153,7 @@ class GatePassScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(20.0),
                 child: Container(
                   decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(20.0),
-                      bottomRight: Radius.circular(20.0),
-                      topLeft: Radius.circular(20.0),
-                      bottomLeft: Radius.circular(20.0),
-                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
                     color: Colors.white,
                   ),
                   child: Padding(
