@@ -149,7 +149,7 @@ class _TeamScreenState extends State<TeamScreen> {
                                                     image:
                                                         CachedNetworkImageProvider(
                                                   baseUrl +
-                                                      '/media/images/' +
+                                                      '/media/' +
                                                       team![index].profile,
                                                 )),
                                               ),
