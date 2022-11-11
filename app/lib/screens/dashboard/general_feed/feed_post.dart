@@ -40,10 +40,6 @@ class _FeedPostState extends State<FeedPost> {
   bool showImages = false;
   final secureStorage = const FlutterSecureStorage();
 
-  Future<String?> getIdToken() async {
-    return await secureStorage.read(key: 'idToken');
-  }
-
   final ReceivePort _port = ReceivePort();
 
   @override
@@ -120,22 +116,11 @@ class _FeedPostState extends State<FeedPost> {
               const SizedBox(
                 height: 5.0,
               ),
-              FutureBuilder<String?>(
-                future: getIdToken(),
-                builder: (context, snapshot) {
-                  return CircleAvatar(
-                    radius: 20,
-                    backgroundImage: NetworkImage(
-                      baseUrl +
-                          '/user_profile/user_image?email=' +
-                          widget.data.authorEmail,
-                      headers: {
-                        'Authorization': 'idToken ' + snapshot.data!,
-                      },
-                    ),
-                  );
-                },
-              ),
+              CircleAvatar(
+                radius: 20,
+                backgroundImage:
+                    NetworkImage(baseUrl + widget.data.authorImage),
+              )
             ],
           ),
           const SizedBox(

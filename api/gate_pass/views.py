@@ -217,12 +217,8 @@ class DeleteQR(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        hash = json.loads(request.body.decode('utf-8')).get('hash')
-
-        user_email = hash.split('_')[0] + '@iitjammu.ac.in'
-
         gate_pass = GatePass.objects.filter(
-            user__email=user_email, status=False, completed_status=False).first()
+            user = request.user, status=False, completed_status=False).first()
 
         if gate_pass:
             gate_pass.delete()

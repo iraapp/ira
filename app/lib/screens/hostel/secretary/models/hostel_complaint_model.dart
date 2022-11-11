@@ -5,7 +5,7 @@ class HostelComplaintModel {
   final String hostel;
   final String createdAt;
   final bool status;
-  final String file;
+  final String? file;
   final String complaintType;
 
   HostelComplaintModel({
