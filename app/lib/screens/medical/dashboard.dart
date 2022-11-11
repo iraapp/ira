@@ -5,6 +5,7 @@ import 'package:ira/screens/medical/appointments/appointments.dart';
 import 'package:ira/screens/medical/bmi_calculator/bmi_calculator.dart';
 import 'package:ira/screens/medical/doctor_details/doctor_details.dart';
 import 'package:ira/screens/medical/staff_contact/staff_contact.dart';
+import 'package:ira/util/helpers.dart';
 
 import 'history/medical_history.dart';
 
@@ -19,12 +20,15 @@ class _MedicalStudentScreenState extends State<MedicalStudentScreen> {
   final secureStorage = const FlutterSecureStorage();
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
 
-  final List<String> _medicalList = [
-    "Staff Contact",
-    "Doctors",
-    "History",
-    "Appointments",
-    "BMI Calculator"
+  final List<DashboardIconModel> _medicalList = [
+    DashboardIconModel(
+        icon: const Icon(Icons.supervised_user_circle), title: "Staff Contact"),
+    DashboardIconModel(
+        icon: const Icon(Icons.perm_contact_cal), title: "Doctors"),
+    DashboardIconModel(icon: const Icon(Icons.history), title: "History"),
+    DashboardIconModel(
+        icon: const Icon(Icons.meeting_room), title: "Appointments"),
+    DashboardIconModel(icon: const Icon(Icons.scale), title: "BMI Calculator"),
   ];
 
   final List<Widget> _medicalRoutes = [
@@ -72,12 +76,6 @@ class _MedicalStudentScreenState extends State<MedicalStudentScreen> {
             height: size.height * 0.7,
             child: Container(
               decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(40.0),
-                  bottomRight: Radius.circular(0.0),
-                  topLeft: Radius.circular(40.0),
-                  bottomLeft: Radius.circular(0.0),
-                ),
                 color: Color(0xfff5f5f5),
               ),
               child: Padding(
@@ -116,14 +114,15 @@ class _MedicalStudentScreenState extends State<MedicalStudentScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              SizedBox(
-                                  height: 40.0,
-                                  width: 40.0,
-                                  child: Image.asset(
-                                      "assets/images/mess_icon.png")),
+                              CircleAvatar(
+                                radius: 25,
+                                backgroundColor: Colors.blue,
+                                foregroundColor: Colors.white,
+                                child: _medicalList[index].icon,
+                              ),
                               const SizedBox(height: 5.0),
                               Text(
-                                _medicalList[index],
+                                _medicalList[index].title,
                                 style: const TextStyle(fontSize: 12.0),
                               ),
                             ],

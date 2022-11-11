@@ -4,6 +4,7 @@ import 'package:ira/screens/mess/student/feedback_mess_student.dart';
 import 'package:ira/screens/mess/student/menu_mess_student.dart';
 import 'package:ira/screens/mess/student/mom_mess_student.dart';
 import 'package:ira/screens/mess/student/tender_mess_student.dart';
+import 'package:ira/util/helpers.dart';
 
 class MessStudentScreen extends StatefulWidget {
   const MessStudentScreen({Key? key}) : super(key: key);
@@ -13,12 +14,21 @@ class MessStudentScreen extends StatefulWidget {
 }
 
 class _MessStudentScreenState extends State<MessStudentScreen> {
-  final List<String> _messList = [
-    "Feedback",
-    "Complaint",
-    "Menu",
-    "Mess MOM",
-    "Tenders"
+  final List<DashboardIconModel> _messList = [
+    DashboardIconModel(
+      icon: const Icon(Icons.forum),
+      title: "Feedback",
+    ),
+    DashboardIconModel(
+      icon: const Icon(Icons.open_in_new),
+      title: "Complaint",
+    ),
+    DashboardIconModel(
+      icon: const Icon(Icons.ballot),
+      title: "Menu",
+    ),
+    DashboardIconModel(icon: const Icon(Icons.drafts), title: "Mess MOM"),
+    DashboardIconModel(icon: const Icon(Icons.content_paste), title: "Tenders"),
   ];
 
   final List<Widget> _messRoutes = [
@@ -67,12 +77,6 @@ class _MessStudentScreenState extends State<MessStudentScreen> {
             height: size.height * 0.7,
             child: Container(
               decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(40.0),
-                  bottomRight: Radius.circular(0.0),
-                  topLeft: Radius.circular(40.0),
-                  bottomLeft: Radius.circular(0.0),
-                ),
                 color: Color(0xfff5f5f5),
               ),
               child: Padding(
@@ -109,14 +113,15 @@ class _MessStudentScreenState extends State<MessStudentScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
                             children: [
-                              SizedBox(
-                                  height: 40.0,
-                                  width: 40.0,
-                                  child: Image.asset(
-                                      "assets/images/mess_icon.png")),
+                              CircleAvatar(
+                                radius: 25,
+                                backgroundColor: Colors.blue,
+                                foregroundColor: Colors.white,
+                                child: _messList[index].icon,
+                              ),
                               const SizedBox(height: 4.0),
                               Text(
-                                _messList[index],
+                                _messList[index].title,
                                 style: const TextStyle(fontSize: 12.0),
                               ),
                             ],

@@ -24,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return AppScaffold(
       child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-        const SizedBox(height: 40.0),
+        const SizedBox(height: 80.0),
         Center(
           child: Image.asset(
             'assets/images/iit-jammu-logo-white.png',
@@ -36,9 +36,6 @@ class _LoginScreenState extends State<LoginScreen> {
             width: MediaQuery.of(context).size.width,
             decoration: const BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30.0),
-                  topRight: Radius.circular(30.0)),
             ),
             child: Padding(
               padding: const EdgeInsets.all(20.0),
@@ -49,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 40.0,
                   ),
                   const Text(
-                    'Welcome to the',
+                    'Welcome to ',
                     style: TextStyle(fontSize: 22),
                   ),
                   const Text(
@@ -63,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 40.0,
                   ),
                   const Text(
-                    'Login using your Gmail id',
+                    'Login using your institute id',
                     style: TextStyle(
                       fontSize: 18.0,
                     ),
@@ -72,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 20.0,
                   ),
                   IconButton(
-                    iconSize: 60.0,
+                    iconSize: 55.0,
                     icon: SvgPicture.asset(
                       'assets/svgs/google_sign_in.svg',
                     ),
@@ -114,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         );
                       },
                       child: const Text(
-                        'Continue as a Staff',
+                        'Continue as Staff',
                         style: TextStyle(
                           fontSize: 16.0,
                           color: Colors.blue,

@@ -6,7 +6,6 @@ import 'package:ira/screens/hostel/dashboard.dart';
 import 'package:ira/screens/login/login.dart';
 import 'package:ira/screens/medical/dashboard.dart';
 import 'package:ira/screens/mess/student/mess_student.dart';
-import 'package:ira/screens/profile/profile.dart';
 import 'package:ira/screens/team/team.dart';
 import 'package:ira/services/auth.service.dart';
 import 'package:ira/util/helpers.dart';
@@ -50,7 +49,7 @@ class _AppDrawerState extends State<AppDrawer> {
         child: ListView(
       padding: EdgeInsets.zero,
       children: [
-        StudentDrawerHeader(),
+        isUserStudent(widget.role) ? StudentDrawerHeader() : Container(),
         const Divider(),
         ListTile(
           leading: const Icon(
@@ -65,7 +64,7 @@ class _AppDrawerState extends State<AppDrawer> {
           },
         ),
         ListTile(
-          leading: const Icon(Icons.person),
+          leading: const Icon(Icons.apartment),
           title: const Text("Hostel"),
           enabled: !disableDrawerTiles,
           onTap: () {
@@ -77,7 +76,7 @@ class _AppDrawerState extends State<AppDrawer> {
           },
         ),
         ListTile(
-          leading: const Icon(Icons.food_bank),
+          leading: const Icon(Icons.fastfood),
           title: const Text("Mess"),
           enabled: !disableDrawerTiles,
           onTap: () {
@@ -113,7 +112,7 @@ class _AppDrawerState extends State<AppDrawer> {
         //   },
         // ),
         ListTile(
-          leading: const Icon(Icons.admin_panel_settings_rounded),
+          leading: const Icon(Icons.sensor_door),
           title: const Text("Gate Pass"),
           enabled: !disableDrawerTiles,
           onTap: () {
@@ -125,7 +124,7 @@ class _AppDrawerState extends State<AppDrawer> {
           },
         ),
         ListTile(
-          leading: const Icon(Icons.people),
+          leading: const Icon(Icons.groups),
           title: const Text("Team"),
           enabled: !disableDrawerTiles,
           onTap: () {
@@ -137,7 +136,7 @@ class _AppDrawerState extends State<AppDrawer> {
           },
         ),
         ListTile(
-          leading: const Icon(Icons.people),
+          leading: const Icon(Icons.forum),
           title: const Text("Feedback"),
           enabled: !disableDrawerTiles,
           onTap: () {
@@ -147,7 +146,7 @@ class _AppDrawerState extends State<AppDrawer> {
         ),
         ListTile(
           hoverColor: Colors.blue,
-          leading: const Icon(Icons.exit_to_app),
+          leading: const Icon(Icons.logout),
           title: const Text('Sign out'),
           onTap: () async {
             if (isRoleWithGoogleAuth(widget.role)) {

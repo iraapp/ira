@@ -94,12 +94,6 @@ class _PurposeScreenState extends State<PurposeScreen> {
                     child: Container(
                       width: double.infinity,
                       decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(40.0),
-                          bottomRight: Radius.circular(0.0),
-                          topLeft: Radius.circular(40.0),
-                          bottomLeft: Radius.circular(0.0),
-                        ),
                         color: Color(0xfff5f5f5),
                       ),
                       child: Column(
@@ -109,16 +103,15 @@ class _PurposeScreenState extends State<PurposeScreen> {
                             child: Container(
                               margin: const EdgeInsets.only(top: 50.0),
                               width: MediaQuery.of(context).size.width * 0.9,
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.circular(20),
-                                boxShadow: const [
+                                boxShadow: [
                                   BoxShadow(
                                       color: Colors.grey,
-                                      blurRadius: 5.0,
+                                      blurRadius: 2.0,
                                       offset: Offset(
                                         0,
-                                        5,
+                                        2,
                                       ))
                                 ],
                               ),
@@ -137,15 +130,8 @@ class _PurposeScreenState extends State<PurposeScreen> {
                                     contentPadding:
                                         EdgeInsets.symmetric(horizontal: 10.0),
                                     border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(20.0),
-                                      ),
                                       borderSide: BorderSide.none,
                                     ),
-                                    focusedBorder: InputBorder.none,
-                                    enabledBorder: InputBorder.none,
-                                    errorBorder: InputBorder.none,
-                                    disabledBorder: InputBorder.none,
                                     hintText: '  Purpose for going out',
                                   ),
                                 ),
@@ -156,12 +142,6 @@ class _PurposeScreenState extends State<PurposeScreen> {
                             height: 20.0,
                           ),
                           ElevatedButton(
-                            style: ButtonStyle(
-                                shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0),
-                            ))),
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
                                 String? idToken =

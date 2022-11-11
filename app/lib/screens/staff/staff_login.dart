@@ -24,6 +24,7 @@ class _StaffLoginState extends State<StaffLogin> {
   final secureStorage = const FlutterSecureStorage();
   final localStorage = LocalStorage('store');
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
+  bool invalid = false;
 
   Future<String> autoLogin() async {
     String? staffToken = await secureStorage.read(key: 'staffToken');
@@ -59,7 +60,7 @@ class _StaffLoginState extends State<StaffLogin> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 40.0),
+                  const SizedBox(height: 80.0),
                   Center(
                     child: Image.asset(
                       'assets/images/iit-jammu-logo-white.png',
@@ -71,9 +72,6 @@ class _StaffLoginState extends State<StaffLogin> {
                       width: MediaQuery.of(context).size.width,
                       decoration: const BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(30.0),
-                            topRight: Radius.circular(30.0)),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
@@ -87,7 +85,7 @@ class _StaffLoginState extends State<StaffLogin> {
                                   height: 20.0,
                                 ),
                                 const Text(
-                                  'Welcome to the',
+                                  'Welcome to',
                                   style: TextStyle(fontSize: 22),
                                 ),
                                 const Text(
@@ -109,11 +107,8 @@ class _StaffLoginState extends State<StaffLogin> {
 
                                     return null;
                                   },
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                      ),
+                                  decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
                                       hintText: 'Username'),
                                 ),
                                 const SizedBox(
@@ -128,29 +123,29 @@ class _StaffLoginState extends State<StaffLogin> {
 
                                     return null;
                                   },
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                      ),
+                                  decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
                                       hintText: 'Password'),
                                   obscureText: true,
                                   enableSuggestions: false,
                                   autocorrect: false,
                                 ),
                                 const SizedBox(
-                                  height: 30.0,
+                                  height: 15.0,
+                                ),
+                                Text(
+                                  invalid
+                                      ? 'Invalid Username and password'
+                                      : '',
+                                  style: const TextStyle(color: Colors.red),
+                                ),
+                                const SizedBox(
+                                  height: 15.0,
                                 ),
                                 SizedBox(
                                   height: 50.0,
                                   width: double.infinity,
                                   child: ElevatedButton(
-                                    style: ButtonStyle(
-                                        shape: MaterialStateProperty.all<
-                                                RoundedRectangleBorder>(
-                                            RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                    ))),
                                     onPressed: () async {
                                       if (_formKey.currentState!.validate()) {
                                         final response = await http.post(
@@ -199,8 +194,9 @@ class _StaffLoginState extends State<StaffLogin> {
                                             ),
                                           );
                                         } else {
-                                          // ScaffoldMessenger.of(context)
-                                          //     .showSnackBar(alertSnackbar);
+                                          setState(() {
+                                            invalid = true;
+                                          });
                                         }
                                       }
                                     },

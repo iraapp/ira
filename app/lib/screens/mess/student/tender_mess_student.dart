@@ -102,13 +102,6 @@ class _TenderMessState extends State<TenderMess> {
         child: Container(
           width: double.infinity,
           decoration: const BoxDecoration(
-            // ignore: unnecessary_const
-            borderRadius: const BorderRadius.only(
-              topRight: Radius.circular(40.0),
-              bottomRight: Radius.circular(0.0),
-              topLeft: Radius.circular(40.0),
-              bottomLeft: Radius.circular(0.0),
-            ),
             color: Color(0xfff5f5f5),
           ),
           child: Padding(
@@ -183,16 +176,11 @@ class _TenderMessState extends State<TenderMess> {
                                   child: Column(
                                     children: [
                                       Container(
-                                          height: size.height * 0.13,
+                                          height: 100,
                                           width: double.infinity,
                                           decoration: const BoxDecoration(
-                                            borderRadius: BorderRadius.only(
-                                              topRight: Radius.circular(10.0),
-                                              bottomRight:
-                                                  Radius.circular(10.0),
-                                              topLeft: Radius.circular(10.0),
-                                              bottomLeft: Radius.circular(10.0),
-                                            ),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(5)),
                                             color: Colors.white,
                                             boxShadow: [
                                               BoxShadow(
@@ -212,8 +200,8 @@ class _TenderMessState extends State<TenderMess> {
                                               Padding(
                                                 padding:
                                                     const EdgeInsets.symmetric(
-                                                        horizontal: 10.0,
-                                                        vertical: 8.0),
+                                                        horizontal: 15.0,
+                                                        vertical: 15.0),
                                                 child: Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
@@ -261,10 +249,13 @@ class _TenderMessState extends State<TenderMess> {
                                                               data.id);
                                                         }
                                                       },
-                                                      child: SizedBox(
-                                                        height: 38.0,
-                                                        child: Image.asset(
-                                                            "assets/icons/download_cloud.png"),
+                                                      child: const CircleAvatar(
+                                                        backgroundColor:
+                                                            Colors.blue,
+                                                        foregroundColor:
+                                                            Colors.white,
+                                                        child: Icon(Icons
+                                                            .file_download),
                                                       ),
                                                     )
                                                   ],
