@@ -7,6 +7,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ira/screens/dashboard/dashboard.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 import '../../../util/helpers.dart';
 
@@ -83,12 +85,6 @@ class _AddPhotoScreenState extends State<AddPhotoScreen> {
             child: Container(
               width: size.width,
               decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(40.0),
-                  bottomRight: Radius.circular(0.0),
-                  topLeft: Radius.circular(40.0),
-                  bottomLeft: Radius.circular(0.0),
-                ),
                 color: Color(0xffffffff),
               ),
               child: Padding(
@@ -125,8 +121,18 @@ class _AddPhotoScreenState extends State<AddPhotoScreen> {
                                 final XFile? image = await _picker.pickImage(
                                     source: ImageSource.gallery);
                                 if (image != null) {
+                                  CroppedFile? croppedFile =
+                                      await ImageCropper().cropImage(
+                                    sourcePath: image.path,
+                                    aspectRatioPresets: [
+                                      CropAspectRatioPreset.square,
+                                    ],
+                                    maxWidth: 512,
+                                    maxHeight: 512,
+                                  );
+
                                   setState(() {
-                                    _imagePath = image.path;
+                                    _imagePath = croppedFile!.path;
                                     _imageUploaded = true;
                                   });
                                 } else {

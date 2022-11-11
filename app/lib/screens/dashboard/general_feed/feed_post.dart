@@ -117,14 +117,10 @@ class _FeedPostState extends State<FeedPost> {
                 height: 5.0,
               ),
               CircleAvatar(
-                backgroundColor: Colors.blue.shade800,
-                child: Text(
-                  widget.data.authorName[0].toUpperCase(),
-                  style: const TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+                radius: 20,
+                backgroundImage:
+                    NetworkImage(baseUrl + widget.data.authorImage),
+              )
             ],
           ),
           const SizedBox(

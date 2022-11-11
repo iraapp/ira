@@ -25,7 +25,7 @@ class HistoryCard extends StatelessWidget {
         Container(
           decoration: const BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            borderRadius: BorderRadius.all(Radius.circular(5.0)),
             boxShadow: [
               BoxShadow(
                 color: Color.fromARGB(81, 158, 158, 158),
@@ -94,7 +94,7 @@ class HistoryCard extends StatelessWidget {
                       decoration: const BoxDecoration(
                         color: Colors.green,
                         borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(20.0),
+                          bottomLeft: Radius.circular(5.0),
                         ),
                       ),
                       child: Center(
@@ -115,7 +115,7 @@ class HistoryCard extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: inhouse ? Colors.blue : Colors.red,
                         borderRadius: const BorderRadius.only(
-                          bottomRight: Radius.circular(20.0),
+                          bottomRight: Radius.circular(5.0),
                         ),
                       ),
                       child: Center(

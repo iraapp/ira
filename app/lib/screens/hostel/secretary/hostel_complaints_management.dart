@@ -32,6 +32,7 @@ class _ComplaintHostelSecretaryState extends State<ComplaintHostelSecretary> {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
+      print(data);
       return data
           .map<HostelComplaintModel>(
               (json) => HostelComplaintModel.fromJson(json))
@@ -85,13 +86,7 @@ class _ComplaintHostelSecretaryState extends State<ComplaintHostelSecretary> {
         child: Container(
           width: double.infinity,
           decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topRight: Radius.circular(40.0),
-              bottomRight: Radius.circular(0.0),
-              topLeft: Radius.circular(40.0),
-              bottomLeft: Radius.circular(0.0),
-            ),
-            color: Color(0xfff5f5f5),
+            color: Colors.white,
           ),
           child: Padding(
             padding:
@@ -354,7 +349,7 @@ class _ComplaintHostelSecretaryState extends State<ComplaintHostelSecretary> {
     required String subtitle,
     required String content,
     required String defaultActionText,
-    required String file,
+    required String? file,
     required bool status,
   }) {
     return showDialog(
@@ -400,10 +395,12 @@ class _ComplaintHostelSecretaryState extends State<ComplaintHostelSecretary> {
             const SizedBox(
               height: 10.0,
             ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.4,
-              child: Image.network(widget.baseUrl + file),
-            ),
+            file != null
+                ? SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.4,
+                    child: Image.network(widget.baseUrl + file),
+                  )
+                : Container(),
             const SizedBox(height: 20.0),
             SizedBox(
               height: 40.0,

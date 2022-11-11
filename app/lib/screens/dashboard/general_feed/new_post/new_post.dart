@@ -32,6 +32,7 @@ class _NewPostState extends State<NewPost> {
   final secureStorage = const FlutterSecureStorage();
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
   List<PlatformFile> files = [];
+  bool inProcess = false;
 
   @override
   initState() {
@@ -59,7 +60,7 @@ class _NewPostState extends State<NewPost> {
       var request = http.MultipartRequest('POST', requestUrl);
       final headers = {'Authorization': 'idToken ' + idToken!};
       request.headers.addAll(headers);
-      print(widget.postId);
+
       if (widget.edit) {
         request.fields['post_id'] = widget.postId.toString();
       }
@@ -102,13 +103,17 @@ class _NewPostState extends State<NewPost> {
         actions: [
           TextButton(
             onPressed: () async {
-              if (_controller.document.toPlainText().trim().isNotEmpty) {
+              if (_controller.document.toPlainText().trim().isNotEmpty &&
+                  !inProcess) {
+                inProcess = true;
+
                 bool response = await _submitPost(_controller.document);
 
                 if (response) {
                   Navigator.pop(context);
                   widget.successCallback();
                 }
+                inProcess = false;
               }
             },
             child: const Text(
@@ -129,13 +134,7 @@ class _NewPostState extends State<NewPost> {
           child: Container(
             width: double.infinity,
             decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(40.0),
-                bottomRight: Radius.circular(0.0),
-                topLeft: Radius.circular(40.0),
-                bottomLeft: Radius.circular(0.0),
-              ),
-              color: Color(0xfff5f5f5),
+              color: Colors.white,
             ),
             child: Padding(
               padding: const EdgeInsets.all(20),

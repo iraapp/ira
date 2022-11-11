@@ -15,13 +15,13 @@ studentMenu(context, showHostelSecretary) {
     //   pageRoute: Profile(),
     // ),
     DashboardIcon(
-      icon: const Icon(Icons.person),
+      icon: const Icon(Icons.apartment),
       title: "Hostel",
       pageRoute: const HostelStudentScreen(),
     ),
 
     DashboardIcon(
-      icon: const Icon(Icons.food_bank),
+      icon: const Icon(Icons.fastfood),
       title: "Mess",
       pageRoute: const MessStudentScreen(),
     ),
@@ -31,19 +31,19 @@ studentMenu(context, showHostelSecretary) {
       pageRoute: const MedicalStudentScreen(),
     ),
     DashboardIcon(
-      icon: const Icon(Icons.admin_panel_settings_rounded),
+      icon: const Icon(Icons.sensor_door),
       title: "Gate Pass",
       pageRoute: const PurposeScreen(),
     ),
     DashboardIcon(
-      icon: const Icon(Icons.people),
+      icon: const Icon(Icons.groups),
       title: "Team",
       pageRoute: const TeamScreen(),
     ),
 
     showHostelSecretary
         ? DashboardIcon(
-            icon: const Icon(Icons.person),
+            icon: const Icon(Icons.add_moderator),
             title: "H. Secretary",
             pageRoute: const HostelSecretaryScreen(),
           )

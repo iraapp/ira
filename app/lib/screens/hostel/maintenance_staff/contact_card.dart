@@ -37,10 +37,10 @@ class MaintenanceContactCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10.0),
             decoration: const BoxDecoration(
-              color: Color(0xff3a82fd),
+              color: Colors.blue,
               borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10.0),
-                topRight: Radius.circular(10.0),
+                topLeft: Radius.circular(5.0),
+                topRight: Radius.circular(5.0),
               ),
             ),
             child: Center(
@@ -54,11 +54,11 @@ class MaintenanceContactCard extends StatelessWidget {
           ),
           Container(
             padding: const EdgeInsets.all(10.0),
-            decoration: const BoxDecoration(
-              color: Color.fromARGB(72, 58, 129, 253),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(10.0),
-                bottomRight: Radius.circular(10.0),
+            decoration: BoxDecoration(
+              color: Colors.blue.shade100,
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(5.0),
+                bottomRight: Radius.circular(5.0),
               ),
             ),
             child: Row(
@@ -87,7 +87,7 @@ class MaintenanceContactCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     CircleAvatar(
-                      backgroundColor: const Color(0xff3a82fd),
+                      backgroundColor: Colors.blue,
                       child: IconButton(
                         onPressed: () {
                           _makingPhoneCall(contact);

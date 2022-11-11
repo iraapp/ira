@@ -102,7 +102,9 @@ class _HostelComplaintState extends State<HostelComplaint> {
     request.fields['hostel'] = hostel;
     request.fields['complaint_type'] = complaintType;
     request.fields['feedback'] = description;
-    request.files.add(await http.MultipartFile.fromPath('file', filePath));
+    if (filePath != '') {
+      request.files.add(await http.MultipartFile.fromPath('file', filePath));
+    }
 
     final response = await request.send();
 
@@ -141,12 +143,6 @@ class _HostelComplaintState extends State<HostelComplaint> {
           child: Container(
             width: double.infinity,
             decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(40.0),
-                bottomRight: Radius.circular(0.0),
-                topLeft: Radius.circular(40.0),
-                bottomLeft: Radius.circular(0.0),
-              ),
               color: Color(0xfff5f5f5),
             ),
             child: FutureBuilder(
@@ -406,15 +402,6 @@ class _HostelComplaintState extends State<HostelComplaint> {
                                             }
                                           }
                                         },
-                                        style: ButtonStyle(
-                                          shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
-                                            RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(18.0),
-                                            ),
-                                          ),
-                                        ),
                                         child: const Text("Submit",
                                             style: TextStyle(
                                               color: Colors.white,

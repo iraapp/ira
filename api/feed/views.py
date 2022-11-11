@@ -1,13 +1,22 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from authentication.permissions import IsAcademicBoardPG, IsAcademicBoardUG, IsAcademicOfficePG, IsAcademicOfficeUG, IsCulturalBoard, IsGymkhana, IsHostelBoard, IsHostelSecretary, IsIraTeam, IsSportsBoard, IsSwoOffice, IsTechnicalBoard
 from feed.models import Document, Post
 from feed.serializers import PostSerializer
-from rest_framework.permissions import IsAuthenticated
-from .firebase import send_notification
 from institute_app import settings
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from user_profile.models import Student
+
+from .firebase import send_notification
+
 
 class CreatePostView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [
+        IsAuthenticated,
+        IsSwoOffice|IsAcademicOfficeUG|IsAcademicOfficePG|
+        IsGymkhana|IsCulturalBoard|IsTechnicalBoard|
+        IsSportsBoard|IsHostelBoard|IsAcademicBoardUG|
+        IsAcademicBoardPG|IsIraTeam|IsHostelSecretary]
 
     def post(self, request):
         body = request.POST.get("body")
@@ -15,8 +24,9 @@ class CreatePostView(APIView):
         notification = request.POST.get("notification")
 
         instance = Post.objects.create(
-            user=user,
-            body=body,
+            user = user,
+            student_profile = Student.objects.filter(user = user).first(),
+            body = body,
         )
 
         if request.FILES:
@@ -49,11 +59,14 @@ class DeleteFeedView(APIView):
 
         post = Post.objects.filter(id = id).first()
 
-        post.delete()
+        if post.user == request.user:
+            post.delete()
 
-        return Response(status=200, data = {
-            'msg': 'Post deleted successfully'
-        })
+            return Response(status=200, data = {
+                'msg': 'Post deleted successfully'
+            })
+
+        return Response(status = 401)
 
 
 class UpdateFeedView(APIView):
