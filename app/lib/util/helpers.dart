@@ -88,3 +88,10 @@ bool canShowGeneralFeed(String role) {
 bool canPostOnGeneralFeed(String role) {
   return rolesCanPostOnGeneralFeed.contains(role);
 }
+
+class DashboardIconModel {
+  Icon icon;
+  String title;
+
+  DashboardIconModel({required this.icon, required this.title});
+}

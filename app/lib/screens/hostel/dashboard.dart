@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ira/screens/hostel/complaint/hostel_complaint.dart';
 import 'package:ira/screens/hostel/complaint/hostel_feedback.dart';
 import 'package:ira/screens/hostel/maintenance_staff/maintenance_staff_contact.dart';
+import 'package:ira/util/helpers.dart';
 
 class HostelStudentScreen extends StatefulWidget {
   const HostelStudentScreen({Key? key}) : super(key: key);
@@ -16,7 +17,14 @@ class _HostelStudentScreenState extends State<HostelStudentScreen> {
   final secureStorage = const FlutterSecureStorage();
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
 
-  final List<String> _hostelList = ["Maintenance", "Complaint", "Feedback"];
+  final List<DashboardIconModel> _hostelList = [
+    DashboardIconModel(
+      icon: const Icon(Icons.contact_support),
+      title: "Maintenance",
+    ),
+    DashboardIconModel(icon: const Icon(Icons.open_in_new), title: "Complaint"),
+    DashboardIconModel(icon: const Icon(Icons.forum), title: "Feedback"),
+  ];
 
   final List<Widget> _hostelRoutes = [
     MaintenanceStaffContact(),
@@ -61,12 +69,6 @@ class _HostelStudentScreenState extends State<HostelStudentScreen> {
             height: size.height * 0.7,
             child: Container(
               decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(40.0),
-                  bottomRight: Radius.circular(0.0),
-                  topLeft: Radius.circular(40.0),
-                  bottomLeft: Radius.circular(0.0),
-                ),
                 color: Color(0xfff5f5f5),
               ),
               child: Padding(
@@ -105,14 +107,15 @@ class _HostelStudentScreenState extends State<HostelStudentScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              SizedBox(
-                                  height: 40.0,
-                                  width: 40.0,
-                                  child: Image.asset(
-                                      "assets/images/mess_icon.png")),
+                              CircleAvatar(
+                                radius: 25,
+                                backgroundColor: Colors.blue,
+                                foregroundColor: Colors.white,
+                                child: _hostelList[index].icon,
+                              ),
                               const SizedBox(height: 5.0),
                               Text(
-                                _hostelList[index],
+                                _hostelList[index].title,
                                 style: const TextStyle(fontSize: 12.0),
                               ),
                             ],

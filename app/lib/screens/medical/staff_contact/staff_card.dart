@@ -30,7 +30,7 @@ class StaffCard extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(30.00, 25.00, 30.0, 25.0),
           decoration: const BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            borderRadius: BorderRadius.all(Radius.circular(5.0)),
             boxShadow: [
               BoxShadow(
                 color: Color.fromARGB(81, 158, 158, 158),

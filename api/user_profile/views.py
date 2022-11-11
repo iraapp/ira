@@ -1,4 +1,5 @@
 import json
+from django.http import FileResponse
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -39,3 +40,19 @@ class StudentProfile(APIView):
     )
 
     return Response(status = 200, data = { 'msg': 'success' })
+
+class StudentProfileImage(APIView):
+  permission_classes = [IsAuthenticated]
+
+  def get(self, request):
+    profile = Student.objects.filter(user = request.user).first()
+
+    return FileResponse(profile.profile_image.file)
+
+class UserImage(APIView):
+  permission_classes = [IsAuthenticated]
+
+  def get(self, request):
+    profile = Student.objects.filter(user__email = request.GET.get('email')).first()
+
+    return FileResponse(profile.profile_image.file)

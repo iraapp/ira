@@ -141,12 +141,6 @@ class _HostelComplaintState extends State<HostelComplaint> {
           child: Container(
             width: double.infinity,
             decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(40.0),
-                bottomRight: Radius.circular(0.0),
-                topLeft: Radius.circular(40.0),
-                bottomLeft: Radius.circular(0.0),
-              ),
               color: Color(0xfff5f5f5),
             ),
             child: FutureBuilder(
@@ -406,15 +400,6 @@ class _HostelComplaintState extends State<HostelComplaint> {
                                             }
                                           }
                                         },
-                                        style: ButtonStyle(
-                                          shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
-                                            RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(18.0),
-                                            ),
-                                          ),
-                                        ),
                                         child: const Text("Submit",
                                             style: TextStyle(
                                               color: Colors.white,

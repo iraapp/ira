@@ -30,7 +30,7 @@ class DoctorCard extends StatelessWidget {
         Container(
           decoration: const BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            borderRadius: BorderRadius.all(Radius.circular(5.0)),
             boxShadow: [
               BoxShadow(
                 color: Color.fromARGB(81, 158, 158, 158),
@@ -48,7 +48,15 @@ class DoctorCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(children: [
-                      Image.asset("assets/icons/staff_contact_profile.png"),
+                      const CircleAvatar(
+                        radius: 25,
+                        backgroundColor: Colors.grey,
+                        child: Icon(
+                          Icons.person,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                      ),
                       const SizedBox(
                         width: 15.0,
                       ),
@@ -102,7 +110,7 @@ class DoctorCard extends StatelessWidget {
                       decoration: const BoxDecoration(
                         color: Colors.green,
                         borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(20.0),
+                          bottomLeft: Radius.circular(5.0),
                         ),
                       ),
                       child: Center(
@@ -133,7 +141,7 @@ class DoctorCard extends StatelessWidget {
                       decoration: const BoxDecoration(
                         color: Colors.blue,
                         borderRadius: BorderRadius.only(
-                          bottomRight: Radius.circular(20.0),
+                          bottomRight: Radius.circular(5.0),
                         ),
                       ),
                       child: Center(
