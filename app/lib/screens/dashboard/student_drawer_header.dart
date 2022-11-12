@@ -51,7 +51,8 @@ class StudentDrawerHeader extends StatelessWidget {
                         backgroundImage: NetworkImage(
                           baseUrl + '/user_profile/image',
                           headers: {
-                            'Authorization': 'idToken ' + snapshot.data!,
+                            'Authorization': 'idToken ' +
+                                (snapshot.data != null ? snapshot.data! : ''),
                           },
                         ),
                       );
