@@ -72,12 +72,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             child: Container(
               width: size.width,
               decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(40.0),
-                  bottomRight: Radius.circular(0.0),
-                  topLeft: Radius.circular(40.0),
-                  bottomLeft: Radius.circular(0.0),
-                ),
                 color: Color(0xffffffff),
               ),
               child: Padding(

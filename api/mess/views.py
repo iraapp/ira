@@ -14,7 +14,7 @@ class MessListAPI(APIView):
 
 
 class MessMenuAPI(APIView):
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         weekdays = WeekDay.objects.all()

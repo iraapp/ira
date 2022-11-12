@@ -48,11 +48,3 @@ class StudentProfileImage(APIView):
     profile = Student.objects.filter(user = request.user).first()
 
     return FileResponse(profile.profile_image.file)
-
-class UserImage(APIView):
-  permission_classes = [IsAuthenticated]
-
-  def get(self, request):
-    profile = Student.objects.filter(user__email = request.GET.get('email')).first()
-
-    return FileResponse(profile.profile_image.file)

@@ -15,6 +15,7 @@ class FeedModel {
   String body;
   String authorName;
   String authorEmail;
+  String authorImage;
   String createdAt;
   dynamic attachments;
 
@@ -23,6 +24,7 @@ class FeedModel {
     required this.body,
     required this.authorName,
     required this.authorEmail,
+    required this.authorImage,
     required this.attachments,
     required this.createdAt,
   });
@@ -36,6 +38,7 @@ class FeedModel {
           ' ' +
           json['user']['last_name'].toString(),
       authorEmail: json['user']['email'],
+      authorImage: json['student_profile']['profile_image'],
       attachments: json['attachments'],
     );
   }

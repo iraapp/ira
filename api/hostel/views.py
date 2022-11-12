@@ -57,7 +57,7 @@ class MaintenanceStaffContactsInstanceView(APIView):
         })
 
 class HostelComplaintView(APIView):
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         data = HostelComplaint.objects.all()
@@ -100,7 +100,7 @@ class HostelComplaintActionView(APIView):
 
 
 class HostelFeedbackView(APIView):
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         data = HostelFeedback.objects.all()
@@ -135,7 +135,7 @@ class HostelFeedbackInstanceView(APIView):
         return Response(data={'msg': 'not found'}, status=404)
 
 class HostelAndComplaintListView(APIView):
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         data = Hostel.objects.all()

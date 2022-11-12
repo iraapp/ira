@@ -102,7 +102,9 @@ class _HostelComplaintState extends State<HostelComplaint> {
     request.fields['hostel'] = hostel;
     request.fields['complaint_type'] = complaintType;
     request.fields['feedback'] = description;
-    request.files.add(await http.MultipartFile.fromPath('file', filePath));
+    if (filePath != '') {
+      request.files.add(await http.MultipartFile.fromPath('file', filePath));
+    }
 
     final response = await request.send();
 

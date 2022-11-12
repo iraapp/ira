@@ -80,16 +80,17 @@ class StaffCard extends StatelessWidget {
                 ),
               ]),
               IconButton(
+                  iconSize: 35,
                   onPressed: () {
                     _makePhoneCall(contact);
                   },
                   icon: const CircleAvatar(
-                    radius: 25,
+                    radius: 35,
                     backgroundColor: Colors.green,
                     child: Icon(
                       Icons.call,
                       color: Colors.white,
-                      size: 18,
+                      size: 25,
                     ),
                   )),
             ],
