@@ -15,6 +15,7 @@ STAFF_ROLE_IDS = {
     'guard': 1,
     'mess_manager': 2,
     'medical_manager': 3,
+    'security_officer': 4,
 }
 
 USER_ROLES={
@@ -122,6 +123,7 @@ class Staff(models.Model):
         (STAFF_ROLE_IDS['guard'], 'Guard'),
         (STAFF_ROLE_IDS['mess_manager'], 'Mess Manager'),
         (STAFF_ROLE_IDS['medical_manager'], 'Medical Manager'),
+        (STAFF_ROLE_IDS['security_officer'], 'Security Officer')
     )
 
     first_name = models.CharField(max_length=30)

@@ -1,4 +1,5 @@
 from django.utils import timezone
+from gate_pass.serializers import GatePassSerializer
 from authentication.permissions import IsGuard
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -15,11 +16,12 @@ class GenerateQR(APIView):
     def post(self, request, *args, **kwargs):
         request.body = json.loads(request.body.decode('utf8'))
         purpose = request.body.get("purpose", None)
+        contact = request.body.get('contact', None)
 
-        if purpose is None:
+        if purpose is None or contact is None:
             return Response(
                 data = {
-                    "msg": "purpose field is missing."
+                    "msg": "data is missing."
                 },
                 status = 400
             )
@@ -41,7 +43,8 @@ class GenerateQR(APIView):
             # Creating mew object of gate pass
             gate_pass_obj = GatePass.objects.create(
                 user = request.user,
-                purpose = purpose
+                purpose = purpose,
+                contact = contact
             )
 
 
@@ -254,5 +257,22 @@ class ScanQR(APIView):
 
         return Response(status=400, data='invalid gate pass')
 
+class CurrentlyOut(APIView):
 
+    permission_classes = [IsAuthenticated, IsGuard]
+
+    def get(self, _):
+        data = GatePass.objects.filter(
+            status = True, completed_status = False)
+        return Response(status = 200, data = GatePassSerializer(data, many = True).data)
+
+class AllStudents(APIView):
+
+    permission_classes = [IsAuthenticated, IsGuard]
+
+    def get(self, _):
+        data = GatePass.objects.all()
+        return Response(
+            status = 200, data = GatePassSerializer(
+            data, many = True).data)
 

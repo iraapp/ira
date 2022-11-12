@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from user_profile.serializers import StudentSerializer
-from feed.models import Document
 
 from authentication.serializers import UserSerializer
 
