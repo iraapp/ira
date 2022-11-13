@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_flavor/flutter_flavor.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:ira/screens/dashboard/dashboard.dart';
 import 'package:ira/screens/login/welcome/welcome.dart';
@@ -7,6 +11,7 @@ import 'package:ira/services/auth.service.dart';
 import 'package:ira/shared/app_scaffold.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -17,6 +22,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final localStorage = LocalStorage('store');
+  final secureStorage = const FlutterSecureStorage();
+  String baseUrl = FlavorConfig.instance.variables['baseUrl'];
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     onPressed: () async {
                       authService.successCallback =
-                          (bool askForDetails, String role) {
+                          (bool askForDetails, String role) async {
                         if (askForDetails) {
                           Navigator.pushReplacement(
                             context,
@@ -84,14 +91,31 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           );
                         } else {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Dashboard(
-                                role: role,
+                          String? idToken =
+                              await secureStorage.read(key: 'idToken');
+                          final response = await http.get(
+                              Uri.parse(
+                                baseUrl + '/user_profile/contact',
                               ),
-                            ),
-                          );
+                              headers: <String, String>{
+                                'Content-Type':
+                                    'application/json; charset=UTF-8',
+                                'Authorization': 'idToken ' + idToken!
+                              });
+
+                          if (response.statusCode == 200) {
+                            String decodedBody = jsonDecode(response.body);
+                            localStorage.setItem('contact', decodedBody);
+
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Dashboard(
+                                  role: role,
+                                ),
+                              ),
+                            );
+                          }
                         }
                       };
                       await authService.signIn();
