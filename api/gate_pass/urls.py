@@ -11,4 +11,5 @@ urlpatterns = [
   path('delete_qr', views.DeleteQR.as_view(), name="Delete QR"),
   path('currently_out', views.CurrentlyOut.as_view(), name="Currently out"),
   path('all', views.AllStudents.as_view(), name = 'All students'),
+  path('extract', views.ExtractData.as_view(), name = 'Extract Data'),
 ]
