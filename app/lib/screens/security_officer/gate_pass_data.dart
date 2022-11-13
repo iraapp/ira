@@ -7,6 +7,7 @@ import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:uuid/uuid.dart';
 
 class GatePassData extends StatefulWidget {
   const GatePassData({Key? key}) : super(key: key);
@@ -20,15 +21,19 @@ class _GatePassDataState extends State<GatePassData> {
   TextEditingController dateinput2 = TextEditingController();
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
   final secureStorage = const FlutterSecureStorage();
+  final uuid = Uuid();
 
   Future<void> _downloadFile(String fileUrl) async {
+    String? staffToken = await secureStorage.read(key: 'staffToken');
     var status = await Permission.storage.request();
     if (status.isGranted) {
       await FlutterDownloader.enqueue(
         url: fileUrl,
+        headers: {
+          'Authorization': staffToken != null ? 'Token ' + staffToken : '',
+        },
         savedDir: '/storage/emulated/0/Download/',
-        fileName:
-            "gate_pass_data" + dateinput1.text + "-" + dateinput2.text + ".csv",
+        fileName: "gate_pass_data" + uuid.v1() + ".csv",
         showNotification:
             true, // show download progress in status bar (for Android)
         openFileFromNotification:
