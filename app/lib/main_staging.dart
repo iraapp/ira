@@ -20,6 +20,7 @@ Future main() async {
     color: Colors.blue,
     variables: {
       "baseUrl": dotenv.env['STAGING_MODE_BASELINK'],
+      "mediaUrl": dotenv.env['STAGING_MODE_BASELINK']
     },
   );
 

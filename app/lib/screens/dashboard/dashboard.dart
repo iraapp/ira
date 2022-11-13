@@ -24,6 +24,7 @@ class Dashboard extends StatefulWidget {
   final secureStorage = const FlutterSecureStorage();
   final localStorage = LocalStorage('store');
   final baseUrl = FlavorConfig.instance.variables['baseUrl'];
+  final mediaUrl = FlavorConfig.instance.variables['mediaUrl'];
 
   roleHeaderMap(role) {
     if (rolesThatCanBeAssignedToStudent.contains(role)) {
@@ -136,12 +137,12 @@ class _DashboardState extends State<Dashboard> {
                 Container(
                   padding: const EdgeInsets.all(20.0),
                   decoration: isUserStudent(widget.role)
-                      ? BoxDecoration(
+                      ? const BoxDecoration(
                           image: DecorationImage(
                             opacity: 0.5,
                             fit: BoxFit.cover,
                             image: NetworkImage(
-                                widget.baseUrl + '/media/images/release.png'),
+                                'https://theiraapp.s3.ap-south-1.amazonaws.com/media/images/release.png'),
                           ),
                         )
                       : const BoxDecoration(),
