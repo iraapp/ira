@@ -137,12 +137,12 @@ class _DashboardState extends State<Dashboard> {
                 Container(
                   padding: const EdgeInsets.all(20.0),
                   decoration: isUserStudent(widget.role)
-                      ? BoxDecoration(
+                      ? const BoxDecoration(
                           image: DecorationImage(
                             opacity: 0.5,
                             fit: BoxFit.cover,
                             image: NetworkImage(
-                                widget.mediaUrl + '/media/images/release.png'),
+                                'https://theiraapp.s3.ap-south-1.amazonaws.com/media/images/release.png'),
                           ),
                         )
                       : const BoxDecoration(),
