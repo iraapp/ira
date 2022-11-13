@@ -46,6 +46,7 @@ class StudentDrawerHeader extends StatelessWidget {
                   child: FutureBuilder<String?>(
                     future: getIdToken(),
                     builder: (context, snapshot) {
+                      if (snapshot.data == null) return Container();
                       return CircleAvatar(
                         radius: 38,
                         backgroundImage: NetworkImage(

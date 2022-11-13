@@ -1,12 +1,15 @@
+import csv
 from django.utils import timezone
+from django.http import HttpResponse
 from gate_pass.serializers import GatePassSerializer
-from authentication.permissions import IsGuard
+from authentication.permissions import IsGuard, IsSecurityOfficer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from gate_pass.models import GatePass
 import datetime
 import json
+import pytz
 
 from authentication.models import User
 
@@ -270,9 +273,56 @@ class AllStudents(APIView):
 
     permission_classes = [IsAuthenticated, IsGuard]
 
-    def get(self, _):
-        data = GatePass.objects.all()
+    def get(self, request):
+        date = request.GET.get('date', None)
+
+        if date is None:
+            return Response(status = 400, data = { 'msg': 'No valid date input' })
+
+        data = GatePass.objects.filter(out_time_stamp__date = date)
+        print(data)
         return Response(
             status = 200, data = GatePassSerializer(
             data, many = True).data)
 
+class ExtractData(APIView):
+    permission_classes = [IsAuthenticated, IsSecurityOfficer]
+
+    def get(self, request):
+        print(request.GET.get('start_date'))
+        print(request.GET.get('end_date'))
+
+        start_date = request.GET.get('start_date', None)
+        end_date = request.GET.get('end_date', None)
+
+        if start_date is None or end_date is None:
+            return Response(status = 400, data = { 'msg': 'GET parameters are wrong' })
+
+        data = GatePass.objects.filter(out_time_stamp__date__range = [start_date, end_date], status = True, completed_status = True)
+
+        response = HttpResponse(
+            content_type='text/csv',
+            headers={'Content-Disposition': 'attachment; filename="gatepass_data.csv"'},
+        )
+
+        writer = csv.writer(response)
+
+        writer.writerow(['Name', 'Entry No.', 'Contact', 'Out Date', 'Out Time', 'In Date', 'In Time', 'Purpose'])
+
+        for gate_pass in data:
+            out_date = gate_pass.out_time_stamp.astimezone(
+                pytz.timezone('Asia/Kolkata')).strftime('%x')
+            out_time = gate_pass.out_time_stamp.astimezone(pytz.timezone('Asia/Kolkata')).strftime('%X')
+
+            in_date = gate_pass.in_time_stamp.astimezone(
+                pytz.timezone('Asia/Kolkata')).strftime('%x')
+            in_time = gate_pass.in_time_stamp.astimezone(pytz.timezone('Asia/Kolkata')).strftime('%X')
+
+            writer.writerow([gate_pass.user.first_name + ' ' + gate_pass.user.last_name,
+            gate_pass.user.email.split('@')[0].upper(),
+            gate_pass.contact,
+            out_date, out_time,
+            in_date, in_time,
+            gate_pass.purpose])
+
+        return response

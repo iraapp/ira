@@ -9,7 +9,7 @@ securityOfficerMenu(context) {
         CircleAvatar(
           backgroundColor: Colors.blue[800],
           child: IconButton(
-            icon: const Icon(Icons.qr_code),
+            icon: const Icon(Icons.description),
             onPressed: () {
               Navigator.push(
                 context,
