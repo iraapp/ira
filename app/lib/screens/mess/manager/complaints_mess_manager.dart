@@ -10,6 +10,7 @@ class ComplaintMessManager extends StatefulWidget {
   ComplaintMessManager({Key? key}) : super(key: key);
   final secureStorage = const FlutterSecureStorage();
   final String baseUrl = FlavorConfig.instance.variables['baseUrl'];
+  final String mediaUrl = FlavorConfig.instance.variables['mediaUrl'];
 
   @override
   State<ComplaintMessManager> createState() => _ComplaintMessManagerState();
@@ -390,7 +391,7 @@ class _ComplaintMessManagerState extends State<ComplaintMessManager> {
             ),
             const SizedBox(height: 10.0),
             Image(
-                image: CachedNetworkImageProvider(widget.baseUrl + filePath),
+                image: CachedNetworkImageProvider(widget.mediaUrl + filePath),
                 height: 300.0),
             const SizedBox(height: 10.0),
             Container(
