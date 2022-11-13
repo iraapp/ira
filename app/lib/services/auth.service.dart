@@ -16,7 +16,7 @@ class AuthService with ChangeNotifier {
       GoogleSignIn(serverClientId: dotenv.env['GOOGLE_OAUTH_CLIENT_ID']);
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
   // ignore: prefer_function_declarations_over_variables
-  var successCallback = (bool askForDetails, String role) {};
+  var successCallback = (bool askForDetails, String role) async {};
 
   // Create secureStorage
   final secureStorage = const FlutterSecureStorage();
@@ -52,6 +52,7 @@ class AuthService with ChangeNotifier {
                 key: 'idToken',
                 value: jsonDecode(response.body)['idToken'],
               );
+
               String role =
                   userRoles[jsonDecode(response.body)['user']['role']] ??
                       'student';
@@ -62,7 +63,7 @@ class AuthService with ChangeNotifier {
 
               bool askForDetails = jsonDecode(response.body)['askForDetails'];
 
-              successCallback(askForDetails, role);
+              await successCallback(askForDetails, role);
             } else {
               // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
             }

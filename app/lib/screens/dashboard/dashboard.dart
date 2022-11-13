@@ -6,6 +6,7 @@ import 'package:ira/screens/dashboard/general_feed/general_feed.dart';
 import 'package:ira/screens/dashboard/general_feed/panel_state_stream.dart';
 import 'package:ira/screens/dashboard/guard_menu.dart';
 import 'package:ira/screens/dashboard/mess_manager_menu.dart';
+import 'package:ira/screens/dashboard/security_officer_menu.dart';
 import 'package:ira/screens/dashboard/staff_header.dart';
 import 'package:ira/screens/dashboard/student_menu.dart';
 import 'package:ira/screens/dashboard/student_header.dart';
@@ -36,6 +37,8 @@ class Dashboard extends StatefulWidget {
         return StaffHeader();
       case 'medical_manager':
         return StaffHeader();
+      case 'security_officer':
+        return StaffHeader();
     }
 
     return Container();
@@ -57,6 +60,8 @@ class Dashboard extends StatefulWidget {
         return messManagerMenu(context);
       case 'medical_manager':
         return medicalManagerMenu(context);
+      case 'security_officer':
+        return securityOfficerMenu(context);
     }
     return const <Widget>[];
   }
