@@ -36,6 +36,7 @@ class FeedPost extends StatefulWidget {
 class _FeedPostState extends State<FeedPost> {
   late final quill.QuillController _controller;
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
+  String mediaUrl = FlavorConfig.instance.variables['mediaUrl'];
   final localStorage = LocalStorage('store');
   bool showImages = false;
   final secureStorage = const FlutterSecureStorage();
@@ -119,7 +120,7 @@ class _FeedPostState extends State<FeedPost> {
               CircleAvatar(
                 radius: 20,
                 backgroundImage:
-                    NetworkImage(baseUrl + widget.data.authorImage),
+                    NetworkImage(mediaUrl + widget.data.authorImage),
               )
             ],
           ),
@@ -260,7 +261,7 @@ class _FeedPostState extends State<FeedPost> {
                                                 children: [
                                                   Image(
                                                     image: CachedNetworkImageProvider(
-                                                        baseUrl +
+                                                        mediaUrl +
                                                             widget.data
                                                                     .attachments[
                                                                 index]['file']),
@@ -277,7 +278,7 @@ class _FeedPostState extends State<FeedPost> {
                                         },
                                         child: Image(
                                           image: CachedNetworkImageProvider(
-                                              baseUrl +
+                                              mediaUrl +
                                                   widget.data.attachments[index]
                                                       ['file']),
                                           width: MediaQuery.of(context)
@@ -317,7 +318,7 @@ class _FeedPostState extends State<FeedPost> {
                               child: OutlinedButton(
                                 onPressed: () async {
                                   await _downloadFile(
-                                    baseUrl +
+                                    mediaUrl +
                                         widget.data.attachments[index]['file'],
                                     widget.data.attachments[index]['filename'],
                                   );

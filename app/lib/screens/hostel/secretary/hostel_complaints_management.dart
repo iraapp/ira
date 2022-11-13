@@ -9,6 +9,7 @@ class ComplaintHostelSecretary extends StatefulWidget {
   ComplaintHostelSecretary({Key? key}) : super(key: key);
   final secureStorage = const FlutterSecureStorage();
   final String baseUrl = FlavorConfig.instance.variables['baseUrl'];
+  final String mediaUrl = FlavorConfig.instance.variables['mediaUrl'];
 
   @override
   State<ComplaintHostelSecretary> createState() =>
@@ -398,7 +399,7 @@ class _ComplaintHostelSecretaryState extends State<ComplaintHostelSecretary> {
             file != null
                 ? SizedBox(
                     height: MediaQuery.of(context).size.height * 0.4,
-                    child: Image.network(widget.baseUrl + file),
+                    child: Image.network(widget.mediaUrl + file),
                   )
                 : Container(),
             const SizedBox(height: 20.0),
