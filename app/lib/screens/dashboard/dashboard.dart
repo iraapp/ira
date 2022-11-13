@@ -24,6 +24,7 @@ class Dashboard extends StatefulWidget {
   final secureStorage = const FlutterSecureStorage();
   final localStorage = LocalStorage('store');
   final baseUrl = FlavorConfig.instance.variables['baseUrl'];
+  final mediaUrl = FlavorConfig.instance.variables['mediaUrl'];
 
   roleHeaderMap(role) {
     if (rolesThatCanBeAssignedToStudent.contains(role)) {
