@@ -2,6 +2,8 @@
 asgiref==3.5.1
 astroid==2.11.7
 autopep8==1.7.0
+boto3==1.26.8
+botocore==1.29.8
 CacheControl==0.12.11
 cachetools==5.0.0
 certifi==2021.10.8
@@ -9,6 +11,7 @@ charset-normalizer==2.0.12
 dill==0.3.5.1
 Django==4.0.4
 django-environ==0.8.1
+django-storages==1.13.1
 djangorestframework==3.13.1
 firebase-admin==5.4.0
 google-api-core==2.7.3
@@ -26,6 +29,7 @@ grpcio-status==1.48.2
 httplib2==0.20.4
 idna==3.3
 isort==5.10.1
+jmespath==1.0.1
 lazy-object-proxy==1.7.1
 logilab-astng==0.24.3
 logilab-common==1.9.7
@@ -43,9 +47,11 @@ pylint==2.14.5
 pylint-django==2.5.3
 pylint-plugin-utils==0.7
 pyparsing==3.0.8
+python-dateutil==2.8.2
 pytz==2022.1
 requests==2.27.1
 rsa==4.8
+s3transfer==0.6.0
 six==1.16.0
 sqlparse==0.4.2
 toml==0.10.2

@@ -9,7 +9,7 @@
    <application
         android:label="IRA"
         android:name="${applicationName}"
-        android:icon="@mipmap/launcher_icon"
+        android:icon="@mipmap/splash"
         android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"
