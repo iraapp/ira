@@ -118,7 +118,7 @@ class _MyAppState extends State<MyApp> {
       child: FlavorBanner(
         location: BannerLocation.topEnd,
         child: MaterialApp(
-          title: 'iRA',
+          title: 'IRA',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
               textTheme: GoogleFonts.latoTextTheme(),
