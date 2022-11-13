@@ -285,9 +285,8 @@ class AllStudents(APIView):
             status = 200, data = GatePassSerializer(
             data, many = True).data)
 
-
 class ExtractData(APIView):
-    # permission_classes = [IsAuthenticated, IsSecurityOfficer]
+    permission_classes = [IsAuthenticated, IsSecurityOfficer]
 
     def get(self, request):
         print(request.GET.get('start_date'))
