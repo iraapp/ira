@@ -42,7 +42,7 @@ class TeamScreen extends StatefulWidget {
 class _TeamScreenState extends State<TeamScreen> {
   final secureStorage = const FlutterSecureStorage();
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
-  String mediaUrl = FlavorConfig.instance.variables['media'];
+  String mediaUrl = FlavorConfig.instance.variables['mediaUrl'];
 
   Future<Map<String, List<Member>>> fetchMembers() async {
     String? idToken = await secureStorage.read(key: 'idToken');

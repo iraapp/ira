@@ -101,7 +101,7 @@ WSGI_APPLICATION = 'institute_app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-if env('DEV_MODE') == 'True':
+if env('DEBUG_MODE') == 'True':
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
