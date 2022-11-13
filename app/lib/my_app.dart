@@ -116,7 +116,7 @@ class _MyAppState extends State<MyApp> {
             create: (_) => PanelStateStream())
       ],
       child: MaterialApp(
-        title: 'iRA',
+        title: 'IRA',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
             textTheme: GoogleFonts.latoTextTheme(),
