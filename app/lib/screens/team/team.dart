@@ -150,7 +150,6 @@ class _TeamScreenState extends State<TeamScreen> {
                                                     image:
                                                         CachedNetworkImageProvider(
                                                   mediaUrl +
-                                                      '/media/' +
                                                       team![index].profile,
                                                 )),
                                               ),
@@ -171,6 +170,8 @@ class _TeamScreenState extends State<TeamScreen> {
                                                   fontSize: 16.0,
                                                 ),
                                               ),
+                                              Text(mediaUrl +
+                                                  team[index].profile),
                                               Row(
                                                 children: [
                                                   IconButton(
