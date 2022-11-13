@@ -119,13 +119,13 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
             height: size.height -
                 (MediaQuery.of(context).padding.top + kToolbarHeight),
           ),
-          child: _messValue != ''
-              ? Container(
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    color: Color(0xfff5f5f5),
-                  ),
-                  child: Column(
+          child: Container(
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              color: Color(0xfff5f5f5),
+            ),
+            child: _messValue != ''
+                ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -410,11 +410,9 @@ class _ComplaintsMessState extends State<ComplaintsMess> {
                         ),
                       ),
                     ],
-                  ),
-                )
-              : const Center(
-                  child: CircularProgressIndicator(),
-                ),
+                  )
+                : const Center(child: CircularProgressIndicator()),
+          ),
         ),
       ),
     );

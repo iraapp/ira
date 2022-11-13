@@ -298,7 +298,7 @@ class ExtractData(APIView):
         if start_date is None or end_date is None:
             return Response(status = 400, data = { 'msg': 'GET parameters are wrong' })
 
-        data = GatePass.objects.filter(out_time_stamp__date__range = [start_date, end_date], status = True, completed_status = True)
+        data = GatePass.objects.filter(out_time_stamp__date__range = [start_date, end_date], status = True)
 
         response = HttpResponse(
             content_type='text/csv',
@@ -312,11 +312,16 @@ class ExtractData(APIView):
         for gate_pass in data:
             out_date = gate_pass.out_time_stamp.astimezone(
                 pytz.timezone('Asia/Kolkata')).strftime('%x')
+
             out_time = gate_pass.out_time_stamp.astimezone(pytz.timezone('Asia/Kolkata')).strftime('%X')
 
-            in_date = gate_pass.in_time_stamp.astimezone(
-                pytz.timezone('Asia/Kolkata')).strftime('%x')
-            in_time = gate_pass.in_time_stamp.astimezone(pytz.timezone('Asia/Kolkata')).strftime('%X')
+            if gate_pass.in_time_stamp:
+                in_date = gate_pass.in_time_stamp.astimezone(
+                    pytz.timezone('Asia/Kolkata')).strftime('%x')
+                in_time = gate_pass.in_time_stamp.astimezone(pytz.timezone('Asia/Kolkata')).strftime('%X')
+            else:
+                in_date = ''
+                in_time = ''
 
             writer.writerow([gate_pass.user.first_name + ' ' + gate_pass.user.last_name,
             gate_pass.user.email.split('@')[0].upper(),

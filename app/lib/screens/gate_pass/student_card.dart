@@ -43,7 +43,7 @@ class StudentCard extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.fromLTRB(20.00, 25.00, 30.0, 25.0),
+          padding: const EdgeInsets.fromLTRB(10.00, 25.00, 20.0, 25.0),
           decoration: BoxDecoration(
             color: Colors.white,
             // borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -94,7 +94,7 @@ class StudentCard extends StatelessWidget {
                       ),
                     ),
                     SizedBox(
-                      width: 185,
+                      width: 150,
                       child: Text(
                         'Purpose: ' + purpose,
                         style: const TextStyle(
