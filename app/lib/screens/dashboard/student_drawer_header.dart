@@ -46,12 +46,14 @@ class StudentDrawerHeader extends StatelessWidget {
                   child: FutureBuilder<String?>(
                     future: getIdToken(),
                     builder: (context, snapshot) {
+                      if (snapshot.data == null) return Container();
                       return CircleAvatar(
                         radius: 38,
                         backgroundImage: NetworkImage(
                           baseUrl + '/user_profile/image',
                           headers: {
-                            'Authorization': 'idToken ' + snapshot.data!,
+                            'Authorization': 'idToken ' +
+                                (snapshot.data != null ? snapshot.data! : ''),
                           },
                         ),
                       );

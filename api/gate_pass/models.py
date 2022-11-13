@@ -12,9 +12,8 @@ class GatePass(models.Model):
     created_at = models.DateTimeField(auto_now = True)
     completed_status = models.BooleanField(default = False)
     status = models.BooleanField(default = False)
+    contact = models.CharField(max_length = 15, default = '')
 
-
-
-
-
+    class Meta:
+        ordering = ['-created_at']
 

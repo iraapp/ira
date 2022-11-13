@@ -48,3 +48,10 @@ class StudentProfileImage(APIView):
     profile = Student.objects.filter(user = request.user).first()
 
     return FileResponse(profile.profile_image.file)
+
+class ContactView(APIView):
+  permission_classes = [IsAuthenticated]
+
+  def get(self, request):
+    return Response(status = 200, data = Student.objects.filter(
+      user = request.user).first().phone_number)
