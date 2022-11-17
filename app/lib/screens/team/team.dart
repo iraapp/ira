@@ -170,8 +170,6 @@ class _TeamScreenState extends State<TeamScreen> {
                                                   fontSize: 16.0,
                                                 ),
                                               ),
-                                              Text(mediaUrl +
-                                                  team[index].profile),
                                               Row(
                                                 children: [
                                                   IconButton(
