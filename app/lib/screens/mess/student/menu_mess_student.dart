@@ -33,7 +33,6 @@ class _MessMenuState extends State<MessMenu> {
       },
     );
     if (response.statusCode == 200) {
-      // print(jsonDecode(response.body));
       Map<String, dynamic> messData = jsonDecode(response.body);
 
       _weekdaysCarousels = [];

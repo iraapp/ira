@@ -38,7 +38,6 @@ class ObtainIdTokenView(APIView):
             decoded_token = id_token.verify_oauth2_token(
                 idToken, requests.Request(), env('GOOGLE_OAUTH_CLIENT_ID'))
         except Exception as e:
-            print(e)
             raise exceptions.AuthenticationFailed('Invalid ID Token')
 
         try:

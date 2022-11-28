@@ -7,7 +7,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ira/screens/dashboard/dashboard.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_cropper/image_cropper.dart';
 
 import '../../../util/helpers.dart';

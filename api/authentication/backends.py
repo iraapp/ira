@@ -42,7 +42,6 @@ class StaffAuthenticationBackend(BaseBackend):
             token = authorization_header.split(' ')[1]
             decoded_token = StaffToken.objects.get(key=token)
         except Exception as e:
-            print(e)
             raise exceptions.AuthenticationFailed('Invalid staff token')
         try:
             staff_user = decoded_token.user
