@@ -74,7 +74,6 @@ class GenerateQR(APIView):
             )
 
         except Exception as e:
-            print("Some error occured", e)
             return Response(
                 status=500,
                 data={
@@ -280,7 +279,6 @@ class AllStudents(APIView):
             return Response(status = 400, data = { 'msg': 'No valid date input' })
 
         data = GatePass.objects.filter(out_time_stamp__date = date)
-        print(data)
         return Response(
             status = 200, data = GatePassSerializer(
             data, many = True).data)
@@ -289,9 +287,6 @@ class ExtractData(APIView):
     permission_classes = [IsAuthenticated, IsSecurityOfficer]
 
     def get(self, request):
-        print(request.GET.get('start_date'))
-        print(request.GET.get('end_date'))
-
         start_date = request.GET.get('start_date', None)
         end_date = request.GET.get('end_date', None)
 

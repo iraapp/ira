@@ -33,7 +33,6 @@ class _ComplaintHostelSecretaryState extends State<ComplaintHostelSecretary> {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      print(data);
       return data
           .map<HostelComplaintModel>(
               (json) => HostelComplaintModel.fromJson(json))

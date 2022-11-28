@@ -182,7 +182,6 @@ class MessMomView(APIView):
                 "msg": "mom submitted successfully."
             })
         except Exception as e:
-            print(e)
             return Response(status=500, data={
                 "msg": "internal server error"
             })
@@ -240,7 +239,6 @@ class MessTenderView(APIView):
                 "msg": "tender submitted successfully."
             })
         except Exception as e:
-            print(e)
             return Response(status=500, data={
                 "msg": "internal server error"
             })
