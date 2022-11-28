@@ -395,7 +395,6 @@ Future<void> _showDeletionConfirmationDialog(
           ),
           TextButton(
             onPressed: () async {
-              // print(widget.data.id);
               Map<String, dynamic> body = {
                 'id': id.toString(),
               };
