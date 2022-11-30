@@ -65,10 +65,11 @@ class AuthService with ChangeNotifier {
 
               await successCallback(askForDetails, role);
             } else {
-              // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+              await _googleSignIn.signOut();
             }
           },
-        ).catchError((err) {
+        ).catchError((err) async {
+          await _googleSignIn.signOut();
           isAuthenticated = false;
         });
       } else {

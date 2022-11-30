@@ -21,7 +21,7 @@ class _GatePassDataState extends State<GatePassData> {
   TextEditingController dateinput2 = TextEditingController();
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
   final secureStorage = const FlutterSecureStorage();
-  final uuid = Uuid();
+  final uuid = const Uuid();
 
   Future<void> _downloadFile(String fileUrl) async {
     String? staffToken = await secureStorage.read(key: 'staffToken');
