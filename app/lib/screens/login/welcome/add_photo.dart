@@ -171,6 +171,9 @@ class _AddPhotoScreenState extends State<AddPhotoScreen> {
                               onPressed: () async {
                                 if (_imagePath.isNotEmpty) {
                                   if (await _postStudentData()) {
+                                    widget.localStorage
+                                        .setItem('contact', widget.mobile);
+
                                     Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
