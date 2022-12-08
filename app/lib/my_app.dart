@@ -25,7 +25,7 @@ void initAppWithFirebase() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FlutterDownloader.initialize(
     debug: true,
-    ignoreSsl: true,
+    ignoreSsl: false,
   );
 
   //Intialize firebase and firebase cloud messaging.
