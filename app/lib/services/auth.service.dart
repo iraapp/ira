@@ -91,6 +91,8 @@ class AuthService with ChangeNotifier {
   signOut() async {
     await _googleSignIn.signOut();
     await secureStorage.delete(key: 'idToken');
-    await secureStorage.delete(key: 'role');
+    await localStorage.deleteItem('role');
+    await localStorage.deleteItem('displayName');
+    await localStorage.deleteItem('email');
   }
 }
