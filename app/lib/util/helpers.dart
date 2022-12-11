@@ -5,13 +5,18 @@ getHeightOf(BuildContext context) {
 }
 
 String capitalize(String str) {
+  if (str.length <= 1) return str.toUpperCase();
+
   return '${str[0].toUpperCase()}${str.substring(1).toLowerCase()}';
 }
 
-String formatDisplayName(String displayName) {
+String formatDisplayName(String? displayName) {
+  if (displayName == null) return '';
+
   return capitalize(displayName.split(' ')[0]) +
-      ' ' +
-      capitalize(displayName.split(' ')[1]);
+      (displayName.split(' ').length > 1
+          ? ' ' + capitalize(displayName.split(' ')[1])
+          : '');
 }
 
 List<String> rolesThatCanBeAssignedToStudent = [
