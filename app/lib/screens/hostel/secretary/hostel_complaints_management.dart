@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -398,7 +399,7 @@ class _ComplaintHostelSecretaryState extends State<ComplaintHostelSecretary> {
             file != null
                 ? SizedBox(
                     height: MediaQuery.of(context).size.height * 0.4,
-                    child: Image.network(widget.mediaUrl + file),
+                    child: CachedNetworkImage(imageUrl: widget.mediaUrl + file),
                   )
                 : Container(),
             const SizedBox(height: 20.0),
