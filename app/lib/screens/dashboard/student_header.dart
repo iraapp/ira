@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ira/util/helpers.dart';
 import 'package:localstorage/localstorage.dart';
-
-String capitalize(String str) {
-  return '${str[0].toUpperCase()}${str.substring(1).toLowerCase()}';
-}
 
 class StudentHeader extends StatelessWidget {
   StudentHeader({Key? key}) : super(key: key);
@@ -26,9 +23,7 @@ class StudentHeader extends StatelessWidget {
           String displayName = localStorage.getItem('displayName');
 
           return Text(
-            capitalize(displayName.split(' ')[0]) +
-                ' ' +
-                capitalize(displayName.split(' ')[1]),
+            formatDisplayName(displayName),
             style: const TextStyle(
               color: Colors.white,
             ),
