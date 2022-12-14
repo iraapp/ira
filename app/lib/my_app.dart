@@ -95,7 +95,6 @@ class _MyAppState extends State<MyApp> {
               previousState == ConnectivityResult.wifi)) {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(alertSnackbar(
-          ''
           "No internet connection",
           Colors.red,
         ));
