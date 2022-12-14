@@ -206,7 +206,6 @@ else:
         CACHES = {
             'default': {
                 'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-                'LOCATION': 'redis://{host}:{port}'.format(
-                    host = env('REDIS_HOST', port = env('REDIS_PORT'))),
+                'LOCATION': [env('REDIS_PRIMARY'), env('REDIS_REPLICA')]
             }
         }
