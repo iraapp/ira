@@ -70,25 +70,6 @@ class CoursePageViewStudent(APIView):
         return Response(status = 200, data="Authenticated")
 
 @authentication_classes([])
-class RegisterStaffView(APIView):
-
-    def post(self, request, *args, **kwargs):
-        username = request.POST.get('username')
-        first_name = request.POST.get('firstname')
-        last_name = request.POST.get('lastname')
-        raw_password = request.POST.get('password')
-
-        if username and first_name and last_name and raw_password:
-            staff = Staff.objects.create(
-                username=username, first_name= first_name, last_name=last_name,
-                password=make_password(raw_password))
-            return Response(status=200, data = StaffSerializer(staff).data)
-
-        else:
-            return Response(status = 400)
-
-
-@authentication_classes([])
 class ObtainTokenView(APIView):
 
     def post(self, request, *args, **kwargs):
