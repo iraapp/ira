@@ -1,3 +1,5 @@
+from django.core.cache import cache
+from constants import CACHE_CONSTANTS, CACHE_EXPIRY
 from authentication.permissions import IsAcademicBoardPG, IsAcademicBoardUG, IsAcademicOfficePG, IsAcademicOfficeUG, IsCulturalBoard, IsGymkhana, IsHostelBoard, IsHostelSecretary, IsIraTeam, IsSportsBoard, IsSwoOffice, IsTechnicalBoard
 from feed.models import Document, Post
 from feed.serializers import PostSerializer
@@ -37,6 +39,9 @@ class CreatePostView(APIView):
 
         instance.save()
 
+        # Invalidate cache for feed data.
+        cache.delete('feed_posts')
+
         send_notification(user.first_name + " " + user.last_name + " posted a new message", notification, settings.FEED_NOTIFICATION_CHANNEL)
 
         return Response(data={
@@ -47,8 +52,16 @@ class GetFeedView(APIView):
     permission_classes = [IsAuthenticated, ]
 
     def get(self, request, *args, **kwargs):
+        cached_feeds = cache.get(CACHE_CONSTANTS['FEED_CACHE'])
+        if cached_feeds:
+            return Response(data=cached_feeds)
+
         data = Post.objects.all().order_by('-created_at')
         serialized_json = PostSerializer(data, many=True)
+
+        # Cache feed data in the memory as it is frequently requested
+        # This results in significant reduction in server response time.
+        cache.set(CACHE_CONSTANTS['FEED_CACHE'], serialized_json.data, CACHE_EXPIRY)
         return Response(data=serialized_json.data)
 
 class DeleteFeedView(APIView):
@@ -61,6 +74,9 @@ class DeleteFeedView(APIView):
 
         if post.user == request.user:
             post.delete()
+
+            # Invalidate cache for feed data.
+            cache.delete('feed_posts')
 
             return Response(status=200, data = {
                 'msg': 'Post deleted successfully'
@@ -81,6 +97,9 @@ class UpdateFeedView(APIView):
         if post.user == request.user:
             post.body = body
             post.save()
+
+            # Invalidate cache for feed data.
+            cache.delete('feed_posts')
 
             return Response(status = 200, data = "Post updated")
 

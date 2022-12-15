@@ -1,6 +1,7 @@
 2to3==1.0
 asgiref==3.5.1
 astroid==2.11.7
+async-timeout==4.0.2
 autopep8==1.7.0
 boto3==1.26.8
 botocore==1.29.8
@@ -26,6 +27,7 @@ google-resumable-media==2.4.0
 googleapis-common-protos==1.56.0
 grpcio==1.49.1
 grpcio-status==1.48.2
+hiredis==2.0.0
 httplib2==0.20.4
 idna==3.3
 isort==5.10.1
@@ -50,6 +52,7 @@ pylint-plugin-utils==0.7
 pyparsing==3.0.8
 python-dateutil==2.8.2
 pytz==2022.1
+redis==4.4.0
 requests==2.27.1
 rsa==4.8
 s3transfer==0.6.0

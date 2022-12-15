@@ -119,8 +119,8 @@ class _FeedPostState extends State<FeedPost> {
               ),
               CircleAvatar(
                 radius: 20,
-                backgroundImage:
-                    NetworkImage(mediaUrl + widget.data.authorImage),
+                backgroundImage: CachedNetworkImageProvider(
+                    mediaUrl + widget.data.authorImage),
               )
             ],
           ),

@@ -1,5 +1,7 @@
 import datetime
 import json
+from django.core.cache import cache
+from constants import CACHE_CONSTANTS, CACHE_EXPIRY
 from authentication.permissions import IsMedicalManager, IsMessManager
 from medical.serializers import *
 from medical.models import *
@@ -36,12 +38,22 @@ class AddDoctorView(APIView):
             mail=mail
         )
         instance.save()
+
+        cache.delete(CACHE_CONSTANTS['MEDICAL_DOCTORS'])
+
         serinstance = DoctorSerializer(instance)
         return Response(serinstance.data)
 
     def get(self, request):
+        cached_doctors = cache.get(CACHE_CONSTANTS['MEDICAL_DOCTORS'])
+
+        if cached_doctors:
+            return Response(data = cached_doctors)
+
         doctors = Doctor.objects.all()
         serializer = DoctorSerializer(doctors, many=True)
+
+        cache.set(CACHE_CONSTANTS['MEDICAL_DOCTORS'], serializer.data, CACHE_EXPIRY)
         return Response(serializer.data)
 
 
@@ -203,9 +215,20 @@ class StaffInstanceView(APIView):
 class StudentDoctorView(APIView):
     permission_classes = (IsAuthenticated,)
 
-    def get(self, request):
+    def get(self, _):
+        cached_doctors = cache.get(CACHE_CONSTANTS['MEDICAL_STUDENT_DOCTORS'])
+
+        if cached_doctors:
+            return Response(data = cached_doctors)
+
         doctors = Doctor.objects.all()
         serializer = DoctorSerializer(doctors, many=True)
+
+        cache.set(
+            CACHE_CONSTANTS['MEDICAL_DOCTORS'],
+            serializer.data,
+            CACHE_EXPIRY)
+
         return Response(serializer.data)
 
 
@@ -213,8 +236,20 @@ class StudentStaffView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
+        cached_staff = cache.get(CACHE_CONSTANTS['MEDICAL_STUDENT_STAFF'])
+
+        if cached_staff:
+            return Response(data = cached_staff)
+
         staffs = Staff.objects.all()
         serializer = StaffSerializer(staffs, many=True)
+
+        cache.set(
+            CACHE_CONSTANTS['MEDICAL_STUDENT_STAFF'],
+            serializer.data,
+            CACHE_EXPIRY
+        )
+
         return Response(serializer.data)
 
 
