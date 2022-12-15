@@ -15,9 +15,7 @@ class StudentProfile(APIView):
   permission_classes = [IsAuthenticated]
 
   def get(self, request):
-    profile = Student.objects.filter(user=request.user).first()
-
-    return Response(status=200, data = StudentSerializer(profile).data)
+    return Response(status=200, data = StudentSerializer(request.user.profile).data)
 
   def post(self, request):
     user = request.user
@@ -28,8 +26,7 @@ class StudentProfile(APIView):
 
     request.FILES.get('profile')
 
-    Student.objects.create(
-      user = user,
+    profile = Student.objects.create(
       name = user.first_name + ' ' + user.last_name,
       entry_no = user.email.split('@')[0].upper(),
       programme = programme,
@@ -39,19 +36,20 @@ class StudentProfile(APIView):
       profile_image = request.FILES.get('profile')
     )
 
+    user.profile = profile
+    user.save()
+
     return Response(status = 200, data = { 'msg': 'success' })
 
 class StudentProfileImage(APIView):
   permission_classes = [IsAuthenticated]
 
   def get(self, request):
-    profile = Student.objects.filter(user = request.user).first()
 
-    return FileResponse(profile.profile_image.file)
+    return FileResponse(request.user.profile.profile_image.file)
 
 class ContactView(APIView):
   permission_classes = [IsAuthenticated]
 
   def get(self, request):
-    return Response(status = 200, data = Student.objects.filter(
-      user = request.user).first().phone_number)
+    return Response(status = 200, data = request.user.profile.phone_number)

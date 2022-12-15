@@ -38,7 +38,7 @@ class FeedModel {
           ' ' +
           json['user']['last_name'].toString(),
       authorEmail: json['user']['email'],
-      authorImage: json['student_profile']['profile_image'],
+      authorImage: json['user']['profile']['profile_image'],
       attachments: json['attachments'],
     );
   }
@@ -58,11 +58,15 @@ class _GeneralFeedState extends State<GeneralFeed> {
   final secureStorage = const FlutterSecureStorage();
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
 
-  Future<List<FeedModel>> fetchFeed() async {
+  List<FeedModel> feeds = [];
+  bool end = false;
+  int pageNumber = 1;
+
+  void loadPage() async {
     String? idToken = await secureStorage.read(key: 'idToken');
     final response = await http.get(
         Uri.parse(
-          baseUrl + '/feed/feed/',
+          baseUrl + '/feed/feed/?page=' + pageNumber.toString(),
         ),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -71,13 +75,28 @@ class _GeneralFeedState extends State<GeneralFeed> {
 
     if (response.statusCode == 200) {
       List decodedBody = jsonDecode(response.body);
-      return decodedBody.map((json) => FeedModel.fromJson(json)).toList();
-    } else if (response.statusCode != 401 || response.statusCode != 404) {
-    } else {
-      // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
+      feeds
+          .addAll(decodedBody.map((json) => FeedModel.fromJson(json)).toList());
+      pageNumber += 1;
+    } else if (response.statusCode == 404) {
+      end = true;
     }
+    setState(() {});
+  }
 
-    return Future.value([]);
+  Future<void> refreshFeed() async {
+    setState(() {
+      end = false;
+      pageNumber = 1;
+      feeds = [];
+      loadPage();
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadPage();
   }
 
   @override
@@ -110,9 +129,7 @@ class _GeneralFeedState extends State<GeneralFeed> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => NewPost(
-                                        successCallback: () {
-                                          setState(() {});
-                                        },
+                                        successCallback: refreshFeed,
                                         edit: false,
                                         document: null,
                                         postId: -1,
@@ -137,31 +154,12 @@ class _GeneralFeedState extends State<GeneralFeed> {
               ],
             ),
           ),
-          Expanded(
-            child: RefreshIndicator(
-              displacement: 15.0,
-              color: Colors.white,
-              backgroundColor: Colors.blue,
-              onRefresh: () async {
-                setState(() {});
-              },
-              child: FutureBuilder(
-                future: fetchFeed(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<List<FeedModel>> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting ||
-                      snapshot.data == null) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-
-                  return FeedList(
-                      feeds: snapshot.data!,
-                      refreshFeed: () {
-                        setState(() {});
-                      });
-                },
-              ),
-            ),
+          FeedList(
+            feeds: feeds,
+            end: end,
+            pageNumber: pageNumber,
+            loadPage: loadPage,
+            refreshFeed: refreshFeed,
           ),
           const SizedBox(
             height: 100.0,
@@ -175,10 +173,17 @@ class _GeneralFeedState extends State<GeneralFeed> {
 // ignore: must_be_immutable
 class FeedList extends StatefulWidget {
   List<FeedModel> feeds;
-  VoidCallback refreshFeed;
+  bool end = false;
+  int pageNumber;
+  VoidCallback loadPage;
+  Future<void> Function() refreshFeed;
+
   FeedList({
     Key? key,
     required this.feeds,
+    required this.end,
+    required this.pageNumber,
+    required this.loadPage,
     required this.refreshFeed,
   }) : super(key: key);
 
@@ -188,6 +193,25 @@ class FeedList extends StatefulWidget {
 
 class _FeedListState extends State<FeedList> {
   bool heightState = false;
+
+  // Create secureStorage
+  final secureStorage = const FlutterSecureStorage();
+  String baseUrl = FlavorConfig.instance.variables['baseUrl'];
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        if (!widget.end) {
+          widget.loadPage();
+        }
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -203,27 +227,68 @@ class _FeedListState extends State<FeedList> {
       if (heightState != panelStateStream.state) {
         setState(() {
           heightState = panelStateStream.state;
+          if (heightState) {
+            widget.loadPage();
+          }
         });
       }
     });
 
-    return SizedBox(
-      height: MediaQuery.of(context).size.height - (heightState ? 0 : 350),
-      child: ListView.builder(
-        itemCount: widget.feeds.length,
-        itemBuilder: ((BuildContext context, int index) {
-          return Column(
-            children: [
-              FeedPost(
-                data: widget.feeds[index],
-                updateView: () {
-                  widget.refreshFeed();
-                },
-              ),
-              const Divider(),
-            ],
-          );
-        }),
+    return Expanded(
+      child: RefreshIndicator(
+        displacement: 15.0,
+        color: Colors.white,
+        backgroundColor: Colors.blue,
+        onRefresh: widget.refreshFeed,
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height - (heightState ? 0 : 350),
+          child: ListView.builder(
+            controller: _scrollController,
+            itemCount: widget.feeds.length + 1,
+            itemBuilder: ((BuildContext context, int index) {
+              if (index == widget.feeds.length) {
+                if (widget.end) {
+                  return Column(
+                    children: const [
+                      Center(
+                        child: Text(
+                          'THE END',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                    ],
+                  );
+                }
+
+                return Column(
+                  children: const [
+                    SizedBox(
+                      height: 25,
+                      width: 25,
+                      child: CircularProgressIndicator(),
+                    ),
+                  ],
+                );
+              }
+
+              return Column(
+                children: [
+                  FeedPost(
+                    data: widget.feeds[index],
+                    updateView: widget.refreshFeed,
+                  ),
+                  const Divider(),
+                ],
+              );
+            }),
+          ),
+        ),
       ),
     );
   }

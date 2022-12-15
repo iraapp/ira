@@ -9,7 +9,6 @@ class AppointmentCard extends StatelessWidget {
   final String startTime;
   final String endTime;
   final String status;
-  final String dateTime;
   final String reason;
 
   Map<String, Color> statusColor = {
@@ -27,7 +26,6 @@ class AppointmentCard extends StatelessWidget {
     required this.startTime,
     required this.endTime,
     required this.status,
-    required this.dateTime,
     required this.reason,
   }) : super(key: key);
 

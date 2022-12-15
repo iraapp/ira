@@ -1,9 +1,6 @@
 from rest_framework import serializers
 
-from authentication.serializers import UserSerializer
-
 class StudentSerializer(serializers.Serializer):
-  user = UserSerializer()
   name = serializers.CharField(max_length=30)
   entry_no = serializers.CharField(max_length=30)
   programme = serializers.CharField(max_length=30)

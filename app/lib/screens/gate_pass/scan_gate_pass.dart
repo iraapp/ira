@@ -17,7 +17,7 @@ class _ScanGatePassState extends State<ScanGatePass> {
           allowDuplicates: false,
           onDetect: (barcode, args) {
             final String hash = barcode.rawValue!;
-            Navigator.push(
+            Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                     builder: (context) => UpdateGatePass(hash: hash)));

@@ -18,8 +18,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController mobileFieldController = TextEditingController();
   TextEditingController emergencyFieldController = TextEditingController();
-  TextEditingController disciplineFieldController = TextEditingController();
-  TextEditingController programmeFieldController = TextEditingController();
   final secureStorage = const FlutterSecureStorage();
   final String baseUrl = FlavorConfig.instance.variables['baseUrl'];
 
@@ -199,10 +197,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                             mobile: mobileFieldController.text,
                                             emergency:
                                                 emergencyFieldController.text,
-                                            discipline:
-                                                disciplineFieldController.text,
-                                            programme:
-                                                programmeFieldController.text,
+                                            discipline: discipline,
+                                            programme: programme,
                                           ),
                                         ));
                                   }

@@ -14,6 +14,8 @@ class AppointmentModel {
   dynamic time;
   String status;
   dynamic reason;
+  String startTime;
+  String endTime;
 
   AppointmentModel({
     required this.id,
@@ -22,6 +24,8 @@ class AppointmentModel {
     required this.time,
     required this.status,
     required this.reason,
+    required this.startTime,
+    required this.endTime,
   });
 
   factory AppointmentModel.fromJson(Map<String, dynamic> json) {
@@ -32,6 +36,8 @@ class AppointmentModel {
       reason: json['reason'],
       status: json['status'],
       time: json['time'],
+      endTime: json['end_time'],
+      startTime: json['start_time'],
     );
   }
 }
@@ -136,14 +142,9 @@ class _MedicalAppointmentsScreenState extends State<MedicalAppointmentsScreen> {
                               snapshot.data![index].doctor.specialization,
                           contact: snapshot.data![index].doctor.contact,
                           email: snapshot.data![index].doctor.mail,
-                          startTime: snapshot.data![index].doctor.startTime,
-                          endTime: snapshot.data![index].doctor.endTime,
+                          startTime: snapshot.data![index].startTime,
+                          endTime: snapshot.data![index].endTime,
                           status: snapshot.data![index].status,
-                          dateTime: snapshot.data![index].time != null
-                              ? snapshot.data![index].time +
-                                  " " +
-                                  snapshot.data![index].date
-                              : "",
                           reason: snapshot.data![index].reason,
                         );
                       },

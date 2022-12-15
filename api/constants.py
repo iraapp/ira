@@ -15,3 +15,5 @@ CACHE_CONSTANTS = {
   'MESS_LIST': 'mess_list',
   'TEAM': 'team'
 }
+
+FEEDS_PER_PAGE = 5

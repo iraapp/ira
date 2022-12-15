@@ -1,4 +1,5 @@
 import csv
+import zoneinfo
 from django.utils import timezone
 from django.http import HttpResponse
 from gate_pass.serializers import GatePassSerializer
@@ -82,22 +83,13 @@ class GenerateQR(APIView):
             )
 
 
-class StudentGatepassStatus(APIView):
+class StudentGatePass(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        Current_user = request.user
-        if Current_user is None:
-            return Response(
-                status = 401,
-                data = {
-                    "msg": "User not found."
-                }
-            )
+        gate_pass = GatePass.objects.filter(user = request.user, completed_status = False).first()
 
-        current_gate_pass = GatePass.objects.filter(user = Current_user, completed_status = False).first()
-
-        if current_gate_pass is None:
+        if gate_pass is None:
             return Response(
                 status = 404,
                 data = {
@@ -112,103 +104,11 @@ class StudentGatepassStatus(APIView):
             status = 200,
             data = {
                 "msg": "GatePass object already exists.",
-                "status": current_gate_pass.status,
-                "purpose": current_gate_pass.purpose,
-                "out_time_stamp": current_gate_pass.out_time_stamp,
-                "hash": "{}_{}".format(student_id, current_gate_pass.created_at)
+                "status": gate_pass.status,
+                "purpose": gate_pass.purpose,
+                "out_time_stamp": gate_pass.out_time_stamp,
+                "hash": "{}_{}".format(student_id, gate_pass.created_at)
             }
-        )
-
-
-
-class Staff_Ping_1(APIView):
-    permission_classes = [IsAuthenticated]
-
-
-    def post(self, request, *args, **kwargs):
-        Current_user = request.user
-        if Current_user == None:
-            return Response(
-                status = 401,
-                data = {
-                    "msg": "User not found."
-                }
-            )
-
-        if not Current_user.is_staff:
-            return Response(
-                status = 403,
-                data = {
-                    "msg": "User doesn't have the permission to access this resource."
-                }
-            )
-
-        jsonData = json.loads(request.body)
-
-        entryNo = jsonData.get("entryNo", None)
-        purpose = jsonData.get("purpose", None)
-
-        if entryNo is None or purpose is None:
-            return Response(
-                status = 404,
-                data = {
-                    "msg": "Either entryNo or purpose field is missing."
-                }
-            )
-
-        student_user = User.objects.filter(email = entryNo).first()
-        if student_user is None:
-            return Response(
-                status = 404,
-                data = {
-                    "msg": "Student not found."
-                }
-            )
-
-        gate_pass = GatePass.objects.filter(user = student_user, completed_status = False).order_by("-created_at").first()
-        if gate_pass is None:
-            GatePass.objects.create(
-                user = student_user,
-                purpose = purpose,
-                status = True,
-                out_time_stamp = datetime.datetime.now()
-            )
-            return Response(
-                status = 200,
-                data = {
-                    "msg": "Exit Marked Successfully."
-                }
-            )
-
-        if gate_pass.status == True:
-            gate_pass.status = False
-            gate_pass.completed_status = True
-            gate_pass.save()
-            return Response(
-                status = 201,
-                data = {
-                    "msg": "Entry marked successfully."
-                }
-            )
-        else:
-            return Response(
-                status = 409,
-                data = {
-                    "msg": "GatePass entry already exsits and marked as exit. Please make a new one."
-                }
-            )
-
-
-
-class Testing(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, *args, **kwargs):
-        return Response(
-            data = {
-                "msg": "Hello World"
-            },
-            status = 200
         )
 
 
@@ -304,16 +204,16 @@ class ExtractData(APIView):
 
         writer.writerow(['Name', 'Entry No.', 'Contact', 'Out Date', 'Out Time', 'In Date', 'In Time', 'Purpose'])
 
-        for gate_pass in data:
-            out_date = gate_pass.out_time_stamp.astimezone(
-                pytz.timezone('Asia/Kolkata')).strftime('%x')
+        kolkata_tz = zoneinfo.ZoneInfo('Asia/Kolkata')
 
-            out_time = gate_pass.out_time_stamp.astimezone(pytz.timezone('Asia/Kolkata')).strftime('%X')
+        for gate_pass in data:
+            out_date = gate_pass.out_time_stamp.astimezone(kolkata_tz).strftime('%x')
+
+            out_time = gate_pass.out_time_stamp.astimezone(kolkata_tz).strftime('%X')
 
             if gate_pass.in_time_stamp:
-                in_date = gate_pass.in_time_stamp.astimezone(
-                    pytz.timezone('Asia/Kolkata')).strftime('%x')
-                in_time = gate_pass.in_time_stamp.astimezone(pytz.timezone('Asia/Kolkata')).strftime('%X')
+                in_date = gate_pass.in_time_stamp.astimezone(kolkata_tz).strftime('%x')
+                in_time = gate_pass.in_time_stamp.astimezone(kolkata_tz).strftime('%X')
             else:
                 in_date = ''
                 in_time = ''
