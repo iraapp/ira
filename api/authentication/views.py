@@ -54,7 +54,7 @@ class ObtainIdTokenView(APIView):
 
         askForDetails = True
 
-        if Student.objects.filter(user = user):
+        if user.profile:
             askForDetails = False
 
         return Response(status = 200, data = {'idToken': token.key, 'askForDetails': askForDetails, 'user': UserSerializer(user).data})

@@ -75,6 +75,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'institute_app.local_time.AsiaKolkataTimeMiddleware',
 ]
 
 ROOT_URLCONF = 'institute_app.urls'

@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:ira/screens/mess/student/complains_mess_student.dart';
 
-Future<bool> _requestAppointment(int id, BuildContext context) async {
+Future<int> _requestAppointment(int id, BuildContext context) async {
   const secureStorage = FlutterSecureStorage();
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
   String? idToken = await secureStorage.read(key: 'idToken');
@@ -23,12 +24,12 @@ Future<bool> _requestAppointment(int id, BuildContext context) async {
       }));
 
   if (response.statusCode == 200) {
-    return Future.value(true);
+    return Future.value(response.statusCode);
   } else {
     // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
   }
 
-  return Future.value(false);
+  return Future.value(response.statusCode);
 }
 
 Future takeAppointmentDialog(
@@ -60,9 +61,20 @@ Future takeAppointmentDialog(
               padding: const EdgeInsets.only(left: 15.0, right: 15.0),
             ),
             onPressed: () async {
-              bool result = await _requestAppointment(id, context);
+              int result = await _requestAppointment(id, context);
 
-              if (result) {
+              if (result == 200) {
+                await showFeedbackDialog(context,
+                    title: "Thank you",
+                    content:
+                        "Appointment request has been sent to medical unit.",
+                    defaultActionText: "Close");
+                Navigator.pop(context);
+              } else if (result == 401) {
+                await showFeedbackDialog(context,
+                    title: "Thank you",
+                    content: "An appointment request is already under process.",
+                    defaultActionText: "Close");
                 Navigator.pop(context);
               }
             },

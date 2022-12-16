@@ -112,7 +112,7 @@ class _DashboardState extends State<Dashboard> {
           title: widget.roleHeaderMap(widget.role),
         ),
         body: SlidingUpPanel(
-          minHeight: MediaQuery.of(context).size.height - 280,
+          minHeight: MediaQuery.of(context).size.height - 300,
           maxHeight: MediaQuery.of(context).size.height,
           parallaxEnabled: true,
           parallaxOffset: 1.0,
