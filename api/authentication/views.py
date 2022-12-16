@@ -1,15 +1,12 @@
 import json
 import os
 from pathlib import Path
-from user_profile.models import Student
 from authentication.models import Staff, StaffToken, User, UserToken
 from authentication.serializers import StaffSerializer, UserSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import authentication_classes
 
-from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth.hashers import check_password
 from google.auth.transport import requests
 from google.oauth2 import id_token
 from rest_framework import exceptions
@@ -27,7 +24,7 @@ environ.Env.read_env(os.path.join(BASE_DIR.parent, '.env'))
 class ObtainIdTokenView(APIView):
     permission_classes = []
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         credentials = json.loads(request.body.decode('utf-8'))
         idToken = credentials.get('idToken')
 
@@ -37,7 +34,7 @@ class ObtainIdTokenView(APIView):
         try:
             decoded_token = id_token.verify_oauth2_token(
                 idToken, requests.Request(), env('GOOGLE_OAUTH_CLIENT_ID'))
-        except Exception as e:
+        except Exception:
             raise exceptions.AuthenticationFailed('Invalid ID Token')
 
         try:
@@ -54,23 +51,19 @@ class ObtainIdTokenView(APIView):
 
         askForDetails = True
 
-        if Student.objects.filter(user = user):
+        if user.profile:
             askForDetails = False
 
-        return Response(status = 200, data = {'idToken': token.key, 'askForDetails': askForDetails, 'user': UserSerializer(user).data})
+        return Response(status = 200, data = {
+            'idToken': token.key,
+            'askForDetails': askForDetails,
+            'user': UserSerializer(user).data
+        })
 
 
-class CoursePageViewStudent(APIView):
-    permission_classes = [IsAuthenticated]
 
-    def get(self, request, *args, **kwargs):
-        return Response(status = 200, data = "Authenticated")
-
-    def post(self, request, *args, **kwargs):
-        return Response(status = 200, data="Authenticated")
-
-@authentication_classes([])
-class ObtainTokenView(APIView):
+class ObtainStaffTokenView(APIView):
+    permission_classes = []
 
     def post(self, request, *args, **kwargs):
         credentials = json.loads(request.body.decode('utf-8'))
