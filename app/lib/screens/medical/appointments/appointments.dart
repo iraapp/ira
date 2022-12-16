@@ -10,10 +10,10 @@ import 'package:http/http.dart' as http;
 class AppointmentModel {
   int id;
   DoctorModel doctor;
-  dynamic date;
-  dynamic time;
+  String date;
+  String time;
   String status;
-  dynamic reason;
+  String reason;
   String startTime;
   String endTime;
 
@@ -32,12 +32,12 @@ class AppointmentModel {
     return AppointmentModel(
       id: json['id'],
       doctor: DoctorModel.fromJson(json['doctor']),
-      date: json['date'],
-      reason: json['reason'],
+      date: json['date'] ?? '',
+      reason: json['reason'] ?? '',
       status: json['status'],
-      time: json['time'],
-      endTime: json['end_time'],
-      startTime: json['start_time'],
+      time: json['time'] ?? '',
+      endTime: json['end_time'] ?? '',
+      startTime: json['start_time'] ?? '',
     );
   }
 }
@@ -137,7 +137,6 @@ class _MedicalAppointmentsScreenState extends State<MedicalAppointmentsScreen> {
                       itemBuilder: (BuildContext context, int index) {
                         return AppointmentCard(
                           name: snapshot.data![index].doctor.name,
-                          // details: snapshot.data[index].,
                           specialization:
                               snapshot.data![index].doctor.specialization,
                           contact: snapshot.data![index].doctor.contact,
