@@ -72,7 +72,7 @@ class HostelComplaintActionView(APIView):
         complaint = HostelComplaint.objects.filter(id=pk).first()
         complaint.status = True
         complaint.save()
-        
+
         # Invalidate hostel complaints cache.
         cache.delete(CACHE_CONSTANTS['HOSTEL_COMPLAINTS'])
         
