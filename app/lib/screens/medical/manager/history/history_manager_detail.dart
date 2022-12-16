@@ -70,7 +70,7 @@ class _HistoryManagerDetailState extends State<HistoryManagerDetail> {
     required String treatment,
   }) async {
     final String? token = await secureStorage.read(key: 'staffToken');
-    final requestUrl = Uri.parse(baseUrl + '/medical/medicalhistory/');
+    final requestUrl = Uri.parse(baseUrl + '/medical/manager/medicalhistory/');
 
     Map<String, dynamic> formMap = {
       'date': date,
