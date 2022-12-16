@@ -55,7 +55,7 @@ class FeedbackView(APIView):
         cached_feedback = cache.get(CACHE_CONSTANTS['MESS_FEEDBACK'])
 
         if cached_feedback:
-            return cached_feedback
+            return Response(data=cached_feedback)
 
         data = MessFeedback.objects.all()
         serialized_json = MessFeedbackSerializer(data, many=True)
