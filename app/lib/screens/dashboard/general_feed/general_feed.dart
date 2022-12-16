@@ -246,32 +246,21 @@ class _FeedListState extends State<FeedList> {
             controller: _scrollController,
             itemCount: widget.feeds.length + 1,
             itemBuilder: ((BuildContext context, int index) {
-              if (index == widget.feeds.length) {
-                if (widget.end) {
-                  return Column(
-                    children: const [
-                      Center(
-                        child: Text(
-                          'THE END',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                    ],
-                  );
-                }
-
+              if (index == widget.feeds.length &&
+                  (widget.end || widget.feeds.isEmpty)) {
                 return Column(
                   children: const [
+                    Center(
+                      child: Text(
+                        'THE END',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
                     SizedBox(
-                      height: 25,
-                      width: 25,
-                      child: CircularProgressIndicator(),
+                      height: 10.0,
                     ),
                   ],
                 );
