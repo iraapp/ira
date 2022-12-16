@@ -6,8 +6,8 @@ class MaintenanceStaffContactsSer(serializers.Serializer):
     name = serializers.CharField(max_length=100)
     contact = serializers.CharField(max_length=10)
     designation = serializers.CharField(max_length=100)
-    start_time = serializers.TimeField()
-    end_time = serializers.TimeField()
+    start_time = serializers.TimeField(format='%I:%M %p', input_formats='%I:%M %p')
+    end_time = serializers.TimeField(format='%I:%M %p', input_formats='%I:%M %p')
     location = serializers.CharField(max_length=30, default='')
 
 class HostelSerializer(serializers.Serializer):

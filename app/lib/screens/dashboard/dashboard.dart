@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -141,8 +142,9 @@ class _DashboardState extends State<Dashboard> {
                           image: DecorationImage(
                             opacity: 0.5,
                             fit: BoxFit.cover,
-                            image: NetworkImage(
-                                'https://theiraapp.s3.ap-south-1.amazonaws.com/media/images/release.png'),
+                            image: CachedNetworkImageProvider(
+                              'https://theiraapp.s3.ap-south-1.amazonaws.com/media/images/release.png',
+                            ),
                           ),
                         )
                       : const BoxDecoration(),

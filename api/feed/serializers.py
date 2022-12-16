@@ -13,8 +13,8 @@ class PostSerializer(serializers.Serializer):
     user = UserSerializer()
     body = serializers.CharField(max_length=30)
     attachments = DocumentSerializer(many = True)
-    created_at = serializers.DateTimeField()
-    updated_at = serializers.DateTimeField()
+    created_at = serializers.DateTimeField(format='%-I:%M %p %d %b %y', input_formats='%-I:%M %p %d %b %y')
+    updated_at = serializers.DateTimeField(format='%I:%M %p', input_formats='%I:%M %p')
     student_profile = StudentSerializer()
 
     def __str__(self):

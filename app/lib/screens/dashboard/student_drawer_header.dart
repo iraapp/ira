@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -49,7 +50,7 @@ class StudentDrawerHeader extends StatelessWidget {
                       if (snapshot.data == null) return Container();
                       return CircleAvatar(
                         radius: 38,
-                        backgroundImage: NetworkImage(
+                        backgroundImage: CachedNetworkImageProvider(
                           baseUrl + '/user_profile/image',
                           headers: {
                             'Authorization': 'idToken ' +

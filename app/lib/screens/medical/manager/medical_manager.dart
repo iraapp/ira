@@ -3,7 +3,6 @@ import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ira/screens/medical/manager/appointments/appointments_management.dart';
 import 'package:ira/screens/medical/manager/doctor_details/doctor_details_manager.dart';
-import 'package:ira/screens/medical/manager/history/history_manager.dart';
 import 'package:ira/screens/medical/manager/staff_contact/staff_contact.dart';
 
 class MedicalManagerScreen extends StatefulWidget {
@@ -18,17 +17,17 @@ class _MedicalManagerScreenState extends State<MedicalManagerScreen> {
   String baseUrl = FlavorConfig.instance.variables['baseUrl'];
 
   final List<String> _medicalList = [
-    "Maintenance Staff Contact",
+    "Staff Contact",
     "Doctors",
     "Appointments",
-    "History"
+    // "History"
   ];
 
   final List<Widget> _medicalRoutes = [
     const StaffContactManagerScreen(),
     const DoctorDetailsManager(),
     const AppointmentsManagement(),
-    const HistoryManager(),
+    // const HistoryManager(),
   ];
 
   @override
@@ -68,12 +67,6 @@ class _MedicalManagerScreenState extends State<MedicalManagerScreen> {
             height: size.height * 0.7,
             child: Container(
               decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(40.0),
-                  bottomRight: Radius.circular(0.0),
-                  topLeft: Radius.circular(40.0),
-                  bottomLeft: Radius.circular(0.0),
-                ),
                 color: Color(0xfff5f5f5),
               ),
               child: Padding(

@@ -1,3 +1,5 @@
+from django.core.cache import cache
+from constants import CACHE_CONSTANTS, CACHE_EXPIRY
 from mess.serializers import *
 from mess.models import *
 from rest_framework.views import APIView
@@ -17,6 +19,11 @@ class MessMenuAPI(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
+        cached_mess_menu = cache.get(CACHE_CONSTANTS['MESS_MENU'])
+
+        if cached_mess_menu:
+            return Response(data = cached_mess_menu)
+
         weekdays = WeekDay.objects.all()
 
         data = {}
@@ -26,6 +33,8 @@ class MessMenuAPI(APIView):
             for slot in MenuSlot.objects.all():
                 data[day.name][slot.name] = MessMenuSerializer(
                     MessMenu.objects.filter(slot=slot, weekdays=day).first()).data
+
+        cache.set(CACHE_CONSTANTS['MESS_MENU'], data, CACHE_EXPIRY)
 
         return Response(data=data)
 
@@ -43,8 +52,16 @@ class FeedbackView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        cached_feedback = cache.get(CACHE_CONSTANTS['MESS_FEEDBACK'])
+
+        if cached_feedback:
+            return Response(data=cached_feedback)
+
         data = MessFeedback.objects.all()
         serialized_json = MessFeedbackSerializer(data, many=True)
+
+        cache.set(CACHE_CONSTANTS['MESS_FEEDBACK'], serialized_json.data, CACHE_EXPIRY)
+
         return Response(data=serialized_json.data)
 
     def post(self, request, *args, **kwargs):
@@ -59,6 +76,9 @@ class FeedbackView(APIView):
             mess_type=mess_type,
             mess_meal=mess_meal
         )
+
+        cache.delete(CACHE_CONSTANTS['MESS_FEEDBACK'])
+
         return Response(status=200, data={
 
             "msg": "Feedback submitted successfully."
@@ -95,8 +115,16 @@ class ComplaintView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        cached_complaints = cache.get(CACHE_CONSTANTS['MESS_COMPLAINT'])
+
+        if cached_complaints:
+            return Response(data = cached_complaints)
+
         data = MessComplaint.objects.all()
         serialized_json = MessComplaintSerializer(data, many=True)
+
+        cache.set(CACHE_CONSTANTS['MESS_COMPLAINT'], serialized_json.data, CACHE_EXPIRY)
+
         return Response(data=serialized_json.data)
 
     def post(self, request, *args, **kwargs):
@@ -106,6 +134,7 @@ class ComplaintView(APIView):
         mess_meal = request.POST.get("mess_meal")
         file = request.FILES.get("file")
         mess_type = Mess.objects.filter(name=mess_name).first()
+
         MessComplaint.objects.create(
             user=user,
             body=complaint,
@@ -113,6 +142,9 @@ class ComplaintView(APIView):
             mess_meal=mess_meal,
             file=file
         )
+
+        cache.delete(CACHE_CONSTANTS['MESS_COMPLAINT'])
+
         return Response(status=200, data={
             "msg": "Complaint submitted successfully."
         })
@@ -136,6 +168,10 @@ class ComplaintActionView(APIView):
         complaint = MessComplaint.objects.filter(id=pk).first()
         complaint.status = True
         complaint.save()
+
+        # Clear mess complaint cache.
+        cache.delete(CACHE_CONSTANTS['MESS_COMPLAINT'])
+
         return Response(status=200, data={
 
             "msg": "Complaint action Updated."
@@ -165,26 +201,20 @@ class MessMomView(APIView):
         return Response(data=serialized_json.data)
 
     def post(self, request, *args, **kwargs):
-        try:
-            file = request.FILES.get("file")
-            title = request.POST.get("title", None)
-            date = request.POST.get("date", None)
-            description = request.POST.get("description", None)
-            instance = self.model.objects.create(
-                file=file,
-                title=title,
-                date=date,
-                description=description
+        file = request.FILES.get("file")
+        title = request.POST.get("title", None)
+        date = request.POST.get("date", None)
+        description = request.POST.get("description", None)
+        instance = self.model.objects.create(
+            file=file,
+            title=title,
+            date=date,
+            description=description
 
-            )
-            return Response(status=200, data={
-
-                "msg": "mom submitted successfully."
-            })
-        except Exception as e:
-            return Response(status=500, data={
-                "msg": "internal server error"
-            })
+        )
+        return Response(status=200, data={
+            "msg": "mom submitted successfully."
+        });
 
 
 class MessMomInstanceView(APIView):
@@ -248,8 +278,16 @@ class MessNameView(APIView):
     permission_classes = [IsAuthenticated, ]
 
     def get(self, request, *args, **kwargs):
+        cached_mess_list = cache.get(CACHE_CONSTANTS['MESS_LIST'])
+
+        if cached_mess_list:
+            return Response(data = cached_mess_list)
+
         data = Mess.objects.all()
         serialized_json = MessSerializer(data, many=True)
+
+        cache.set(CACHE_CONSTANTS['MESS_LIST'], serialized_json.data, CACHE_EXPIRY)
+
         return Response(data=serialized_json.data)
 
 # To update tender State
@@ -291,6 +329,8 @@ class MenuTimingView(APIView):
         slot.end_time = end_time
         slot.save()
 
+        cache.delete(CACHE_CONSTANTS['MESS_MENU'])
+
         return Response(status=200, data={
             'msg': 'Successfully updated menu timings'
         })
@@ -317,6 +357,8 @@ class MenuItemUpdateView(APIView):
                 'msg': 'action field is malformed'
             })
 
+        cache.delete(CACHE_CONSTANTS['MESS_MENU'])
+
         return Response(status=200, data={
             'msg': 'Successfully updated mess menu item'
         })
@@ -335,6 +377,8 @@ class MessMenuItemAdd(APIView):
 
         menu = MessMenu.objects.filter(id=menu_id).first()
         menu.items.add(menu_item)
+
+        cache.delete(CACHE_CONSTANTS['MESS_MENU'])
 
         return Response(status=200, data={
             'msg': 'Menu item added successfully'

@@ -10,10 +10,12 @@ import 'package:http/http.dart' as http;
 class AppointmentModel {
   int id;
   DoctorModel doctor;
-  dynamic date;
-  dynamic time;
+  String date;
+  String time;
   String status;
-  dynamic reason;
+  String reason;
+  String startTime;
+  String endTime;
 
   AppointmentModel({
     required this.id,
@@ -22,16 +24,20 @@ class AppointmentModel {
     required this.time,
     required this.status,
     required this.reason,
+    required this.startTime,
+    required this.endTime,
   });
 
   factory AppointmentModel.fromJson(Map<String, dynamic> json) {
     return AppointmentModel(
       id: json['id'],
       doctor: DoctorModel.fromJson(json['doctor']),
-      date: json['date'],
-      reason: json['reason'],
+      date: json['date'] ?? '',
+      reason: json['reason'] ?? '',
       status: json['status'],
-      time: json['time'],
+      time: json['time'] ?? '',
+      endTime: json['end_time'] ?? '',
+      startTime: json['start_time'] ?? '',
     );
   }
 }
@@ -131,19 +137,13 @@ class _MedicalAppointmentsScreenState extends State<MedicalAppointmentsScreen> {
                       itemBuilder: (BuildContext context, int index) {
                         return AppointmentCard(
                           name: snapshot.data![index].doctor.name,
-                          // details: snapshot.data[index].,
                           specialization:
                               snapshot.data![index].doctor.specialization,
                           contact: snapshot.data![index].doctor.contact,
                           email: snapshot.data![index].doctor.mail,
-                          startTime: snapshot.data![index].doctor.startTime,
-                          endTime: snapshot.data![index].doctor.endTime,
+                          startTime: snapshot.data![index].startTime,
+                          endTime: snapshot.data![index].endTime,
                           status: snapshot.data![index].status,
-                          dateTime: snapshot.data![index].time != null
-                              ? snapshot.data![index].time +
-                                  " " +
-                                  snapshot.data![index].date
-                              : "",
                           reason: snapshot.data![index].reason,
                         );
                       },

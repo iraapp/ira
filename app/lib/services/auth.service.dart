@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -63,6 +64,9 @@ class AuthService with ChangeNotifier {
 
               bool askForDetails = jsonDecode(response.body)['askForDetails'];
 
+              // Subscribe to general feed notifications once logged in.
+              await FirebaseMessaging.instance.subscribeToTopic('feed');
+
               await successCallback(askForDetails, role);
             } else {
               await _googleSignIn.signOut();
@@ -91,6 +95,11 @@ class AuthService with ChangeNotifier {
   signOut() async {
     await _googleSignIn.signOut();
     await secureStorage.delete(key: 'idToken');
-    await secureStorage.delete(key: 'role');
+    await localStorage.deleteItem('role');
+    await localStorage.deleteItem('displayName');
+    await localStorage.deleteItem('email');
+
+    // Unsubscribe from general feed notifications on signing out.
+    await FirebaseMessaging.instance.unsubscribeFromTopic('feed');
   }
 }
