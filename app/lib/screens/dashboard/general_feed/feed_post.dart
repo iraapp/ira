@@ -168,9 +168,7 @@ class _FeedPostState extends State<FeedPost> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => NewPost(
-                                            successCallback: () {
-                                              setState(() {});
-                                            },
+                                            successCallback: widget.updateView,
                                             edit: true,
                                             document: quill.Document.fromJson(
                                               jsonDecode(
