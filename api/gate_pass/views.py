@@ -8,16 +8,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from gate_pass.models import GatePass
-import datetime
 import json
-import pytz
-
-from authentication.models import User
 
 class GenerateQR(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         request.body = json.loads(request.body.decode('utf8'))
         purpose = request.body.get("purpose", None)
         contact = request.body.get('contact', None)
@@ -30,63 +26,47 @@ class GenerateQR(APIView):
                 status = 400
             )
 
-        try:
-            gate_pass_obj = GatePass.objects.filter(
-                user = request.user,
-                status = False
-            ).order_by("created_at")
+        gate_pass_obj = GatePass.objects.filter(
+            user = request.user,
+            status = False
+        ).order_by("created_at")
 
-            if gate_pass_obj.exists():
-                return Response(
-                data = {
-                    "msg": "GatePass object already exists. Please contact administrator."
-                },
-                status = 400
-            )
-
-            # Creating mew object of gate pass
-            gate_pass_obj = GatePass.objects.create(
-                user = request.user,
-                purpose = purpose,
-                contact = contact
-            )
-
-
-            student_id = request.user.email.split('@')[0]
-
-            if student_id is None or student_id == "":
-                return Response(
-                    status=500,
-                    data={
-                        "msg": "Some Inernal Server Error Occured."
-                    }
-                )
-
-            hash = "{}_{}".format(student_id, gate_pass_obj.created_at)
-
+        if gate_pass_obj:
             return Response(
-                status=200,
-                data={
-                    "msg": "GatePass object created successfully.",
-                    "hash": hash,
-                    "purpose": purpose,
-                    "status": False
-                }
-            )
+            data = {
+                "msg": "GatePass object already exists. Please contact administrator."
+            },
+            status = 400
+        )
 
-        except Exception as e:
-            return Response(
-                status=500,
-                data={
-                    "msg": "Some Internal Server Error Occured."
-                }
-            )
+        # Creating mew object of gate pass
+        gate_pass_obj = GatePass.objects.create(
+            user = request.user,
+            purpose = purpose,
+            contact = contact
+        )
+
+
+        student_id = request.user.email.split('@')[0]
+
+
+        hash = "{}_{}".format(student_id, gate_pass_obj.created_at)
+
+        return Response(
+            status=200,
+            data={
+                "msg": "GatePass object created successfully.",
+                "hash": hash,
+                "purpose": purpose,
+                "status": False
+            }
+        )
 
 
 class StudentGatePass(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         gate_pass = GatePass.objects.filter(user = request.user, completed_status = False).first()
 
         if gate_pass is None:
@@ -113,7 +93,6 @@ class StudentGatePass(APIView):
 
 
 # QR Code is generated in the frontend only.
-
 # When the user goes to the main gate, and his qr is scanned, a ping is sent to backend, and image of user is sent back.
 # Now, when the guard approves the request, a modelinstance is created in the backend, for outing, with out time. with out == True
 # Now, when the user comes back to the campus, and opens app, the qr should be there, and when it is scanned again, the out == False.

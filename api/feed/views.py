@@ -1,6 +1,6 @@
 from django.core.cache import cache
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from constants import CACHE_CONSTANTS, CACHE_EXPIRY, FEEDS_PER_PAGE
+from constants import CACHE_CONSTANTS, FEEDS_PER_PAGE
 from authentication.permissions import IsAcademicBoardPG, IsAcademicBoardUG, IsAcademicOfficePG, IsAcademicOfficeUG, IsCulturalBoard, IsGymkhana, IsHostelBoard, IsHostelSecretary, IsIraTeam, IsSportsBoard, IsSwoOffice, IsTechnicalBoard
 from feed.models import Document, Post
 from feed.serializers import PostSerializer
@@ -86,7 +86,12 @@ class GetFeedView(APIView):
         return Response(data=serialized_json.data)
 
 class DeleteFeedView(APIView):
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [
+        IsAuthenticated,
+        IsSwoOffice|IsAcademicOfficeUG|IsAcademicOfficePG|
+        IsGymkhana|IsCulturalBoard|IsTechnicalBoard|
+        IsSportsBoard|IsHostelBoard|IsAcademicBoardUG|
+        IsAcademicBoardPG|IsIraTeam|IsHostelSecretary]
 
     def post(self, request, *args):
         id = request.POST.get('id', None);
@@ -107,7 +112,13 @@ class DeleteFeedView(APIView):
 
 
 class UpdateFeedView(APIView):
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [
+        IsAuthenticated,
+        IsSwoOffice|IsAcademicOfficeUG|IsAcademicOfficePG|
+        IsGymkhana|IsCulturalBoard|IsTechnicalBoard|
+        IsSportsBoard|IsHostelBoard|IsAcademicBoardUG|
+        IsAcademicBoardPG|IsIraTeam|IsHostelSecretary
+    ]
 
     def post(self, request):
         post_id = request.POST.get("post_id")
