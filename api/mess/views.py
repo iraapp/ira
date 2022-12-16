@@ -168,6 +168,10 @@ class ComplaintActionView(APIView):
         complaint = MessComplaint.objects.filter(id=pk).first()
         complaint.status = True
         complaint.save()
+
+        # Clear mess complaint cache.
+        cache.delete(CACHE_CONSTANTS['MESS_COMPLAINT'])
+
         return Response(status=200, data={
 
             "msg": "Complaint action Updated."
