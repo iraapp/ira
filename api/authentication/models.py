@@ -140,7 +140,7 @@ class Staff(models.Model):
     def is_authenticated(self):
         return True
     def __str__(self):
-        return self.first_name + ' ' + self.last_name
+        return self.username
 
 
 class StaffToken(models.Model):

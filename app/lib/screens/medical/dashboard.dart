@@ -7,8 +7,6 @@ import 'package:ira/screens/medical/doctor_details/doctor_details.dart';
 import 'package:ira/screens/medical/staff_contact/staff_contact.dart';
 import 'package:ira/util/helpers.dart';
 
-import 'history/medical_history.dart';
-
 class MedicalStudentScreen extends StatefulWidget {
   const MedicalStudentScreen({Key? key}) : super(key: key);
 
@@ -25,7 +23,7 @@ class _MedicalStudentScreenState extends State<MedicalStudentScreen> {
         icon: const Icon(Icons.supervised_user_circle), title: "Staff Contact"),
     DashboardIconModel(
         icon: const Icon(Icons.perm_contact_cal), title: "Doctors"),
-    DashboardIconModel(icon: const Icon(Icons.history), title: "History"),
+    // DashboardIconModel(icon: const Icon(Icons.history), title: "History"),
     DashboardIconModel(
         icon: const Icon(Icons.meeting_room), title: "Appointments"),
     DashboardIconModel(icon: const Icon(Icons.scale), title: "BMI Calculator"),
@@ -34,7 +32,7 @@ class _MedicalStudentScreenState extends State<MedicalStudentScreen> {
   final List<Widget> _medicalRoutes = [
     const StaffContactScreen(),
     const DoctorDetailsScreen(),
-    const MedicalHistoryScreen(),
+    // const MedicalHistoryScreen(),
     const MedicalAppointmentsScreen(),
     const BMICalculator(),
   ];

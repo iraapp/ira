@@ -3,9 +3,6 @@ from django.db import models
 
 from institute_app import settings
 
-# Create your models here.
-
-
 class MaintenanceStaffContacts(models.Model):
     name  = models.CharField(max_length=100)
     contact = models.CharField(max_length=20)
@@ -14,6 +11,10 @@ class MaintenanceStaffContacts(models.Model):
     end_time = models.TimeField()
     location = models.CharField(max_length=30)
     created_at = models.TimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
 
 class Hostel(models.Model):
     name = models.CharField(max_length=15, default='')

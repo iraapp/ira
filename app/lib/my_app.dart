@@ -51,8 +51,6 @@ void initAppWithFirebase() async {
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  await FirebaseMessaging.instance.subscribeToTopic('feed');
-
   runApp(const MyApp());
 }
 

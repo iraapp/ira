@@ -40,9 +40,12 @@ class CreatePostView(APIView):
         instance.save()
 
         # Invalidate cache for feed data.
-        cache.delete('feed_posts')
+        cache.delete(CACHE_CONSTANTS['FEED_CACHE'])
 
-        send_notification(user.first_name + " " + user.last_name + " posted a new message", notification, settings.FEED_NOTIFICATION_CHANNEL)
+        send_notification(
+            user.first_name + " " + user.last_name + " posted a new message",
+            notification,
+            settings.FEED_NOTIFICATION_CHANNEL)
 
         return Response(data={
             "msg": "Post created successfully."
@@ -76,7 +79,7 @@ class DeleteFeedView(APIView):
             post.delete()
 
             # Invalidate cache for feed data.
-            cache.delete('feed_posts')
+            cache.delete(CACHE_CONSTANTS['FEED_CACHE'])
 
             return Response(status=200, data = {
                 'msg': 'Post deleted successfully'
@@ -99,7 +102,7 @@ class UpdateFeedView(APIView):
             post.save()
 
             # Invalidate cache for feed data.
-            cache.delete('feed_posts')
+            cache.delete(CACHE_CONSTANTS['FEED_CACHE'])
 
             return Response(status = 200, data = "Post updated")
 

@@ -45,6 +45,9 @@ class MessMenu(models.Model):
     items = models.ManyToManyField(MenuItem)
     weekdays = models.ManyToManyField(WeekDay)
 
+    def __str__(self):
+        return self.slot.name + ' - ' + ', '.join(day.name for day in self.weekdays.all())
+
 # data base model for feedback
 # status is for whether the feedback is viewed by mess manager or not.
 
@@ -79,7 +82,8 @@ class MessMom(models.Model):
     description = models.TextField()
     created_at = models.DateTimeField(auto_now=True)
 
-# data base model for mess tender
+    def __str__(self):
+        return self.title
 
 
 class MessTender(models.Model):
@@ -90,3 +94,6 @@ class MessTender(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField(null=True)
     created_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
