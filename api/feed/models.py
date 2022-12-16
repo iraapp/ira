@@ -15,6 +15,8 @@ class Document(models.Model):
     name, extension = os.path.splitext(self.file.name)
     return extension
 
+  def __str__(self):
+    return self.filename
 
 class Post(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,

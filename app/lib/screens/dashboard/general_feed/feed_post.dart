@@ -8,7 +8,6 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:intl/intl.dart';
 import 'package:ira/screens/dashboard/general_feed/general_feed.dart';
 import 'package:ira/screens/dashboard/general_feed/new_post/new_post.dart';
 import 'package:localstorage/localstorage.dart';
@@ -132,25 +131,26 @@ class _FeedPostState extends State<FeedPost> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  height: 40,
+                  height: 50,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          const SizedBox(height: 10),
                           Text(
                             widget.data.authorName,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(
-                            width: 10.0,
-                          ),
                           Text(
-                            formatTime(widget.data.createdAt),
+                            widget.data.createdAt,
+                            textAlign: TextAlign.left,
                             style: const TextStyle(
                               color: Colors.grey,
+                              fontSize: 12,
                             ),
                           ),
                         ],
@@ -352,23 +352,6 @@ class _FeedPostState extends State<FeedPost> {
         ],
       ),
     );
-  }
-
-  String formatTime(String input) {
-    DateTime createdAt = DateTime.parse(input);
-
-    if (createdAt.day == DateTime.now().day) {
-      return createdAt.hour.toString() +
-          ":" +
-          (createdAt.second.toString().length == 1
-              ? "0" + createdAt.second.toString()
-              : createdAt.second.toString());
-    }
-
-    return DateFormat("dd MMM ").format(createdAt) +
-        createdAt.hour.toString() +
-        ":" +
-        createdAt.second.toString();
   }
 }
 

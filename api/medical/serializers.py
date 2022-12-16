@@ -10,8 +10,8 @@ class DoctorSerializer(serializers.Serializer):
     specialization = serializers.CharField(max_length=30)
     mail = serializers.EmailField(max_length=100)
     date = serializers.DateField()
-    start_time = serializers.TimeField()
-    end_time = serializers.TimeField()
+    start_time = serializers.TimeField(format='%I:%M %p', input_formats='%I:%M %p')
+    end_time = serializers.TimeField(format='%I:%M %p', input_formats='%I:%M %p')
     details = serializers.CharField(max_length=50)
 
 
