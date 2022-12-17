@@ -65,6 +65,8 @@ class _GeneralFeedState extends State<GeneralFeed> {
           baseUrl + '/feed/feed/',
         ),
         headers: <String, String>{
+          // Accept header should be set to access the correct api.
+          'Accept': 'application/json; version=1.1.3',
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'idToken ' + idToken!
         });

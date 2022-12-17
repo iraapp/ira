@@ -64,7 +64,8 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'authentication.backends.UserAuthenticationBackend',
         'authentication.backends.StaffAuthenticationBackend'
-    )
+    ),
+    'DEFAULT_VERSIONING_CLASS': 'institute_app.versioning.AcceptHeaderVersioningWithParameters'
 }
 
 MIDDLEWARE = [
