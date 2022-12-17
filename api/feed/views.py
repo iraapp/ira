@@ -2,7 +2,7 @@ from django.core.cache import cache
 from constants import CACHE_CONSTANTS, CACHE_EXPIRY
 from authentication.permissions import IsAcademicBoardPG, IsAcademicBoardUG, IsAcademicOfficePG, IsAcademicOfficeUG, IsCulturalBoard, IsGymkhana, IsHostelBoard, IsHostelSecretary, IsIraTeam, IsSportsBoard, IsSwoOffice, IsTechnicalBoard
 from feed.models import Document, Post
-from feed.serializers import PostSerializer
+from feed.serializers import PostSerializer, PostSerializerCompatibleWith112
 from institute_app import settings
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -55,6 +55,26 @@ class GetFeedView(APIView):
     permission_classes = [IsAuthenticated, ]
 
     def get(self, request, *args, **kwargs):
+
+        # Ensure backward compatibility with 1.1.2 client.
+        if request.version == '1.1.2':
+            cached_feeds = cache.get(CACHE_CONSTANTS['FEED_CACHE'] + '_1.1.2')
+            if cached_feeds:
+                return Response (data = cached_feeds)
+
+            data = Post.objects.all().order_by('-created_at')
+            serialized_json = PostSerializerCompatibleWith112(data, many = True)
+
+            # Cache feed data in the memory as it is frequently requested
+            # This results in significant reduction in server response time.
+            cache.set(
+                CACHE_CONSTANTS['FEED_CACHE'] + '_1.1.2',
+                serialized_json.data,
+                CACHE_EXPIRY)
+
+            return Response(data = serialized_json.data)
+
+
         cached_feeds = cache.get(CACHE_CONSTANTS['FEED_CACHE'])
         if cached_feeds:
             return Response(data=cached_feeds)

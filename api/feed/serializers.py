@@ -19,3 +19,16 @@ class PostSerializer(serializers.Serializer):
 
     def __str__(self):
         return self.body
+
+
+class PostSerializerCompatibleWith112(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    user = UserSerializer()
+    body = serializers.CharField(max_length=30)
+    attachments = DocumentSerializer(many = True)
+    created_at = serializers.DateTimeField()
+    updated_at = serializers.DateTimeField()
+    student_profile = StudentSerializer()
+
+    def __str__(self):
+        return self.body
