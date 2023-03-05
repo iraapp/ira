@@ -1,12 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-String toLocalDateTime(String time) {
-  return DateFormat("dd MMM yy")
-      .add_jm()
-      .format(DateTime.parse(time).toLocal());
-}
 
 // ignore: must_be_immutable
 class StudentCard extends StatelessWidget {
@@ -106,15 +99,13 @@ class StudentCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Out time : ' +
-                          (outTime != null ? toLocalDateTime(outTime!) : 'NA'),
+                      'Out time : ' + (outTime != null ? outTime! : 'NA'),
                       style: const TextStyle(
                         fontSize: 12.0,
                       ),
                     ),
                     Text(
-                      'In time : ' +
-                          (inTime != null ? toLocalDateTime(inTime!) : 'NA'),
+                      'In time : ' + (inTime != null ? inTime! : 'NA'),
                       style: const TextStyle(
                         fontSize: 12.0,
                       ),
