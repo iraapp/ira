@@ -1,6 +1,6 @@
 from django.core.cache import cache
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from constants import CACHE_CONSTANTS, FEEDS_PER_PAGE
+from constants import CACHE_CONSTANTS, CACHE_EXPIRY, FEEDS_PER_PAGE
 from authentication.permissions import IsAcademicBoardPG, IsAcademicBoardUG, IsAcademicOfficePG, IsAcademicOfficeUG, IsCulturalBoard, IsGymkhana, IsHostelBoard, IsHostelSecretary, IsIraTeam, IsSportsBoard, IsSwoOffice, IsTechnicalBoard
 from feed.models import Document, Post
 from feed.serializers import PostSerializer
@@ -56,6 +56,10 @@ class GetFeedView(APIView):
     def get(self, request, *args, **kwargs):
 
         if request.version == '1.1.3':
+            cached_feeds = cache.get(CACHE_CONSTANTS['FEED_CACHE'])
+            if cached_feeds:
+                return Response(data = cached_feeds)
+
             data = Post.objects.all().order_by('-created_at')
             serialized_json = PostSerializer(data, many=True)
 
