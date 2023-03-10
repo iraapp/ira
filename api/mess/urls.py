@@ -47,9 +47,12 @@ urlpatterns = [
 
     # TODO(#87): Review the below urls after improving mess menu for
     # manager side.
-    path('menu/timing', views.MenuTimingView.as_view(), name="Menu timing"),
+    path('menu/slot/update', views.MenuSlotTimingView.as_view(),
+         name="Menu slot timing"),
     path('menu/item_update', views.MenuItemUpdateView.as_view(),
          name='Menu item update'),
+    path('menu/item_delete', views.MenuItemDeleteView.as_view(),
+         name='Menu item delete'),
     path('menu/item_add', views.MessMenuItemAdd.as_view(), name="Menu item add"),
     path('all', views.MessNameView.as_view(), name="Get mess name"),
     path('list/', views.MessListAPI.as_view(), name="Mess List"),

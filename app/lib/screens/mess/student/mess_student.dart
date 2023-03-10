@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ira/screens/mess/student/complains_mess_student.dart';
 import 'package:ira/screens/mess/student/feedback_mess_student.dart';
-import 'package:ira/screens/mess/student/menu_mess_student.dart';
+import 'package:ira/screens/mess/student/menu/menu_mess_student.dart';
 import 'package:ira/screens/mess/student/mom_mess_student.dart';
 import 'package:ira/screens/mess/student/tender_mess_student.dart';
 import 'package:ira/util/helpers.dart';
@@ -34,7 +34,7 @@ class _MessStudentScreenState extends State<MessStudentScreen> {
   final List<Widget> _messRoutes = [
     FeedbackMess(),
     ComplaintsMess(),
-    const MessMenu(),
+    const MessMenu(editable: false),
     MOMMess(),
     TenderMess(),
   ];

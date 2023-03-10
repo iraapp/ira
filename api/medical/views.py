@@ -1,15 +1,15 @@
 import datetime
 import json
 from django.core.cache import cache
-from authentication.serializers import StaffSerializer, UserSerializer
-from medical.models import Appointment, Doctor, MedicalHistory
-from medical.serializers import AppointmentSerializer, DoctorSerializer, MedicalHistorySerializer
+from authentication.serializers import UserSerializer
+from medical.models import Appointment, Doctor, MedicalHistory, Staff
+from medical.serializers import AppointmentSerializer, DoctorSerializer, MedicalHistorySerializer, StaffSerializer
 from constants import CACHE_CONSTANTS, CACHE_EXPIRY
 from authentication.permissions import IsMedicalManager
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from authentication.models import Staff, User
+from authentication.models import User
 
 
 class StudentDoctorView(APIView):

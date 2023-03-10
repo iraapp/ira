@@ -1,4 +1,5 @@
 from django.core.cache import cache
+from authentication.permissions import IsMessManager
 from mess.models import MenuItem, MenuSlot, Mess, MessComplaint, MessFeedback, MessMenu, MessMom, MessTender, WeekDay
 from mess.serializers import MessComplaintSerializer, MessFeedbackSerializer, MessMenuSerializer, MessMomSer, MessSerializer, MessTenderSer
 from constants import CACHE_CONSTANTS, CACHE_EXPIRY
@@ -224,9 +225,9 @@ class MessTenderArchivedView(APIView):
         })
 
 
-class MenuTimingView(APIView):
+class MenuSlotTimingView(APIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsMessManager]
 
     def post(self, request):
         start_time = request.POST.get('start_time')
@@ -248,41 +249,72 @@ class MenuTimingView(APIView):
 
 class MenuItemUpdateView(APIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsMessManager]
 
     def post(self, request):
-        menu_id = request.POST.get('menu_id')
         menu_item_id = request.POST.get('menu_item_id')
-        action = request.POST.get('action')
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+        veg = request.POST.get('veg') == 'true'
 
-        menu = MessMenu.objects.filter(id=menu_id).first()
-        menu_item = MenuItem.objects.filter(id=menu_item_id).first()
+        image = request.FILES.get('profile')
 
-        if action == 'remove':
-            menu.items.remove(menu_item)
-        elif action == 'add':
-            menu.items.add(menu_item)
-        else:
-            return Response(status=400, data={
-                'msg': 'action field is malformed'
+        menu_item = MenuItem.objects.filter(id = menu_item_id).first()
+
+        if menu_item:
+            menu_item.name = name
+            menu_item.description = description
+            menu_item.veg = veg
+
+            if image:
+                menu_item.image = image
+
+            menu_item.save()
+
+            cache.delete(CACHE_CONSTANTS['MESS_MENU'])
+
+            return Response(status=200, data={
+                'msg': 'Successfully updated mess menu item'
             })
 
-        cache.delete(CACHE_CONSTANTS['MESS_MENU'])
+        return Response(state = 400, data = {
+            'msg': 'Mess Item with given id is not found'
+        })
 
-        return Response(status=200, data={
-            'msg': 'Successfully updated mess menu item'
+
+class MenuItemDeleteView(APIView):
+
+    permission_classes = [IsAuthenticated, IsMessManager]
+
+    def post(self, request):
+        menu_item_id = request.POST.get('menu_item_id')
+
+        menu_item = MenuItem.objects.filter(id = menu_item_id).first()
+
+        menu_item.delete()
+
+        return Response(status = 200, data = {
+            'msg': 'Deleted Successfully'
         })
 
 
 class MessMenuItemAdd(APIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsMessManager]
 
     def post(self, request):
-        menu_item_name = request.POST.get('menu_item_name')
+        menu_item_name = request.POST.get('name')
+        veg = request.POST.get('veg') == 'true'
+        description = request.POST.get('description')
         menu_id = request.POST.get('menu_id')
 
-        menu_item = MenuItem(name=menu_item_name)
+        image =  request.FILES.get('profile')
+
+
+        menu_item = MenuItem(name = menu_item_name,
+                             veg = veg,
+                             description = description,
+                             image = image)
         menu_item.save()
 
         menu = MessMenu.objects.filter(id=menu_id).first()
