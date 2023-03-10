@@ -55,37 +55,17 @@ class GetFeedView(APIView):
 
     def get(self, request, *args, **kwargs):
 
-        # Ensure backward compatibility with 1.1.2 client.
-        if request.version == '1.1.2':
-            cached_feeds = cache.get(CACHE_CONSTANTS['FEED_CACHE'] + '_1.1.2')
-            if cached_feeds:
-                return Response (data = cached_feeds)
-
+        if request.version == '1.1.3':
             data = Post.objects.all().order_by('-created_at')
-            serialized_json = PostSerializerCompatibleWith112(data, many = True)
+            serialized_json = PostSerializer(data, many=True)
 
             # Cache feed data in the memory as it is frequently requested
             # This results in significant reduction in server response time.
-            cache.set(
-                CACHE_CONSTANTS['FEED_CACHE'] + '_1.1.2',
-                serialized_json.data,
-                CACHE_EXPIRY)
+            cache.set(CACHE_CONSTANTS['FEED_CACHE'], serialized_json.data, CACHE_EXPIRY)
+            return Response(data=serialized_json.data)
 
-            return Response(data = serialized_json.data)
-
-
-        cached_feeds = cache.get(CACHE_CONSTANTS['FEED_CACHE'])
-        if cached_feeds:
-            return Response(data=cached_feeds)
 
         page_number = request.GET.get('page', 1)
-
-        # cached_feeds = cache.get(
-        #     CACHE_CONSTANTS['FEED_CACHE'])
-
-        # if cached_feeds and page_number in cached_feeds:
-        #     print('cache hit')
-        #     return Response(data=cached_feeds[page_number])
 
         data = Post.objects.all().order_by('-created_at')
 
@@ -99,13 +79,6 @@ class GetFeedView(APIView):
             return Response(status = 404, data = { 'msg': 'No more data available' })
 
         serialized_json = PostSerializer(page_obj, many=True)
-
-        # Cache feed data in the memory as it is frequently requested
-        # This results in significant reduction in server response time.
-        # cache.set(
-        #     CACHE_CONSTANTS['FEED_CACHE'],
-        #     { page_number : serialized_json.data} if not cached_feeds else cached_feeds.update({ page_number : serialized_json.data}),
-        #     CACHE_EXPIRY)
 
         return Response(data=serialized_json.data)
 
