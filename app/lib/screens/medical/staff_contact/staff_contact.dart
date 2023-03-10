@@ -51,11 +51,9 @@ class _StaffContactScreenState extends State<StaffContactScreen> {
 
     if (response.statusCode == 200) {
       dynamic decodedData = jsonDecode(response.body);
-      print(decodedData);
       mmp['data'] = decodedData
           .map<StaffModel>((json) => StaffModel.fromJson(json))
           .toList();
-      print(mmp);
     } else {
       // ScaffoldMessenger.of(context).showSnackBar(alertSnackbar);
     }
