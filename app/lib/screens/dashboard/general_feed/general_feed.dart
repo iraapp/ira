@@ -173,7 +173,7 @@ class _GeneralFeedState extends State<GeneralFeed> {
 // ignore: must_be_immutable
 class FeedList extends StatefulWidget {
   List<FeedModel> feeds;
-  bool end = false;
+  bool end = true;
   int pageNumber;
   VoidCallback loadPage;
   Future<void> Function() refreshFeed;
@@ -244,27 +244,8 @@ class _FeedListState extends State<FeedList> {
           height: MediaQuery.of(context).size.height - (heightState ? 0 : 350),
           child: ListView.builder(
             controller: _scrollController,
-            itemCount: widget.feeds.length + 1,
+            itemCount: widget.feeds.length,
             itemBuilder: ((BuildContext context, int index) {
-              if (index == widget.feeds.length &&
-                  (widget.end || widget.feeds.isEmpty)) {
-                return Column(
-                  children: const [
-                    Center(
-                      child: Text(
-                        'THE END',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                  ],
-                );
-              }
 
               return Column(
                 children: [

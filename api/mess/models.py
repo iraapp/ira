@@ -3,7 +3,10 @@ from django.db import models
 
 
 class MenuItem(models.Model):
-    name = models.CharField(max_length=30, default='')
+    name = models.CharField(max_length=20, default='')
+    veg = models.BooleanField(default=True)
+    description = models.CharField(max_length=75, default='')
+    image = models.ImageField(upload_to='mess_menu_items/', default='mess_menu_items/fork-plate-and-knife.png')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
