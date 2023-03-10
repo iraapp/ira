@@ -67,11 +67,9 @@ class MaintenanceContactCard extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Timings: " +
-                        startTime +
-                        " Hours to " +
-                        endTime +
-                        " Hours"),
+                    Text(
+                      "Timings: " + startTime + " to " + endTime,
+                    ),
                     const SizedBox(
                       height: 5.0,
                     ),
@@ -79,7 +77,13 @@ class MaintenanceContactCard extends StatelessWidget {
                     const SizedBox(
                       height: 5.0,
                     ),
-                    Text("Name: " + name),
+                    SizedBox(
+                      width: 200,
+                      child: Text(
+                        "Name: " + name,
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
                   ],
                 ),
                 Column(

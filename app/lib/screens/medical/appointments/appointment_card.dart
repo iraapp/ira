@@ -9,7 +9,6 @@ class AppointmentCard extends StatelessWidget {
   final String startTime;
   final String endTime;
   final String status;
-  final String dateTime;
   final String reason;
 
   Map<String, Color> statusColor = {
@@ -27,7 +26,6 @@ class AppointmentCard extends StatelessWidget {
     required this.startTime,
     required this.endTime,
     required this.status,
-    required this.dateTime,
     required this.reason,
   }) : super(key: key);
 
@@ -107,8 +105,7 @@ class AppointmentCard extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Container(
-                      padding:
-                          const EdgeInsets.fromLTRB(10.0, 12.5, 10.0, 12.5),
+                      padding: const EdgeInsets.fromLTRB(10.0, 20, 10.0, 20),
                       decoration: BoxDecoration(
                         color: statusColor[status],
                         borderRadius:
@@ -139,8 +136,8 @@ class AppointmentCard extends StatelessWidget {
                   status == "ACCEPTED" || status == "REJECTED"
                       ? Expanded(
                           child: Container(
-                            padding: const EdgeInsets.fromLTRB(
-                                10.0, 12.5, 10.0, 12.5),
+                            padding:
+                                const EdgeInsets.fromLTRB(10.0, 20, 10.0, 20),
                             decoration: const BoxDecoration(
                               color: Colors.blue,
                               borderRadius: BorderRadius.only(

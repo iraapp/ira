@@ -6,6 +6,7 @@ from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from user_profile.models import Student
 
 from institute_app import settings
 
@@ -40,8 +41,6 @@ USER_ROLES={
 class User(AbstractBaseUser, PermissionsMixin):
 
     # These fields tie to the roles!
-
-
     ROLE_CHOICES = (
         (USER_ROLES['admin'], 'Admin'),
         (USER_ROLES['student'], 'Student'),
@@ -66,6 +65,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=50, blank=True)
+    profile = models.OneToOneField(Student, on_delete=models.CASCADE, null = True)
     role = models.PositiveSmallIntegerField(
         choices=ROLE_CHOICES, blank=True, null=True, default=1)
     date_joined = models.DateTimeField(auto_now_add=True)
@@ -140,7 +140,7 @@ class Staff(models.Model):
     def is_authenticated(self):
         return True
     def __str__(self):
-        return self.first_name + ' ' + self.last_name
+        return self.username
 
 
 class StaffToken(models.Model):

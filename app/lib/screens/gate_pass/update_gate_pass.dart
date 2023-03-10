@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:ira/screens/gate_pass/scan_gate_pass.dart';
 import 'package:ira/shared/app_scaffold.dart';
 
 // ignore: must_be_immutable
@@ -105,7 +106,12 @@ class UpdateGatePass extends StatelessWidget {
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              Navigator.pop(context);
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ScanGatePass(),
+                                ),
+                              );
                             },
                             child: const Text('Scan new'),
                           )

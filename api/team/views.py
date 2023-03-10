@@ -9,7 +9,7 @@ from .models import Member
 class TeamView(APIView):
   permission_classes = [IsAuthenticated]
 
-  def get(self, request, *args, **kwargs):
+  def get(self, _):
     cached_team = cache.get(CACHE_CONSTANTS['TEAM'])
 
     if cached_team:

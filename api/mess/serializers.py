@@ -6,6 +6,9 @@ from rest_framework import serializers
 class MenuItemSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     name = serializers.CharField(max_length=30)
+    veg = serializers.BooleanField()
+    description = serializers.CharField()
+    image = serializers.ImageField()
 
     class Meta:
         model = MenuItem
