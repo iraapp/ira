@@ -85,9 +85,11 @@ class GetFeedView(APIView):
 
         serialized_json = PostSerializer113(data, many=True)
 
+
         # Cache feed data in the memory as it is frequently requested
         # This results in significant reduction in server response time.
         # cache.set(CACHE_CONSTANTS['FEED_CACHE'], serialized_json.data, CACHE_EXPIRY)
+
         return Response(data=serialized_json.data)
 
 
