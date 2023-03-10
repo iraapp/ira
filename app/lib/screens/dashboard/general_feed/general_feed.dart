@@ -69,7 +69,8 @@ class _GeneralFeedState extends State<GeneralFeed> {
           baseUrl + '/feed/feed/?page=' + pageNumber.toString(),
         ),
         headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
+          // Accept header should be set to access the correct api.
+          'Content-Type': 'application/json;version=1.3.0',
           'Authorization': 'idToken ' + idToken!
         });
 
@@ -246,7 +247,6 @@ class _FeedListState extends State<FeedList> {
             controller: _scrollController,
             itemCount: widget.feeds.length,
             itemBuilder: ((BuildContext context, int index) {
-
               return Column(
                 children: [
                   FeedPost(
