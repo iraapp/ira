@@ -87,7 +87,7 @@ class GatePassScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
-                        'Purpose for gate pass : ',
+                        'Purpose: ',
                         style: TextStyle(
                           fontSize: 16,
                         ),
@@ -112,7 +112,7 @@ class GatePassScreen extends StatelessWidget {
                   Opacity(
                       opacity: 0.0,
                       child: IconButton(
-                        onPressed: () => destroyQr(context),
+                        onPressed: () {},
                         color: Colors.black,
                         icon: const Icon(Icons.delete),
                       )),

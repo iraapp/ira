@@ -6,6 +6,9 @@ from rest_framework import serializers
 class MenuItemSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     name = serializers.CharField(max_length=30)
+    veg = serializers.BooleanField()
+    description = serializers.CharField()
+    image = serializers.ImageField()
 
     class Meta:
         model = MenuItem
@@ -14,8 +17,8 @@ class MenuItemSerializer(serializers.Serializer):
 class MenuSlotSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     name = serializers.CharField(max_length=15)
-    start_time = serializers.TimeField(format='%I:%M %p', input_formats='%I:%M %p')
-    end_time = serializers.TimeField(format='%I:%M %p', input_formats='%I:%M %p')
+    start_time = serializers.TimeField()
+    end_time = serializers.TimeField()
 
 
 class WeekDaySerializer(serializers.Serializer):

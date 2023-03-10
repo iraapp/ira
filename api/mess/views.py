@@ -1,24 +1,17 @@
 from django.core.cache import cache
+from authentication.permissions import IsMessManager
+from mess.models import MenuItem, MenuSlot, Mess, MessComplaint, MessFeedback, MessMenu, MessMom, MessTender, WeekDay
+from mess.serializers import MessComplaintSerializer, MessFeedbackSerializer, MessMenuSerializer, MessMomSer, MessSerializer, MessTenderSer
 from constants import CACHE_CONSTANTS, CACHE_EXPIRY
-from mess.serializers import *
-from mess.models import *
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-
-class MessListAPI(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        messList = Mess.objects.all()
-
-        return Response(status = 200, data = MessSerializer(messList, many = True).data)
 
 
 class MessMenuAPI(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
+    def get(self, _):
         cached_mess_menu = cache.get(CACHE_CONSTANTS['MESS_MENU'])
 
         if cached_mess_menu:
@@ -39,19 +32,10 @@ class MessMenuAPI(APIView):
         return Response(data=data)
 
 
-"""
-FeedbackView:
-    Payload required:
-        1. mess_type - mess type
-        2. feedback - feedback body
-
-"""
-
-
 class FeedbackView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, *args, **kwargs):
+    def get(self, _):
         cached_feedback = cache.get(CACHE_CONSTANTS['MESS_FEEDBACK'])
 
         if cached_feedback:
@@ -64,7 +48,7 @@ class FeedbackView(APIView):
 
         return Response(data=serialized_json.data)
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         user = request.user
         feedback = request.POST.get("feedback")
         mess_name = request.POST.get("mess_type")
@@ -85,36 +69,19 @@ class FeedbackView(APIView):
         })
 
 
-class FeedbackInstanceView(APIView):
-    permission_classes = [IsAuthenticated, ]
+class MessListAPI(APIView):
+    permission_classes = [IsAuthenticated]
 
-    def get(self, request, *args, **kwargs):
-        feedback_id = kwargs.get("pk")
-        data = MessFeedback.objects.filter(id=feedback_id).first()
-        serialized_json = MessFeedbackSerializer(data)
-        return Response(data=serialized_json.data)
+    def get(self, _):
+        messList = Mess.objects.all()
 
-# To the status of feedback
-
-
-class FeedbackActionView(APIView):
-    permission_classes = [IsAuthenticated, ]
-
-    def put(self, request, *args, **kwargs):
-        pk = kwargs.get("pk")
-        feedback = MessFeedback.objects.filter(id=pk).first()
-        feedback.status = True
-        feedback.save()
-        return Response(status=200, data={
-
-            "msg": "feedback action Updated."
-        })
+        return Response(status = 200, data = MessSerializer(messList, many = True).data)
 
 
 class ComplaintView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, *args, **kwargs):
+    def get(self, _):
         cached_complaints = cache.get(CACHE_CONSTANTS['MESS_COMPLAINT'])
 
         if cached_complaints:
@@ -150,14 +117,30 @@ class ComplaintView(APIView):
         })
 
 
-class ComplaintInstanceView(APIView):
+class MessMomView(APIView):
     permission_classes = [IsAuthenticated, ]
+    model = MessMom
 
-    def get(self, request, *args, **kwargs):
-        feedback_id = kwargs.get("pk")
-        data = MessComplaint.objects.filter(id=feedback_id).first()
-        serialized_json = MessComplaintSerializer(data)
+    def get(self, _):
+        data = self.model.objects.all()
+        serialized_json = MessMomSer(data, many=True)
         return Response(data=serialized_json.data)
+
+    def post(self, request):
+        file = request.FILES.get("file")
+        title = request.POST.get("title", None)
+        date = request.POST.get("date", None)
+        description = request.POST.get("description", None)
+        instance = self.model.objects.create(
+            file=file,
+            title=title,
+            date=date,
+            description=description
+
+        )
+        return Response(status=200, data={
+            "msg": "mom submitted successfully."
+        })
 
 
 class ComplaintActionView(APIView):
@@ -176,68 +159,6 @@ class ComplaintActionView(APIView):
 
             "msg": "Complaint action Updated."
         })
-
-
-# Minutes of meeting for meeting note: s3 implementation is necessary for production
-"""
-MessMomView:
-
-    Payload required:
-        1. date - date of meeting
-        2. file - file of meeting
-        3. title - title of meeting
-        4. description - description of meeting
-
-"""
-
-
-class MessMomView(APIView):
-    permission_classes = [IsAuthenticated, ]
-    model = MessMom
-
-    def get(self, request, *args, **kwargs):
-        data = self.model.objects.all()
-        serialized_json = MessMomSer(data, many=True)
-        return Response(data=serialized_json.data)
-
-    def post(self, request, *args, **kwargs):
-        file = request.FILES.get("file")
-        title = request.POST.get("title", None)
-        date = request.POST.get("date", None)
-        description = request.POST.get("description", None)
-        instance = self.model.objects.create(
-            file=file,
-            title=title,
-            date=date,
-            description=description
-
-        )
-        return Response(status=200, data={
-            "msg": "mom submitted successfully."
-        });
-
-
-class MessMomInstanceView(APIView):
-
-    permission_classes = [IsAuthenticated, ]
-
-    def get(self, request, *args, **kwargs):
-        mom_id = kwargs.get("pk")
-        data = MessMom.objects.filter(id=mom_id).first()
-        serialized_json = MessMomSer(data)
-        return Response(data=serialized_json.data)
-
-
-# Tender view note: s3 implimentation is necessary for production
-"""
-mess tender view:
-    Payload required:
-        1. date - date of tender
-        2. file - file of tender
-        3. title - title of tender
-        4. description - description of tender
-        5. contractor - name of tender contractor
-"""
 
 
 class MessTenderView(APIView):
@@ -304,19 +225,9 @@ class MessTenderArchivedView(APIView):
         })
 
 
-class MessTenderInstanceView(APIView):
-    model = MessTender
+class MenuSlotTimingView(APIView):
 
-    def get(self, request, *args, **kwargs):
-        tender_id = kwargs.get("pk")
-        data = self.model.objects.filter(id=tender_id).first()
-        serialized_json = MessTenderSer(data)
-        return Response(data=serialized_json.data)
-
-
-class MenuTimingView(APIView):
-
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsMessManager]
 
     def post(self, request):
         start_time = request.POST.get('start_time')
@@ -338,41 +249,72 @@ class MenuTimingView(APIView):
 
 class MenuItemUpdateView(APIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsMessManager]
 
     def post(self, request):
-        menu_id = request.POST.get('menu_id')
         menu_item_id = request.POST.get('menu_item_id')
-        action = request.POST.get('action')
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+        veg = request.POST.get('veg') == 'true'
 
-        menu = MessMenu.objects.filter(id=menu_id).first()
-        menu_item = MenuItem.objects.filter(id=menu_item_id).first()
+        image = request.FILES.get('profile')
 
-        if action == 'remove':
-            menu.items.remove(menu_item)
-        elif action == 'add':
-            menu.items.add(menu_item)
-        else:
-            return Response(status=400, data={
-                'msg': 'action field is malformed'
+        menu_item = MenuItem.objects.filter(id = menu_item_id).first()
+
+        if menu_item:
+            menu_item.name = name
+            menu_item.description = description
+            menu_item.veg = veg
+
+            if image:
+                menu_item.image = image
+
+            menu_item.save()
+
+            cache.delete(CACHE_CONSTANTS['MESS_MENU'])
+
+            return Response(status=200, data={
+                'msg': 'Successfully updated mess menu item'
             })
 
-        cache.delete(CACHE_CONSTANTS['MESS_MENU'])
+        return Response(state = 400, data = {
+            'msg': 'Mess Item with given id is not found'
+        })
 
-        return Response(status=200, data={
-            'msg': 'Successfully updated mess menu item'
+
+class MenuItemDeleteView(APIView):
+
+    permission_classes = [IsAuthenticated, IsMessManager]
+
+    def post(self, request):
+        menu_item_id = request.POST.get('menu_item_id')
+
+        menu_item = MenuItem.objects.filter(id = menu_item_id).first()
+
+        menu_item.delete()
+
+        return Response(status = 200, data = {
+            'msg': 'Deleted Successfully'
         })
 
 
 class MessMenuItemAdd(APIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsMessManager]
 
     def post(self, request):
-        menu_item_name = request.POST.get('menu_item_name')
+        menu_item_name = request.POST.get('name')
+        veg = request.POST.get('veg') == 'true'
+        description = request.POST.get('description')
         menu_id = request.POST.get('menu_id')
 
-        menu_item = MenuItem(name=menu_item_name)
+        image =  request.FILES.get('profile')
+
+
+        menu_item = MenuItem(name = menu_item_name,
+                             veg = veg,
+                             description = description,
+                             image = image)
         menu_item.save()
 
         menu = MessMenu.objects.filter(id=menu_id).first()

@@ -50,7 +50,7 @@ class _StaffContactScreenState extends State<StaffContactScreen> {
     Map<String, List<StaffModel>> mmp = {};
 
     if (response.statusCode == 200) {
-      List decodedData = jsonDecode(response.body);
+      dynamic decodedData = jsonDecode(response.body);
       mmp['data'] = decodedData
           .map<StaffModel>((json) => StaffModel.fromJson(json))
           .toList();

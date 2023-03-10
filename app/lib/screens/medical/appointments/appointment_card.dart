@@ -105,8 +105,7 @@ class AppointmentCard extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Container(
-                      padding:
-                          const EdgeInsets.fromLTRB(10.0, 12.5, 10.0, 12.5),
+                      padding: const EdgeInsets.fromLTRB(10.0, 20, 10.0, 20),
                       decoration: BoxDecoration(
                         color: statusColor[status],
                         borderRadius:
@@ -137,8 +136,8 @@ class AppointmentCard extends StatelessWidget {
                   status == "ACCEPTED" || status == "REJECTED"
                       ? Expanded(
                           child: Container(
-                            padding: const EdgeInsets.fromLTRB(
-                                10.0, 12.5, 10.0, 12.5),
+                            padding:
+                                const EdgeInsets.fromLTRB(10.0, 20, 10.0, 20),
                             decoration: const BoxDecoration(
                               color: Colors.blue,
                               borderRadius: BorderRadius.only(

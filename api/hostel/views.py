@@ -1,4 +1,5 @@
 from django.core.cache import cache
+from authentication.permissions import IsHostelSecretary
 from constants import CACHE_CONSTANTS, CACHE_EXPIRY
 from hostel.serializers import ComplaintTypeSerializer, HostelComplaintSerializer, HostelFeedbackSerializer, HostelSerializer, MaintenanceStaffContactsSer
 from hostel.models import ComplaintType, Hostel, HostelComplaint, HostelFeedback, MaintenanceStaffContacts
@@ -24,58 +25,11 @@ class MaintenanceStaffContactsView(APIView):
 
         return Response(data=serialized_json.data)
 
-    def post(self, request):
-        name = request.POST.get("name")
-        contact = request.POST.get("contact")
-        designation = request.POST.get("designation")
-
-        MaintenanceStaffContacts.objects.create(
-            name=name,
-            contact=contact,
-            designation=designation
-        )
-
-        # Invalidate maintenance staff cache.
-        cache.delete(CACHE_CONSTANTS['MAINTENANCE_STAFF_CACHE'])
-
-        return Response(status=200, data={
-            "msg": "Contact added successfully."
-        })
-
-class MaintenanceStaffContactsInstanceView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, *args, **kwargs):
-        contact_id = kwargs.get("pk")
-        data = MaintenanceStaffContacts.objects.filter(id=contact_id).first()
-        serialized_json = MaintenanceStaffContactsSer(data)
-        return Response(data=serialized_json.data)
-
-    def post(self, request, *args, **kwargs):
-        contact_id = kwargs.get("pk")
-        name = request.POST.get("name")
-        contact = request.POST.get("contact")
-        designation = request.POST.get("designation")
-        MaintenanceStaffContacts.objects.filter(id=contact_id).update(
-            name=name,
-            contact=contact,
-            designation=designation
-        )
-        return Response(status=200, data={
-            "msg": "Contact updated successfully."
-        })
-
-    def delete(self, request, *args, **kwargs):
-        contact_id = kwargs.get("pk")
-        MaintenanceStaffContacts.objects.filter(id=contact_id).delete()
-        return Response(status=200, data={
-            "msg": "Contact deleted successfully."
-        })
 
 class HostelComplaintView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
+    def get(self, _):
         cached_complaints = cache.get(CACHE_CONSTANTS['HOSTEL_COMPLAINTS'])
 
         if cached_complaints:
@@ -111,17 +65,17 @@ class HostelComplaintView(APIView):
         return Response(data={'msg': 'success'}, status=200)
 
 class HostelComplaintActionView(APIView):
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated, IsHostelSecretary]
 
     def put(self, request, *args, **kwargs):
         pk = kwargs.get("pk")
         complaint = HostelComplaint.objects.filter(id=pk).first()
         complaint.status = True
         complaint.save()
-                
+
         # Invalidate hostel complaints cache.
         cache.delete(CACHE_CONSTANTS['HOSTEL_COMPLAINTS'])
-        
+
         return Response(status=200, data={
 
             "msg": "feedback action Updated."
@@ -131,7 +85,7 @@ class HostelComplaintActionView(APIView):
 class HostelFeedbackView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
+    def get(self, _):
         cached_feedback = cache.get(CACHE_CONSTANTS['HOSTEL_FEEDBACKS'])
 
         if cached_feedback:
@@ -162,16 +116,6 @@ class HostelFeedbackView(APIView):
 
         return Response(data={'msg': 'success'}, status=200)
 
-
-class HostelFeedbackInstanceView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, pk):
-        data = HostelFeedback.objects.filter(id=pk).first()
-        if data:
-            serialized_json = HostelFeedbackSerializer(data)
-            return Response(data=serialized_json.data)
-        return Response(data={'msg': 'not found'}, status=404)
 
 class HostelAndComplaintListView(APIView):
     permission_classes = [IsAuthenticated]
