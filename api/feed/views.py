@@ -3,7 +3,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from constants import CACHE_CONSTANTS, CACHE_EXPIRY, FEEDS_PER_PAGE
 from authentication.permissions import IsAcademicBoardPG, IsAcademicBoardUG, IsAcademicOfficePG, IsAcademicOfficeUG, IsCulturalBoard, IsGymkhana, IsHostelBoard, IsHostelSecretary, IsIraTeam, IsSportsBoard, IsSwoOffice, IsTechnicalBoard
 from feed.models import Document, Post
-from feed.serializers import PostSerializer
+from feed.serializers import PostSerializer, PostSerializer113
 from institute_app import settings
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -51,38 +51,44 @@ class CreatePostView(APIView):
 
 
 class GetFeedView(APIView):
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
 
-        if request.version == '1.1.3':
-            cached_feeds = cache.get(CACHE_CONSTANTS['FEED_CACHE'])
-            if cached_feeds:
-                return Response(data = cached_feeds)
+        if request.version == '1.3.0':
+            page_number = request.GET.get('page', 1)
 
             data = Post.objects.all().order_by('-created_at')
-            serialized_json = PostSerializer(data, many=True)
 
-            # Cache feed data in the memory as it is frequently requested
-            # This results in significant reduction in server response time.
-            cache.set(CACHE_CONSTANTS['FEED_CACHE'], serialized_json.data, CACHE_EXPIRY)
+            paginator = Paginator(data, FEEDS_PER_PAGE)
+
+            try:
+                page_obj = paginator.page(page_number)
+            except PageNotAnInteger:
+                page_obj = paginator.page(1)
+            except EmptyPage:
+                return Response(status = 404, data = { 'msg': 'No more data available' })
+
+            serialized_json = PostSerializer(page_obj, many=True)
+
             return Response(data=serialized_json.data)
 
 
-        page_number = request.GET.get('page', 1)
+        cached_feeds = cache.get(CACHE_CONSTANTS['FEED_CACHE'])
+        if cached_feeds:
+            return Response(data = cached_feeds)
 
         data = Post.objects.all().order_by('-created_at')
 
-        paginator = Paginator(data, FEEDS_PER_PAGE)
+        for row in data:
+            row.student_profile = row.user.profile
 
-        try:
-            page_obj = paginator.page(page_number)
-        except PageNotAnInteger:
-            page_obj = paginator.page(1)
-        except EmptyPage:
-            return Response(status = 404, data = { 'msg': 'No more data available' })
+        serialized_json = PostSerializer113(data, many=True)
 
-        serialized_json = PostSerializer(page_obj, many=True)
+
+        # Cache feed data in the memory as it is frequently requested
+        # This results in significant reduction in server response time.
+        # cache.set(CACHE_CONSTANTS['FEED_CACHE'], serialized_json.data, CACHE_EXPIRY)
 
         return Response(data=serialized_json.data)
 
