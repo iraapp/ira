@@ -29,6 +29,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='menuitem',
             name='name',
-            field=models.CharField(default='', max_length=20),
+            field=models.CharField(default='', max_length=25),
         ),
     ]
