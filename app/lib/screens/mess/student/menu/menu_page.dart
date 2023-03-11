@@ -87,6 +87,7 @@ class MenuPage extends StatelessWidget {
                             onPressed: () {
                               showModalBottomSheet(
                                 context: context,
+                                isScrollControlled: true,
                                 builder: (context) => AddMessItemModalSheet(
                                   menuId: weekDay.menus[index].id,
                                   successCallback: updateView,

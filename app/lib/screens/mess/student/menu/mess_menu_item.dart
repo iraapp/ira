@@ -27,6 +27,7 @@ class MessMenuItem extends StatelessWidget {
           if (editable) {
             showModalBottomSheet(
               context: context,
+              isScrollControlled: true,
               builder: (context) => EditDeleteMessItemModalSheet(
                 successCallback: updateView,
                 menuItem: menuItem,

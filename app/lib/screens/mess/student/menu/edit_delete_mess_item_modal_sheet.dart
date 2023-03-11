@@ -88,10 +88,12 @@ class _EditDeleteMessItemModalSheetState
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(30, 20, 30, 0),
+      padding: EdgeInsets.fromLTRB(
+          30, 20, 30, MediaQuery.of(context).viewInsets.bottom),
       child: Form(
         key: _formKey,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             const Center(
               child: Text(
