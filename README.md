@@ -61,3 +61,7 @@ There are three flavours for the flutter app.
   - staging: This can use any test/prod server for running the app. Mainly intended for testing with a physical device.
   - prod: This uses the final production server. No intended for testing purpose.
 
+
+**Deployment**
+
+![IRA DevOps drawio](https://github.com/iraapp/ira/assets/106883815/07da09c0-af87-4000-a3ab-9fd9c10c72aa)
