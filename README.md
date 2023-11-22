@@ -64,7 +64,8 @@ There are three flavours for the flutter app.
 
 **Cloud Architecture**
 
-![IRA DevOps drawio](https://github.com/iraapp/ira/assets/106883815/07da09c0-af87-4000-a3ab-9fd9c10c72aa)
+
+![IRA DevOps drawio (1)](https://github.com/iraapp/ira/assets/106883815/047a8b3d-3856-4ac6-91e1-71003975a7f5)
 
 
 **Demo**
